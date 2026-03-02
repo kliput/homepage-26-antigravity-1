@@ -1,17 +1,19 @@
 ---
-import MainLayout from '../layouts/MainLayout.astro';
+import MainLayout from "../layouts/MainLayout.astro";
 ---
 
 <MainLayout title="Onedata - Data Management Platform">
   <section class="hero-section">
     <div class="container hero-content">
       <h1 class="hero-title">
-        <span class="highlight">Data Management Platform</span><br/>
-        for Distributed API Pipelines<br/>
+        <span class="highlight">Data Management Platform</span><br />
+        for Distributed API Pipelines<br />
         and Hybrid Clouds
       </h1>
       <p class="hero-subtitle">
-        Onedata is a high-performance, unified virtual filesystem for data-intensive applications, bringing data globally across multiple providers and infrastructures.
+        Onedata is a high-performance, unified virtual filesystem for
+        data-intensive applications, bringing data globally across multiple
+        providers and infrastructures.
       </p>
       <div class="hero-actions">
         <a href="/quick-start" class="btn btn-primary">Get Started</a>
@@ -19,7 +21,7 @@ import MainLayout from '../layouts/MainLayout.astro';
       </div>
     </div>
   </section>
-  
+
   <section class="features-preview">
     <div class="container">
       <!-- Future blocks can go here -->
@@ -31,7 +33,11 @@ import MainLayout from '../layouts/MainLayout.astro';
   .hero-section {
     padding: 6rem 0;
     text-align: center;
-    background: linear-gradient(180deg, rgba(var(--color-primary), 0.05) 0%, transparent 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(var(--color-primary), 0.05) 0%,
+      transparent 100%
+    );
   }
 
   .hero-content {

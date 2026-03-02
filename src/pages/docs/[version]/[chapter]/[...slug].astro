@@ -1,49 +1,53 @@
 ---
-import DocsLayout from '../../../../layouts/DocsLayout.astro';
-import { getCollection } from 'astro:content';
+import DocsLayout from "../../../../layouts/DocsLayout.astro";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  const docsEntries = await getCollection('docs');
-  
+  const docsEntries = await getCollection("docs");
+
   // Extract unique versions based on folder structure
-  const versions = [...new Set(docsEntries.map(entry => entry.slug.split('/')[0]))].sort((a,b) => b.localeCompare(a)); // Descending versions
-  
+  const versions = [
+    ...new Set(docsEntries.map((entry) => entry.slug.split("/")[0])),
+  ].sort((a, b) => b.localeCompare(a)); // Descending versions
+
   // Build paths for each entry
-  return docsEntries.map(entry => {
-    const parts = entry.slug.split('/');
+  return docsEntries.map((entry) => {
+    const parts = entry.slug.split("/");
     const version = parts[0];
     const chapter = parts[1];
-    const innerSlug = parts.slice(2).join('/');
-    
+    const innerSlug = parts.slice(2).join("/");
+
     // Create nested tree for sidebar for this version + chapter
-    const relevantDocs = docsEntries.filter(e => e.slug.startsWith(`${version}/${chapter}/`));
-    
+    const relevantDocs = docsEntries.filter((e) =>
+      e.slug.startsWith(`${version}/${chapter}/`),
+    );
+
     // Poor man's tree builder
     const sidebarTree = [];
     const dirsMap = new Map();
 
-    relevantDocs.forEach(doc => {
+    relevantDocs.forEach((doc) => {
       let currentLevel = sidebarTree;
-      const docParts = doc.slug.split('/').slice(2); // Skip version/chapter
-      
+      const docParts = doc.slug.split("/").slice(2); // Skip version/chapter
+
       for (let i = 0; i < docParts.length; i++) {
         const part = docParts[i];
-        
+
         if (i === docParts.length - 1) {
           // File
           currentLevel.push({
-            type: 'file',
+            type: "file",
             label: doc.data.title || part,
-            href: `/docs/${version}/${chapter}/${docParts.join('/')}`
+            href: `/docs/${version}/${chapter}/${docParts.join("/")}`,
           });
         } else {
           // Directory
-          const dirPath = docParts.slice(0, i + 1).join('/');
+          const dirPath = docParts.slice(0, i + 1).join("/");
           if (!dirsMap.has(dirPath)) {
             const newDir = {
-              type: 'dir',
+              type: "dir",
               label: part,
-              children: []
+              children: [],
             };
             dirsMap.set(dirPath, newDir);
             currentLevel.push(newDir);
@@ -55,7 +59,13 @@ export async function getStaticPaths() {
 
     return {
       params: { version, chapter, slug: innerSlug },
-      props: { entry, version, chapter, availableVersions: versions, sidebarTree },
+      props: {
+        entry,
+        version,
+        chapter,
+        availableVersions: versions,
+        sidebarTree,
+      },
     };
   });
 }
@@ -64,7 +74,7 @@ const { entry, version, chapter, availableVersions, sidebarTree } = Astro.props;
 const { Content } = await entry.render();
 ---
 
-<DocsLayout 
+<DocsLayout
   title={`${entry.data.title} | Onedata Docs`}
   version={version}
   availableVersions={availableVersions}

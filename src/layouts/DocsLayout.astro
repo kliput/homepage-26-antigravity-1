@@ -1,5 +1,5 @@
 ---
-import MainLayout from './MainLayout.astro';
+import MainLayout from "./MainLayout.astro";
 
 interface Props {
   title: string;
@@ -10,29 +10,34 @@ interface Props {
 }
 
 const chapters = [
-  { id: 'Introduction', label: 'Introduction', icon: 'book' },
-  { id: 'User Guide', label: 'User Guide', icon: 'users' },
-  { id: 'Admin Guide', label: 'Admin Guide', icon: 'server' },
-  { id: 'Security', label: 'Security', icon: 'lock' },
-  { id: 'Versions', label: 'Versions', icon: 'list' }
+  { id: "Introduction", label: "Introduction", icon: "book" },
+  { id: "User Guide", label: "User Guide", icon: "users" },
+  { id: "Admin Guide", label: "Admin Guide", icon: "server" },
+  { id: "Security", label: "Security", icon: "lock" },
+  { id: "Versions", label: "Versions", icon: "list" },
 ];
 
-const { title, version, availableVersions, activeChapter, sidebarNodes } = Astro.props;
+const { title, version, availableVersions, activeChapter, sidebarNodes } =
+  Astro.props;
 
 // Helper to render sidebar recursively
 function renderSidebarNode(node: any, currentPath: string) {
-  if (node.type === 'file') {
-    const isActive = Astro.url.pathname === node.href || Astro.url.pathname === node.href + '/';
-    return `<li><a href="${node.href}" class="${isActive ? 'active' : ''}">${node.label}</a></li>`;
-  } else if (node.type === 'dir') {
+  if (node.type === "file") {
+    const isActive =
+      Astro.url.pathname === node.href ||
+      Astro.url.pathname === node.href + "/";
+    return `<li><a href="${node.href}" class="${isActive ? "active" : ""}">${node.label}</a></li>`;
+  } else if (node.type === "dir") {
     // Check if any child is active to keep it open
-    const isExpanded = node.children.some((child: any) => 
-      Astro.url.pathname.includes(child.href) || 
-      (child.children && child.children.some((c: any) => Astro.url.pathname.includes(c.href)))
+    const isExpanded = node.children.some(
+      (child: any) =>
+        Astro.url.pathname.includes(child.href) ||
+        (child.children &&
+          child.children.some((c: any) => Astro.url.pathname.includes(c.href))),
     );
-    
+
     let html = `
-      <li class="sidebar-folder ${isExpanded ? 'expanded' : ''}">
+      <li class="sidebar-folder ${isExpanded ? "expanded" : ""}">
         <button class="folder-toggle">
           ${node.label}
           <svg class="chevron" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -45,7 +50,7 @@ function renderSidebarNode(node: any, currentPath: string) {
     html += `</ul></li>`;
     return html;
   }
-  return '';
+  return "";
 }
 ---
 
@@ -55,29 +60,125 @@ function renderSidebarNode(node: any, currentPath: string) {
       <div class="docs-header-content">
         <div>
           <h2 class="docs-h2">Onedata Documentation</h2>
-          <p class="docs-subtitle">Guides, API references, and examples for building with Onedata.</p>
+          <p class="docs-subtitle">
+            Guides, API references, and examples for building with Onedata.
+          </p>
         </div>
         <div class="version-selector">
           <label for="version-select" class="sr-only">Select version</label>
-          <select id="version-select" class="version-select" onchange="window.location.href=this.value">
-            {availableVersions.map(v => (
-              <option value={`/docs/${v}/Introduction/overview`} selected={v === version}>{v}</option>
-            ))}
+          <select
+            id="version-select"
+            class="version-select"
+            onchange="window.location.href=this.value"
+          >
+            {
+              availableVersions.map((v) => (
+                <option
+                  value={`/docs/${v}/Introduction/overview`}
+                  selected={v === version}
+                >
+                  {v}
+                </option>
+              ))
+            }
           </select>
         </div>
       </div>
-      
+
       <div class="chapter-tabs">
-        {chapters.map(chapter => (
-          <a href={`/docs/${version}/${chapter.id}/overview`} class={`chapter-tab ${activeChapter === chapter.id ? 'active' : ''}`}>
-            {chapter.icon === 'book' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>}
-            {chapter.icon === 'users' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>}
-            {chapter.icon === 'server' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>}
-            {chapter.icon === 'lock' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>}
-            {chapter.icon === 'list' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>}
-            {chapter.label}
-          </a>
-        ))}
+        {
+          chapters.map((chapter) => (
+            <a
+              href={`/docs/${version}/${chapter.id}/overview`}
+              class={`chapter-tab ${activeChapter === chapter.id ? "active" : ""}`}
+            >
+              {chapter.icon === "book" && (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+              )}
+              {chapter.icon === "users" && (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              )}
+              {chapter.icon === "server" && (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+                  <line x1="6" y1="6" x2="6.01" y2="6" />
+                  <line x1="6" y1="18" x2="6.01" y2="18" />
+                </svg>
+              )}
+              {chapter.icon === "lock" && (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              )}
+              {chapter.icon === "list" && (
+                <svg
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="8" y1="6" x2="21" y2="6" />
+                  <line x1="8" y1="12" x2="21" y2="12" />
+                  <line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" />
+                  <line x1="3" y1="12" x2="3.01" y2="12" />
+                  <line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+              )}
+              {chapter.label}
+            </a>
+          ))
+        }
       </div>
     </div>
   </div>
@@ -86,9 +187,13 @@ function renderSidebarNode(node: any, currentPath: string) {
     <aside class="docs-sidebar">
       <nav class="sidebar-nav">
         <ul class="sidebar-root-list">
-          {sidebarNodes.map(node => (
-            <Fragment set:html={renderSidebarNode(node, Astro.url.pathname)} />
-          ))}
+          {
+            sidebarNodes.map((node) => (
+              <Fragment
+                set:html={renderSidebarNode(node, Astro.url.pathname)}
+              />
+            ))
+          }
         </ul>
       </nav>
     </aside>
@@ -151,7 +256,7 @@ function renderSidebarNode(node: any, currentPath: string) {
     background-size: 16px;
   }
 
-  html[data-theme='dark'] .version-select {
+  html[data-theme="dark"] .version-select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e0e0e0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   }
 
@@ -162,7 +267,7 @@ function renderSidebarNode(node: any, currentPath: string) {
     padding-bottom: 1px;
     scrollbar-width: none; /* Firefox */
   }
-  
+
   .chapter-tabs::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
   }
@@ -288,28 +393,53 @@ function renderSidebarNode(node: any, currentPath: string) {
   }
 
   /* Markdown content styles identical to post */
-  .docs-content-area h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1.5rem; }
-  .docs-content-area h2 { font-size: 1.75rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; }
-  .docs-content-area p { margin-bottom: 1.25rem; font-size: 1.1rem; line-height: 1.6; }
-  .docs-content-area ul { margin-bottom: 1.25rem; padding-left: 1.5rem; font-size: 1.1rem;}
-  .docs-content-area pre { background-color: #1e1e1e; color: #d4d4d4; padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin-bottom: 1.5rem; font-size: 0.95rem; }
+  .docs-content-area h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+  }
+  .docs-content-area h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .docs-content-area p {
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  .docs-content-area ul {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+    font-size: 1.1rem;
+  }
+  .docs-content-area pre {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.25rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+  }
 </style>
 
 <script>
   // Script for toggling folders
-  document.addEventListener('DOMContentLoaded', () => {
-    const folders = document.querySelectorAll('.folder-toggle');
-    folders.forEach(folder => {
-      folder.addEventListener('click', (e) => {
+  document.addEventListener("DOMContentLoaded", () => {
+    const folders = document.querySelectorAll(".folder-toggle");
+    folders.forEach((folder) => {
+      folder.addEventListener("click", (e) => {
         const li = e.currentTarget.parentElement;
-        const ul = li.querySelector('.folder-contents');
-        
-        if (li.classList.contains('expanded')) {
-          li.classList.remove('expanded');
-          ul.style.display = 'none';
+        const ul = li.querySelector(".folder-contents");
+
+        if (li.classList.contains("expanded")) {
+          li.classList.remove("expanded");
+          ul.style.display = "none";
         } else {
-          li.classList.add('expanded');
-          ul.style.display = 'block';
+          li.classList.add("expanded");
+          ul.style.display = "block";
         }
       });
     });
