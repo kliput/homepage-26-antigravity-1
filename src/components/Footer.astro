@@ -1,16 +1,16 @@
 ---
+import Logo from "./Logo.astro";
+
 // Footer component
 ---
 
 <footer class="site-footer">
   <div class="container footer-content">
     <div class="footer-brand">
-      <div class="logo">
-        <a href="/">
-          <span class="logo-text">ONEDATA</span>
-        </a>
-      </div>
-      <p class="copyright">&copy; {new Date().getFullYear()} Onedata. All rights reserved.</p>
+      <Logo />
+      <p class="copyright">
+        &copy; {new Date().getFullYear()} Onedata. All rights reserved.
+      </p>
     </div>
 
     <div class="footer-links">
@@ -40,7 +40,13 @@
           <li><a href="/api">API</a></li>
           <li><a href="/blog">Blog</a></li>
           <li><a href="/contact">Contact</a></li>
-          <li><a href="https://github.com/onedata" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li>
+            <a
+              href="https://github.com/onedata"
+              target="_blank"
+              rel="noopener noreferrer">GitHub</a
+            >
+          </li>
         </ul>
       </div>
     </div>
@@ -60,7 +66,7 @@
     flex-direction: column;
     gap: 3rem;
   }
-  
+
   @media (min-width: 768px) {
     .footer-content {
       flex-direction: row;
@@ -70,17 +76,6 @@
 
   .footer-brand {
     max-width: 300px;
-  }
-
-  .logo-text {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    color: var(--color-text);
-  }
-  
-  .logo-text a:hover {
-    text-decoration: none;
   }
 
   .copyright {
@@ -95,7 +90,7 @@
     flex-wrap: wrap;
     gap: 2rem;
   }
-  
+
   @media (min-width: 768px) {
     .footer-links {
       gap: 4rem;
@@ -124,12 +119,21 @@
     color: var(--color-text);
     opacity: 0.8;
     font-size: 0.95rem;
-    transition: color 0.2s, opacity 0.2s;
+    transition:
+      color 0.2s,
+      opacity 0.2s;
   }
 
   .footer-list a:hover {
     color: var(--color-primary);
     opacity: 1;
     text-decoration: none;
+  }
+</style>
+
+<style is:global>
+  .footer-brand .onedata-logo {
+    width: 120px;
+    height: 21px;
   }
 </style>

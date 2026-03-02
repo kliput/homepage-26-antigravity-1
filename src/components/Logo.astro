@@ -1,0 +1,27 @@
+---
+import LogoWhite from "../assets/logo-white.svg";
+import LogoBlack from "../assets/logo-black.svg";
+---
+
+<a href="/">
+  <div class="onedata-logo"></div>
+</a>
+
+<style
+  define:vars={{
+    logoBlack: `url(${LogoBlack.src})`,
+    logoWhite: `url(${LogoWhite.src})`,
+  }}
+>
+  .onedata-logo {
+    width: 160px;
+    height: 28px;
+    background-position: left center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: var(--logoBlack);
+  }
+  html[data-theme="dark"] .onedata-logo {
+    background-image: var(--logoWhite);
+  }
+</style>

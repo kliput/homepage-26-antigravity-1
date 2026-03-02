@@ -1,22 +1,57 @@
 :root {
-  --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-primary: #EF3F3F;
-  --color-header-bg: rgba(255, 255, 255, 0.9);
+  --color-bg: var(--od-bg);
+  --color-text: var(--od-text);
+  /* --color-primary: #EF3F3F; */
+  /* original Onedata red */
+  --color-primary: var(--od-accent);
+  --color-header-bg: var(--od-bg-card);
   --color-header-border: #eaeaea;
   --color-border: #eaeaea;
   --color-nav-hover: #f0f0f0;
   --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* experimental from b44 */
+  --od-bg: #faf9f7;
+  --od-bg-2: #f0ede8;
+  --od-bg-card: #ffffff;
+  --od-bg-input: #f7f5f2;
+  --od-border: rgba(0, 0, 0, 0.1);
+  --od-border-hover: rgba(0, 0, 0, 0.25);
+  --od-text: #111111;
+  --od-text-muted: #555555;
+  --od-text-faint: #999999;
+  --od-accent: #e6341a;
+  /* --od-accent: #EF3F3F; */
+  /* original Onedata red */
+  --od-accent-2: #cc2a12;
+  --od-accent-3: #ff5533;
+  --od-glow: rgba(230, 52, 26, 0.08);
+  --od-glow-strong: rgba(230, 52, 26, 0.18);
 }
 
 [data-theme='dark'] {
-  --color-bg: #121212;
-  --color-text: #e0e0e0;
-  --color-primary: hsl(0, 90%, 65%);
   --color-header-bg: rgba(18, 18, 18, 0.9);
   --color-header-border: #333333;
   --color-border: #333333;
   --color-nav-hover: #2a2a2a;
+
+  /* experimental from b44 */
+  --od-bg: #050A14;
+  --od-bg-2: #070D1A;
+  --od-bg-card: #0A1628;
+  --od-bg-input: #0D1E35;
+  --od-border: rgba(100, 116, 139, 0.3);
+  --od-border-hover: rgba(100, 116, 139, 0.6);
+  --od-text: #ffffff;
+  --od-text-muted: #94a3b8;
+  --od-text-faint: #475569;
+  --od-accent: #e6341a;
+  /* --od-accent: hsl(0, 90%, 65%); */
+  /* original Onedata red (dark version) */
+  --od-accent-2: #ff6b4a;
+  --od-accent-3: #ff9070;
+  --od-glow: rgba(230, 52, 26, 0.15);
+  --od-glow-strong: rgba(230, 52, 26, 0.25);
 }
 
 * {
@@ -42,7 +77,12 @@ a:hover {
   text-decoration: underline;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 1.2;
   margin-bottom: 1rem;
 }

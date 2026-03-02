@@ -1,14 +1,12 @@
 ---
+import Logo from "./Logo.astro";
+
 // Header component
 ---
 
 <header class="site-header">
   <div class="container header-content">
-    <div class="logo">
-      <a href="/">
-        <span class="logo-text">ONEDATA</span>
-      </a>
-    </div>
+    <Logo />
 
     <nav class="main-nav">
       <ul class="nav-list">
@@ -157,6 +155,10 @@
 </header>
 
 <style>
+  :root {
+    --header-text-color: var(--od-text-muted);
+  }
+
   .site-header {
     height: 72px;
     display: flex;
@@ -168,16 +170,6 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-  }
-
-  .logo-text {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.05em;
-    color: var(--color-text);
-  }
-  .logo-text a:hover {
-    text-decoration: none;
   }
 
   .main-nav {
@@ -204,7 +196,7 @@
   }
 
   .nav-link {
-    color: var(--color-text);
+    color: var(--header-text-color);
     font-weight: 500;
     font-size: 0.95rem;
     cursor: pointer;
@@ -259,7 +251,7 @@
   .dropdown a {
     display: block;
     padding: 0.5rem 1.25rem;
-    color: var(--color-text);
+    color: var(--header-text-color);
     font-size: 0.9rem;
   }
 
@@ -276,7 +268,7 @@
   }
 
   .social-link {
-    color: var(--color-text);
+    color: var(--header-text-color);
     display: flex;
     align-items: center;
     transition: color 0.2s;
@@ -288,7 +280,7 @@
   .theme-toggle {
     background: none;
     border: none;
-    color: var(--color-text);
+    color: var(--header-text-color);
     cursor: pointer;
     width: 36px;
     height: 36px;
@@ -324,7 +316,7 @@
     display: block;
     background: none;
     border: none;
-    color: var(--color-text);
+    color: var(--header-text-color);
     cursor: pointer;
   }
   @media (min-width: 768px) {
