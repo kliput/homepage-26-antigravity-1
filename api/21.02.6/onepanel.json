@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "basePath": "/api/v3/onepanel",
   "info": {
-    "version": "21.02.8",
+    "version": "21.02.6",
     "title": "Onepanel",
     "x-bash-codegen-description": "This is the RESTful API definition of **Onepanel** component of Onedata data\nmanagement system [http://onedata.org].\n\nThis API allows control and configuration of local Onedata deployment,\nin particular full control over the **Onezone** and **Oneprovider** services\nand their distribution and monitoring on the local resources.\n\nEach of these components is composed of the following services:\n\n**Worker services** - these are available under `/zone/workers` and\n                      `/provider/workers` paths,\n\n**Databases services** - each Onedata component stores it's metadata in a\n                         Couchbase backend, which can be distributed on any\n                         number of nodes, these are available under\n                         `/zone/databases` and `/provider/databases` paths,\n\n**Cluster manager services** - this is a service which controls other\n                               deployed processes in one site, these are\n                               availables under these are available under\n                               `/zone/managers` and `/provider/managers`\n                               paths.\n\n**Onezone** and **Oneprovider** components are composed of 3 types of\nservices: **managers**, **databases** and **workers**.\n\nUsing this API each of these components can be deployed, configured,\nstarted and stopped on a specified host in the local site, in the context of\neither **Onezone** or **Oneprovider** service.\n",
     "description": "# Overview\n\nThis is the RESTful API definition of **Onepanel** component of Onedata data\nmanagement system [onedata.org](http://onedata.org).\n\n> This API is defined using [Swagger](http://swagger.io/), the JSON\nspecification can be used to automatically generate client libraries -\n  [swagger.json](../../../swagger/onepanel/swagger.json).\n\nThis API allows control and configuration of local Onedata deployment, in\nparticular full control over the **Onezone** and **Oneprovider** services and\ntheir distribution and monitoring on the local resources.\n\nThe API is grouped into 3 categories of operations:\n  * **Onepanel** - for common operations\n  * **Oneprovider** - for Oneprovider specific administrative operations\n  * **Onezone** - for Onezone specific administrative operations\n\nEach of these components is composed of the following services:\n  * **Worker services** - these are available under `/zone/workers` and\n    `/provider/workers` paths,\n  * **Databases services** - each Onedata component stores it's metadata in a\n    Couchbase backend, which can be distributed on any number of nodes, these\n    are available under `/zone/databases` and `/provider/databases` paths,\n  * **Cluster manager services** - this is a service which controls other\n    deployed processes in one site, these are availables under these are\n    available under `/zone/managers` and `/provider/managers` paths.\n\n**Onezone** and **Oneprovider** components are composed of 3 types of\nservices: **managers**, **databases** and **workers**.\n\nUsing this API each of these components can be deployed, configured,\nstarted and stopped on a specified host in the local site, in the context\nof either **Onezone** or **Oneprovider** service.\n\nAll paths listed in this documentation are relative to the base Onepanel\nREST API which is `/api/v3/onepanel`, so complete URL for a request to\nOnepanel service is:\n\n```\nhttp://HOSTNAME:PORT/api/v3/onepanel/...\n```\n\n## Authentication\n\n### Token authentication\n\nThe recommended, safest way of authenticating requests to Onepanel API is using\nthe **Onedata access tokens**. The token should be present in `X-Auth-Token` or\n`Authorization: Bearer` header.\nSee [Onezone documentation](/#/home/api/latest/onezone?anchor=section/Overview/Authentication-and-authorization)\nfor detailed explanation of the token concepts.\n\nCurl examples:\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" [...]\ncurl -H \"Authorization: Bearer $TOKEN\" [...]\ncurl -H \"Macaroon: $TOKEN\" [...]   # DEPRECATED\n```\n\n\n### Passphrase authentication\n\nThe token authentication dependes on the Onezone service.\nIn special cases - during Onezone deployment or its outage -\nit is necessary to use the local **emergency passphrase**.\n\nThe passphrase should be provided in a Basic authentication header\nwith username `onepanel`. For curl users this means\n```bash\ncurl -u onepanel:TheEmergencyPassphrase\n```\n\nThe passphrase can also be sent without any username, as the whole\ncontent of base64-encoded string in Basic authorization header, e.g.\n```bash\ncurl -H \"Authorization: Basic $(echo -n TheEmergencyPassphrase | base64)\"\n```\n\nThe passphrase is set during deployment. It can be changed in the Onepanel GUI\nor with an API request:\n```bash\ncurl -X PUT 'https://$PANEL_HOST:9443/api/v3/onepanel/emergency_passphrase' \\\n-u onepanel:TheEmergencyPassphrase -H 'Content-Type: application/json' \\\n-d '{\"currentPassphrase\": \"TheEmergencyPassphrase\", \"newPassphrase\": \"TheNewPassphrase\"}'\n```\n\n## API structure\n\nThe Onepanel API is structured to reflect that it can either be used to\ncontrol **Onezone** or **Oneprovider** deployment, each Onedata component\ndeployment has a separate Onepanel instance. In order to make the API calls\nexplicit, **Onezone** or **Oneprovider** specific requests have different\npaths, i.e.:\n  * Onezone specific operations start with `/api/v3/onepanel/zone/`\n  * Oneprovider specific operations start with `/api/v3/onepanel/provider/`\n  * Common operations paths include `/api/v3/onepanel/users`,\n    `/api/v3/onepanel/hosts` and `/api/v3/onepanel/tasks`\n\nThe overall configuration of each component can be controlled by updating\n`/api/v3/onepanel/zone/configuration` and\n`/api/v3/onepanel/provider/configuration` resources.\n\n## Examples\n\nBelow are some example requests to Onepanel using cURL:\n\n**Add storage resource to provider**\n```bash\ncurl -X POST -u onepanel:Passphrase1 -k -vvv -H \"content-type: application/json\" \\\n-d '{\"NFS\": {\"type\": \"posix\", \"mountPoint\": \"/mnt/vfs\"}}' \\\nhttps://172.17.0.4:9443/api/v3/onepanel/provider/storages\n```\n\n**Add a new Onezone worker**\n```bash\ncurl -X POST -u onepanel:Passphrase1 -k -vvv -H \"content-type: application/json\" \\\n-d '{\"hosts\": [\"node1.p1.1.dev\"]}' \\\nhttps://172.17.0.4:9443/api/v3/onepanel/zone/workers\n```\n",
@@ -889,7 +889,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The DNS check configuration.",
+            "description": "The DNS check results.",
             "schema": {
               "$ref": "#/definitions/DnsCheckConfiguration"
             }
@@ -975,7 +975,7 @@
       "get": {
         "operationId": "check_dns",
         "summary": "Check correctness of DNS entries for the cluster's domain",
-        "description": "Returns results of the last DNS check, verifying the validity\nof DNS configuration for cluster's domain.\nUnless 'forceCheck' flag is set, the results may be cached.\n\nBoth Oneprovider and Onezone return field `domain` for checking if cluster's \ndomain can be resolved.\n\nIn Oneprovider there may be additional field `oneS3Subdomain` for checking if \nOneS3 domain can be resolved if said service is enabled.\n\nIn Onezone there is additional field `dnsZone` for checking whether DNS zone management\nfor the Onezone's domain has been delegated to Onezone server (SOA and NS records)\nallowing for subdomain delegation.\n\nIf the cluster is configured with an IP instead of a domain\nno results are returned.\n\nSettings used for the check, ie. DNS servers used can be modified\nusing the dns_check/configuration endpoint.\n",
+        "description": "Returns results of the last DNS check, verifying the validity of DNS configuration for cluster's domain. Unless 'forceCheck' flag is set, the results may be cached.\nIf the cluster is configured with an IP instead of a domain no results are returned.\nSettings used for the check, ie. DNS servers used can be modified using the dns_check/configuration endpoint.\n",
         "x-onedata-gri": {
           "type": "onp_panel",
           "aspect": "dns_check"
@@ -988,9 +988,9 @@
         ],
         "responses": {
           "200": {
-            "description": "The DNS check summary.",
+            "description": "The DNS check results.",
             "schema": {
-              "$ref": "#/definitions/DnsCheckSummary"
+              "$ref": "#/definitions/DnsCheck"
             }
           },
           "401": {
@@ -3794,267 +3794,6 @@
           {
             "lang": "Shell",
             "source": "onepanel-rest-cli -u onepanel:$PASSPHRASE startStopProviderWorker host=work.example.com started=false --host https://$OP_PANEL_HOST:9443"
-          }
-        ]
-      }
-    },
-    "/provider/ones3": {
-      "get": {
-        "operationId": "get_ones3_status_cluster_wide",
-        "summary": "Get OneS3 service status (cluster-wide)",
-        "description": "Returns the status of OneS3 service on each host where it has been deployed.\n",
-        "x-onedata-gri": {
-          "type": "onp_service",
-          "aspect": "{all_hosts_status, <<\"ones3\">>}"
-        },
-        "tags": [
-          "Oneprovider Cluster"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "The status of OneS3 service on each host where it has been deployed.\n",
-            "schema": {
-              "$ref": "#/definitions/ServiceStatus"
-            }
-          },
-          "401": {
-            "description": "Unauthorized request."
-          },
-          "403": {
-            "description": "Forbidden request."
-          },
-          "404": {
-            "description": "OneS3 service has not been deployed."
-          },
-          "500": {
-            "description": "Internal server error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onepanel-rest-cli -u onepanel:$PASSPHRASE getOnes3StatusClusterWide --host https://$OP_PANEL_HOST:9443"
-          }
-        ]
-      },
-      "post": {
-        "operationId": "add_ones3",
-        "summary": "Add OneS3 services",
-        "description": "Deploys the OneS3 service on the specified hosts.\n\nNOTE: the OneS3 service requires that the provider is registered in \nOnezone before it can be started. If it's not the case, the service\nwill be enabled, but its start will be postponed and automatically \nresumed after the registration.\n",
-        "x-onedata-gri": {
-          "type": "onp_service",
-          "aspect": "ones3_instances"
-        },
-        "tags": [
-          "Oneprovider Cluster"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "202": {
-            "$ref": "#/responses/TaskStarted"
-          },
-          "400": {
-            "description": "Invalid request.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "401": {
-            "description": "Unauthorized request."
-          },
-          "403": {
-            "description": "Forbidden request."
-          },
-          "500": {
-            "description": "Internal server error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "serviceHosts",
-            "in": "body",
-            "description": "The OneS3 service hosts configuration.\n",
-            "schema": {
-              "$ref": "#/definitions/ServiceOnes3"
-            },
-            "required": true
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "cat ones3_hosts.json | onepanel-rest-cli -u onepanel:$PASSPHRASE addOnes3 --host https://$OP_PANEL_HOST:9443 -"
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "start_stop_ones3_cluster_wide",
-        "summary": "Start/stop OneS3 service (cluster-wide)",
-        "description": "Starts or stops OneS3 service on all hosts in the cluster.\n\nNOTE: the OneS3 service requires that the provider is registered in \nOnezone before it can be started. If it's not the case, the start\nof the service will be postponed and automatically resumed after the\nregistration.\n",
-        "x-onedata-gri": {
-          "type": "onp_service",
-          "aspect": "{start_stop_all, <<\"ones3\">>}"
-        },
-        "tags": [
-          "Oneprovider Cluster"
-        ],
-        "responses": {
-          "204": {
-            "description": "OneS3 server service state changed successfully."
-          },
-          "401": {
-            "description": "Unauthorized request."
-          },
-          "403": {
-            "description": "Forbidden request."
-          },
-          "404": {
-            "description": "OneS3 server service has not been deployed."
-          },
-          "500": {
-            "description": "Internal server error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "started",
-            "in": "query",
-            "description": "Defines the intended state of the OneS3 service. The service will be started or stopped in order to match the requested state. Starting may be postponed (see the description).\n",
-            "type": "boolean",
-            "default": true,
-            "required": false
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onepanel-rest-cli -u onepanel:$PASSPHRASE startStopOnes3ClusterWide started=false --host https://$OP_PANEL_HOST:9443"
-          }
-        ]
-      }
-    },
-    "/provider/ones3/{host}": {
-      "get": {
-        "operationId": "get_ones3_status_on_host",
-        "summary": "Get OneS3 service status on a host",
-        "description": "Returns the status of the OneS3 service on the selected host.",
-        "x-onedata-gri": {
-          "type": "onp_service",
-          "id": "?BINDING(host)",
-          "aspect": "{host_status, <<\"ones3\">>}"
-        },
-        "tags": [
-          "Oneprovider Cluster"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "The status of the OneS3 service on the selected host.",
-            "schema": {
-              "$ref": "#/definitions/ServiceStatusHost"
-            }
-          },
-          "401": {
-            "description": "Unauthorized request."
-          },
-          "403": {
-            "description": "Forbidden request."
-          },
-          "404": {
-            "description": "OneS3 service has not been deployed on the selected host."
-          },
-          "500": {
-            "description": "Internal server error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "host",
-            "description": "The cluster host for which the OneS3 service status should be returned.",
-            "in": "path",
-            "type": "string",
-            "required": true
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onepanel-rest-cli -u onepanel:$PASSPHRASE getOnes3StatusOnHost host=s3.example.com --host https://$OP_PANEL_HOST:9443"
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "start_stop_ones3_on_host",
-        "summary": "Start/stop OneS3 service on a host",
-        "description": "Starts or stops the OneS3 service on the selected host in the cluster.\n\nNOTE: the OneS3 service requires that the provider is registered in \nOnezone before it can be started. If it's not the case, the start\nof the service will be postponed and automatically resumed after the\nregistration.\n",
-        "x-onedata-gri": {
-          "type": "onp_service",
-          "id": "?BINDING(host)",
-          "aspect": "{start_stop, <<\"ones3\">>}"
-        },
-        "tags": [
-          "Oneprovider Cluster"
-        ],
-        "responses": {
-          "204": {
-            "description": "OneS3 service state changed successfully."
-          },
-          "401": {
-            "description": "Unauthorized request."
-          },
-          "403": {
-            "description": "Forbidden request."
-          },
-          "404": {
-            "description": "OneS3 service has not been deployed on the selected host."
-          },
-          "500": {
-            "description": "Internal server error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "host",
-            "description": "The cluster host for which OneS3 service status should be changed.",
-            "in": "path",
-            "type": "string",
-            "required": true
-          },
-          {
-            "name": "started",
-            "in": "query",
-            "description": "Defines the intended state of the OneS3 service. The service will be started or stopped in order to match the requested state. Starting may be postponed (see the description).\n",
-            "type": "boolean",
-            "default": true,
-            "required": false
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onepanel-rest-cli -u onepanel:$PASSPHRASE startStopOnes3OnHost started=false --host https://$OP_PANEL_HOST:9443"
           }
         ]
       }
@@ -7974,14 +7713,265 @@
     }
   },
   "definitions": {
-    "DnsCheckSummary": {
+    "Configuration": {
       "type": "object",
-      "description": "Gathers results of DNS checks for various aspects of the cluster domain.\nBoth Oneprovider and Onezone return field 'domain' for checking if cluster's domain can be resolved.\nIn Oneprovider there may be additional field 'oneS3Subdomain' for checking if  OneS3 domain can be resolved if said service is enabled.\nIn Onezone there is additional field 'dnsZone' for checking whether DNS zone management for the Onezone's domain has been delegated to Onezone server (SOA and NS records) allowing for subdomain delegation.\nIf the cluster is configured with an IP neither 'domain' nor 'dnsZone' is returned.\n",
+      "description": "Public service configuration details.",
+      "discriminator": "serviceType",
+      "x-onedata-oneof": true,
+      "x-onedata-subclasses": [
+        "op_configuration",
+        "oz_configuration"
+      ],
+      "properties": {
+        "clusterId": {
+          "type": "string",
+          "description": "The Id of cluster record for this cluster. `null` if the cluster is not registered."
+        },
+        "version": {
+          "type": "string",
+          "description": "Version of this Onepanel."
+        },
+        "build": {
+          "type": "string",
+          "description": "Build number of this Onepanel."
+        },
+        "deployed": {
+          "type": "boolean",
+          "default": true,
+          "description": "True when cluster deployment is finished."
+        }
+      },
+      "required": [
+        "clusterId",
+        "version",
+        "build",
+        "deployed"
+      ]
+    },
+    "op_configuration": {
+      "type": "object",
+      "description": "Public Oneprovider configuration details.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Configuration"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "serviceType": {
+              "description": "Indicates that this is Oneprovider's panel.",
+              "type": "string",
+              "enum": [
+                "oneprovider"
+              ],
+              "x-discriminator-value": "oneprovider"
+            },
+            "providerId": {
+              "type": "string",
+              "description": "This cluster's Oneprovider Id. `null` if the Oneprovider is not registered or Oneprovider worker is down.\n"
+            },
+            "providerName": {
+              "type": "string",
+              "description": "The name of this Oneprovider. If the cluster is not configured or malfunctioning (e.g. the op-worker service is down), the value may be `null`.\n"
+            },
+            "providerDomain": {
+              "type": "string",
+              "description": "The domain of this Oneprovider. If the cluster is not configured or malfunctioning (e.g. the op-worker service is down), the value may be `null`.\n"
+            },
+            "zoneDomain": {
+              "type": "string",
+              "description": "The domain of the Onezone where this Oneprovider is registered. `null` if the Oneprovider is not registered.\n"
+            },
+            "isRegistered": {
+              "type": "boolean",
+              "description": "True if the Oneprovider has been registered at a Onezone.\n"
+            }
+          },
+          "required": [
+            "serviceType",
+            "providerId",
+            "providerName",
+            "providerDomain",
+            "zoneDomain"
+          ]
+        }
+      ],
+      "example": {
+        "serviceType": "oneprovider",
+        "providerName": "oneprovider-name",
+        "providerDomain": "provider.onedata.org",
+        "providerId": "b4ceb5c9ac793e6b8b36c813b9068757",
+        "zoneDomain": "onedata.org",
+        "build": "155-gdf98e0f",
+        "version": "21.02.6",
+        "deployed": true,
+        "isRegistered": true
+      }
+    },
+    "oz_configuration": {
+      "type": "object",
+      "description": "Public Onezone configuration details.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Configuration"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "serviceType": {
+              "description": "Indicates that this is Onezone's panel.",
+              "type": "string",
+              "enum": [
+                "onezone"
+              ],
+              "x-discriminator-value": "onezone"
+            },
+            "zoneDomain": {
+              "type": "string",
+              "description": "The domain of this Onezone cluster. `null` before cluster is configured.\n"
+            },
+            "zoneName": {
+              "type": "string",
+              "description": "The name of this Onezone cluster. `null` before cluster is configured.\n"
+            }
+          },
+          "required": [
+            "serviceType",
+            "zoneDomain"
+          ]
+        }
+      ],
+      "example": {
+        "serviceType": "onezone",
+        "zoneDomain": "onedata.org",
+        "zoneName": "OnedataZone",
+        "build": "155-gdf98e0f",
+        "version": "21.02.6",
+        "deployed": true
+      }
+    },
+    "VersionInfo": {
+      "type": "object",
+      "description": "Service version info.",
+      "properties": {
+        "release": {
+          "type": "string",
+          "description": "Release version."
+        },
+        "build": {
+          "type": "string",
+          "description": "Build number."
+        },
+        "gui": {
+          "type": "string",
+          "description": "GUI version indicated by a SHA256 hash."
+        }
+      },
+      "required": [
+        "release",
+        "build",
+        "gui"
+      ],
+      "example": {
+        "release": "21.02.6",
+        "build": "1-gfabf02d",
+        "gui": "68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3"
+      }
+    },
+    "BlockDevices": {
+      "type": "object",
+      "description": "List of block device descriptions.",
+      "properties": {
+        "blockDevices": {
+          "type": "array",
+          "description": "List of available block devices.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Device type, as returned by lsblk.",
+                "enum": [
+                  "disk",
+                  "part"
+                ]
+              },
+              "host": {
+                "type": "string",
+                "description": "Host on which the device is available."
+              },
+              "path": {
+                "type": "string"
+              },
+              "size": {
+                "type": "integer",
+                "description": "Device size in bytes."
+              },
+              "mounted": {
+                "type": "boolean",
+                "description": "Result of heuristic attempt to detect whether a device or any of its children is mounted."
+              }
+            },
+            "required": [
+              "host",
+              "path",
+              "size",
+              "mounted"
+            ]
+          }
+        }
+      },
+      "required": [
+        "block_devices"
+      ],
+      "example": {
+        "block_devices": [
+          {
+            "path": "/dev/sda",
+            "size": 10000000000,
+            "mounted": false
+          },
+          {
+            "path": "/dev/sdb",
+            "size": 20000000000,
+            "mounted": true
+          },
+          {
+            "path": "/dev/sr0",
+            "size": 1073741312,
+            "mounted": false
+          }
+        ]
+      }
+    },
+    "DataUsage": {
+      "type": "object",
+      "description": "Describes storage space usage level.",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "description": "Total space (used and available) in bytes."
+        },
+        "used": {
+          "type": "integer",
+          "description": "Total used space in bytes."
+        },
+        "available": {
+          "type": "integer",
+          "description": "Total available space in bytes."
+        }
+      },
+      "required": [
+        "total",
+        "used",
+        "available"
+      ]
+    },
+    "DnsCheck": {
+      "type": "object",
+      "description": "Gathers results of DNS checks for various aspects of the cluster domain.\nBoth Oneprovider and Onezone return field 'domain' for checking if cluster's domain can be resolved.\nIn Onezone there is additional field 'dnsZone' for checking whether DNS zone management for the Onezone's domain has been delegated to Onezone server (SOA and NS records) allowing for subdomain delegation.\nIf the cluster is configured with an IP neither 'domain' nor 'dnsZone' is returned.\n",
       "properties": {
         "domain": {
-          "$ref": "#/definitions/DnsCheckResult"
-        },
-        "oneS3Subdomain": {
           "$ref": "#/definitions/DnsCheckResult"
         },
         "dnsZone": {
@@ -8124,471 +8114,6 @@
         ],
         "dnsCheckAcknowledged": true
       }
-    },
-    "DatabaseHosts": {
-      "type": "object",
-      "description": "The cluster database service hosts configuration.",
-      "properties": {
-        "hosts": {
-          "type": "array",
-          "description": "The list of service hosts.",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "hosts"
-      ],
-      "example": {
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ]
-      }
-    },
-    "ManagerHosts": {
-      "type": "object",
-      "description": "The cluster manager service hosts configuration.",
-      "properties": {
-        "mainHost": {
-          "type": "string",
-          "description": "The main cluster manager host. Main cluster manager node is responsible for monitoring cluster worker nodes. Other nodes, which are redundant, are suspended. In case of main cluster manager node failure one of redundant nodes is resumed and takes over main node responsibilities.\n"
-        },
-        "hosts": {
-          "type": "array",
-          "description": "The list of service hosts.",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "mainHost",
-        "hosts"
-      ],
-      "example": {
-        "mainHost": "node1.example.com",
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ]
-      }
-    },
-    "OneS3Hosts": {
-      "type": "object",
-      "description": "The OneS3 service hosts configuration.",
-      "properties": {
-        "hosts": {
-          "type": "array",
-          "description": "The list of service hosts.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "port": {
-          "type": "integer",
-          "description": "The port on which the OneS3 service is available."
-        }
-      },
-      "required": [
-        "hosts",
-        "port"
-      ],
-      "example": {
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ],
-        "port": 4443
-      }
-    },
-    "WorkerHosts": {
-      "type": "object",
-      "description": "The cluster worker service hosts configuration.",
-      "properties": {
-        "hosts": {
-          "type": "array",
-          "description": "The list of service hosts.",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "hosts"
-      ],
-      "example": {
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ]
-      }
-    },
-    "ServiceStatus": {
-      "type": "object",
-      "description": "The collection of hosts with associated service status, for each host\nwhere given service has been deployed.\n",
-      "x-onedata-dictionary": true,
-      "x-onedata-dictionary-value-type": "service_status_host",
-      "additionalProperties": {
-        "$ref": "#/definitions/ServiceStatusHost"
-      },
-      "example": {
-        "node1.oneprovider.onedata.example.com": "healthy",
-        "node2.oneprovider.onedata.example.com": "stopped"
-      }
-    },
-    "ServiceStatusHost": {
-      "type": "string",
-      "description": "The service status.",
-      "enum": [
-        "starting",
-        "healthy",
-        "unhealthy",
-        "stopping",
-        "stopped",
-        "missing"
-      ]
-    },
-    "ServiceHosts": {
-      "type": "object",
-      "description": "The service hosts configuration.",
-      "properties": {
-        "hosts": {
-          "type": "array",
-          "description": "The list of hosts where service should be deployed.",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "hosts"
-      ],
-      "example": {
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ]
-      }
-    },
-    "ServiceDatabases": {
-      "type": "object",
-      "description": "The service hosts configuration.",
-      "properties": {
-        "hosts": {
-          "type": "array",
-          "description": "The list of hosts where service should be deployed.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "serverQuota": {
-          "type": "integer",
-          "description": "The server quota is the RAM memory in MiB that is allocated to the server\nwhen Couchbase Server is first installed. This sets the limit of RAM\nallocated by Couchbase for caching data for all buckets on each of the nodes. \nOptional, defaults to `4096` (4 GiB).\n\nNOTE: This parameter is taken into account only during the initial cluster \ndeployment and ignored when adding new hosts to the cluster.\n"
-        },
-        "bucketQuota": {
-          "type": "integer",
-          "description": "The bucket quota is the amount of RAM memory in MiB allocated to each\nindividual bucket for caching data. Optional, defaults to `4096` (4 GiB). \nOptimally, should be set to the same value as `serverQuota`.\n\nNOTE: This parameter is taken into account only during the initial cluster \ndeployment and ignored when adding new hosts to the cluster.\n"
-        }
-      },
-      "required": [
-        "hosts"
-      ],
-      "example": {
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ]
-      }
-    },
-    "ServiceOnes3": {
-      "type": "object",
-      "description": "The service hosts configuration.",
-      "properties": {
-        "hosts": {
-          "type": "array",
-          "description": "The list of hosts where service should be deployed.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "port": {
-          "type": "integer",
-          "description": "The port on which the OneS3 service will be available.\n\nNOTE: This parameter is considered only during the initial cluster\ndeployment or when adding the OneS3 service for the first time. In all\nother cases, it is ignored, and the port will default to that of the\nalready deployed OneS3 services in the cluster.\n"
-        }
-      },
-      "required": [
-        "hosts"
-      ],
-      "example": {
-        "hosts": [
-          "node1.example.com",
-          "node2.example.com",
-          "node3.example.com"
-        ],
-        "port": 4443
-      }
-    },
-    "Configuration": {
-      "type": "object",
-      "description": "Public service configuration details.",
-      "discriminator": "serviceType",
-      "x-onedata-oneof": true,
-      "x-onedata-subclasses": [
-        "op_configuration",
-        "oz_configuration"
-      ],
-      "properties": {
-        "clusterId": {
-          "type": "string",
-          "description": "The Id of cluster record for this cluster. `null` if the cluster is not registered."
-        },
-        "version": {
-          "type": "string",
-          "description": "Version of this Onepanel."
-        },
-        "build": {
-          "type": "string",
-          "description": "Build number of this Onepanel."
-        },
-        "deployed": {
-          "type": "boolean",
-          "default": true,
-          "description": "True when cluster deployment is finished."
-        }
-      },
-      "required": [
-        "clusterId",
-        "version",
-        "build",
-        "deployed"
-      ]
-    },
-    "op_configuration": {
-      "type": "object",
-      "description": "Public Oneprovider configuration details.",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Configuration"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "serviceType": {
-              "description": "Indicates that this is Oneprovider's panel.",
-              "type": "string",
-              "enum": [
-                "oneprovider"
-              ],
-              "x-discriminator-value": "oneprovider"
-            },
-            "providerId": {
-              "type": "string",
-              "description": "This cluster's Oneprovider Id. `null` if the Oneprovider is not registered or Oneprovider worker is down.\n"
-            },
-            "providerName": {
-              "type": "string",
-              "description": "The name of this Oneprovider. If the cluster is not configured or malfunctioning (e.g. the op-worker service is down), the value may be `null`.\n"
-            },
-            "providerDomain": {
-              "type": "string",
-              "description": "The domain of this Oneprovider. If the cluster is not configured or malfunctioning (e.g. the op-worker service is down), the value may be `null`.\n"
-            },
-            "zoneDomain": {
-              "type": "string",
-              "description": "The domain of the Onezone where this Oneprovider is registered. `null` if the Oneprovider is not registered.\n"
-            },
-            "isRegistered": {
-              "type": "boolean",
-              "description": "True if the Oneprovider has been registered at a Onezone.\n"
-            }
-          },
-          "required": [
-            "serviceType",
-            "providerId",
-            "providerName",
-            "providerDomain",
-            "zoneDomain"
-          ]
-        }
-      ],
-      "example": {
-        "serviceType": "oneprovider",
-        "providerName": "oneprovider-name",
-        "providerDomain": "provider.onedata.org",
-        "providerId": "b4ceb5c9ac793e6b8b36c813b9068757",
-        "zoneDomain": "onedata.org",
-        "build": "155-gdf98e0f",
-        "version": "21.02.8",
-        "deployed": true,
-        "isRegistered": true
-      }
-    },
-    "oz_configuration": {
-      "type": "object",
-      "description": "Public Onezone configuration details.",
-      "allOf": [
-        {
-          "$ref": "#/definitions/Configuration"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "serviceType": {
-              "description": "Indicates that this is Onezone's panel.",
-              "type": "string",
-              "enum": [
-                "onezone"
-              ],
-              "x-discriminator-value": "onezone"
-            },
-            "zoneDomain": {
-              "type": "string",
-              "description": "The domain of this Onezone cluster. `null` before cluster is configured.\n"
-            },
-            "zoneName": {
-              "type": "string",
-              "description": "The name of this Onezone cluster. `null` before cluster is configured.\n"
-            }
-          },
-          "required": [
-            "serviceType",
-            "zoneDomain"
-          ]
-        }
-      ],
-      "example": {
-        "serviceType": "onezone",
-        "zoneDomain": "onedata.org",
-        "zoneName": "OnedataZone",
-        "build": "155-gdf98e0f",
-        "version": "21.02.8",
-        "deployed": true
-      }
-    },
-    "VersionInfo": {
-      "type": "object",
-      "description": "Service version info.",
-      "properties": {
-        "release": {
-          "type": "string",
-          "description": "Release version."
-        },
-        "build": {
-          "type": "string",
-          "description": "Build number."
-        },
-        "gui": {
-          "type": "string",
-          "description": "GUI version indicated by a SHA256 hash."
-        }
-      },
-      "required": [
-        "release",
-        "build",
-        "gui"
-      ],
-      "example": {
-        "release": "21.02.8",
-        "build": "1-gfabf02d",
-        "gui": "68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3"
-      }
-    },
-    "BlockDevices": {
-      "type": "object",
-      "description": "List of block device descriptions.",
-      "properties": {
-        "blockDevices": {
-          "type": "array",
-          "description": "List of available block devices.",
-          "items": {
-            "type": "object",
-            "properties": {
-              "type": {
-                "type": "string",
-                "description": "Device type, as returned by lsblk.",
-                "enum": [
-                  "disk",
-                  "part"
-                ]
-              },
-              "host": {
-                "type": "string",
-                "description": "Host on which the device is available."
-              },
-              "path": {
-                "type": "string"
-              },
-              "size": {
-                "type": "integer",
-                "description": "Device size in bytes."
-              },
-              "mounted": {
-                "type": "boolean",
-                "description": "Result of heuristic attempt to detect whether a device or any of its children is mounted."
-              }
-            },
-            "required": [
-              "host",
-              "path",
-              "size",
-              "mounted"
-            ]
-          }
-        }
-      },
-      "required": [
-        "block_devices"
-      ],
-      "example": {
-        "block_devices": [
-          {
-            "path": "/dev/sda",
-            "size": 10000000000,
-            "mounted": false
-          },
-          {
-            "path": "/dev/sdb",
-            "size": 20000000000,
-            "mounted": true
-          },
-          {
-            "path": "/dev/sr0",
-            "size": 1073741312,
-            "mounted": false
-          }
-        ]
-      }
-    },
-    "DataUsage": {
-      "type": "object",
-      "description": "Describes storage space usage level.",
-      "properties": {
-        "total": {
-          "type": "integer",
-          "description": "Total space (used and available) in bytes."
-        },
-        "used": {
-          "type": "integer",
-          "description": "Total used space in bytes."
-        },
-        "available": {
-          "type": "integer",
-          "description": "Total available space in bytes."
-        }
-      },
-      "required": [
-        "total",
-        "used",
-        "available"
-      ]
     },
     "Error": {
       "type": "object",
@@ -9059,26 +8584,6 @@
         }
       }
     },
-    "ClusterOneS3": {
-      "type": "object",
-      "description": "The OneS3 service configuration.",
-      "properties": {
-        "nodes": {
-          "type": "array",
-          "description": "The list of aliases of OneS3 nodes.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "port": {
-          "type": "integer",
-          "description": "The port on which the OneS3 service will be available."
-        }
-      },
-      "required": [
-        "nodes"
-      ]
-    },
     "ClusterWorkers": {
       "type": "object",
       "description": "The cluster worker service configuration.",
@@ -9129,11 +8634,11 @@
         },
         "serverQuota": {
           "type": "integer",
-          "description": "The server quota is the RAM memory in MiB that is allocated to the server when Couchbase Server is first installed. This sets the limit of RAM allocated by Couchbase for caching data for all buckets on each of the nodes.  Optional, defaults to `4096` (4 GiB).\n"
+          "description": "The server quota is the RAM memory in bytes that is allocated to the server when Couchbase Server is first installed. This sets the limit of RAM allocated by Couchbase for caching data for all buckets and is configured on a per-node basis.\n"
         },
         "bucketQuota": {
           "type": "integer",
-          "description": "The bucket quota is the amount of RAM memory in MiB allocated to each individual bucket for caching data. Optional, defaults to `4096` (4 GiB).  Optimally, should be set to the same value as `serverQuota`.\n"
+          "description": "The bucket quota is the amount of RAM memory in bytes allocated to an individual bucket for caching data.\n"
         }
       },
       "required": [
@@ -9648,7 +9153,7 @@
             },
             "hostname": {
               "type": "string",
-              "description": "The URL of the S3 service endpoint, including the scheme (http or https) and optionally a port (after a colon).\n"
+              "description": "The hostname of a machine where S3 storage is installed."
             },
             "bucketName": {
               "type": "string",
@@ -9676,7 +9181,7 @@
             },
             "blockSize": {
               "type": "integer",
-              "description": "Storage block size in bytes i.e. the maximum object size. Files larger than one block will stripped and stored in a series of objects. Must be more than zero for non-imported storage. To enable import from an S3 storage, block size must be set to zero, together with \"canonical\" path type and the read-only mode.\n",
+              "description": "Storage block size in bytes. In case the block size is `0` and `canonical` path type is selected, each file is stored in a single S3 object. This value must be set to `0` to enable data import from an existing S3 bucket.\n",
               "default": 10485760,
               "x-onedata-default-value": 10485760
             },
@@ -9743,7 +9248,7 @@
             },
             "hostname": {
               "type": "string",
-              "description": "The URL of the S3 service endpoint, including the scheme (http or https) and optionally a port (after a colon).\n"
+              "description": "The hostname of a machine where S3 storage is installed."
             },
             "bucketName": {
               "type": "string",
@@ -9860,15 +9365,15 @@
             },
             "monitorHostname": {
               "type": "string",
-              "description": "The hostname (IP address or FQDN) of the Ceph monitor service.\n"
+              "description": "The monitor hostname."
             },
             "clusterName": {
               "type": "string",
-              "description": "The name of the Ceph storage cluster."
+              "description": "The Ceph cluster name."
             },
             "poolName": {
               "type": "string",
-              "description": "The name of the Ceph pool – the logical partition for object storage.\n"
+              "description": "The Ceph pool name."
             },
             "storagePathType": {
               "type": "string",
@@ -9925,15 +9430,15 @@
             },
             "monitorHostname": {
               "type": "string",
-              "description": "The hostname (IP address or FQDN) of the Ceph monitor service."
+              "description": "The monitor hostname."
             },
             "clusterName": {
               "type": "string",
-              "description": "The name of the Ceph storage cluster."
+              "description": "The Ceph cluster name."
             },
             "poolName": {
               "type": "string",
-              "description": "The name of the Ceph pool – the logical partition for object storage.\n"
+              "description": "The Ceph pool name."
             }
           },
           "required": [
@@ -10009,19 +9514,19 @@
             },
             "monitorHostname": {
               "type": "string",
-              "description": "The hostname (IP address or FQDN) of the Ceph monitor service.\n"
+              "description": "The monitor hostname."
             },
             "clusterName": {
               "type": "string",
-              "description": "The name of the Ceph storage cluster."
+              "description": "The Ceph cluster name."
             },
             "poolName": {
               "type": "string",
-              "description": "The name of the Ceph pool – the logical partition for object storage.\n"
+              "description": "The Ceph pool name."
             },
             "blockSize": {
               "type": "integer",
-              "description": "Each file will be split across a number of Ceph RADOS objects of the specified size. For optimal performance, this value should be equal to the object size configured in a given Ceph Storage Cluster (default 4M).\n",
+              "description": "Storage block size in bytes.",
               "default": 4194304,
               "x-onedata-default-value": 4194304
             },
@@ -10084,15 +9589,15 @@
             },
             "monitorHostname": {
               "type": "string",
-              "description": "The hostname (IP address or FQDN) of the Ceph monitor service."
+              "description": "The monitor hostname."
             },
             "clusterName": {
               "type": "string",
-              "description": "The name of the Ceph storage cluster."
+              "description": "The Ceph cluster name."
             },
             "poolName": {
               "type": "string",
-              "description": "The name of the Ceph pool – the logical partition for object storage.\n"
+              "description": "The Ceph pool name."
             }
           },
           "required": [
@@ -10134,39 +9639,19 @@
             "password": {
               "type": "string",
               "description": "The Keystone authentication password."
-            },
-            "projectName": {
-              "type": "string",
-              "description": "The Keystone project name."
-            },
-            "userDomainName": {
-              "type": "string",
-              "description": "The Keystone user domain name.",
-              "default": "Default",
-              "x-onedata-default-value": "<<\"Default\">>"
-            },
-            "projectDomainName": {
-              "type": "string",
-              "description": "The Keystone project domain name.",
-              "default": "Default",
-              "x-onedata-default-value": "<<\"Default\">>"
             }
           },
           "required": [
             "type",
             "username",
-            "password",
-            "projectName"
+            "password"
           ]
         }
       ],
       "example": {
         "type": "swift",
         "username": "user",
-        "password": "p@$$w0rd",
-        "projectName": "Project1",
-        "userDomainName": "Default",
-        "projectDomainName": "Default"
+        "password": "p@$$w0rd"
       }
     },
     "Swift": {
@@ -10192,7 +9677,11 @@
             },
             "authUrl": {
               "type": "string",
-              "description": "The URL to OpenStack Identity Service (Keystone) V3."
+              "description": "The URL to OpenStack Keystone identity service."
+            },
+            "tenantName": {
+              "type": "string",
+              "description": "The name of the tenant to which the user belongs."
             },
             "containerName": {
               "type": "string",
@@ -10214,6 +9703,7 @@
           "required": [
             "type",
             "authUrl",
+            "tenantName",
             "containerName"
           ]
         },
@@ -10224,13 +9714,11 @@
       "example": {
         "type": "swift",
         "name": "SomeSwift",
-        "authUrl": "http://keystone2.example.com:5000/v3",
+        "authUrl": "http://keystone2.example.com",
+        "tenantName": "Project1",
         "containerName": "Container1",
         "username": "user",
-        "password": "p@$$w0rd",
-        "projectName": "Project1",
-        "userDomainName": "Default",
-        "projectDomainName": "Default"
+        "password": "p@$$w0rd"
       }
     },
     "SwiftModify": {
@@ -10254,6 +9742,10 @@
               "type": "string",
               "description": "The URL to OpenStack Keystone identity service."
             },
+            "tenantName": {
+              "type": "string",
+              "description": "The name of the tenant to which the user belongs."
+            },
             "containerName": {
               "type": "string",
               "description": "The name of the Swift storage container."
@@ -10265,18 +9757,6 @@
             "password": {
               "type": "string",
               "description": "The Keystone authentication password."
-            },
-            "projectName": {
-              "type": "string",
-              "description": "The Keystone project name."
-            },
-            "userDomainName": {
-              "type": "string",
-              "description": "The Keystone user domain name."
-            },
-            "projectDomainName": {
-              "type": "string",
-              "description": "The Keystone project domain name."
             }
           },
           "required": [
@@ -10287,7 +9767,7 @@
       "example": {
         "type": "swift",
         "name": "SomeSwift",
-        "authUrl": "http://keystone2.example.com:5000/v3",
+        "authUrl": "http://keystone2.example.com",
         "tenantName": "Project1",
         "containerName": "Container1",
         "username": "user",
@@ -11118,23 +10598,23 @@
             },
             "volume": {
               "type": "string",
-              "description": "The name (path) of the NFS export."
+              "description": "The name of the NFS volume (export)."
             },
             "connectionPoolSize": {
               "type": "integer",
-              "description": "Number of simultaneous network connections that can be maintained with the NFS server.\n",
+              "description": "The size of NFS connection pool.",
               "default": 10,
               "x-onedata-default-value": 10
             },
             "dirCache": {
               "type": "boolean",
-              "description": "Enables caching of directory metadata on the client side to improve performance by reducing requests to the NFS server. May cause temporary inconsistencies if the directory content changes on the server.\n",
+              "description": "Enables directory caching.",
               "default": true,
               "x-onedata-default-value": true
             },
             "readAhead": {
               "type": "integer",
-              "description": "The amount of data that the system preloads into cache ahead of client requests.\n",
+              "description": "The size of readahead in bytes.",
               "default": 0,
               "x-onedata-default-value": 0
             },
@@ -11195,19 +10675,19 @@
             },
             "volume": {
               "type": "string",
-              "description": "The name (path) of the NFS export."
+              "description": "The name of the NFS volume (export)."
             },
             "connectionPoolSize": {
               "type": "integer",
-              "description": "Number of simultaneous network connections that can be maintained with the NFS server.\n"
+              "description": "The size of NFS connection pool."
             },
             "dirCache": {
               "type": "boolean",
-              "description": "Enables caching of directory metadata on the client side to improve performance by reducing requests to the NFS server. May cause temporary inconsistencies if the directory content changes on the server.\n"
+              "description": "Enables directory caching."
             },
             "readAhead": {
               "type": "integer",
-              "description": "The amount of data that the system preloads into cache ahead of client requests.\n"
+              "description": "The size of readahead in bytes."
             },
             "autoReconnect": {
               "type": "integer",
@@ -11706,15 +11186,19 @@
           "accessKey": "4efb70ad3e1fc8dd73c721b8f683b2e831503892",
           "secretKey": "fdeac26aedd3a179f9551d7007cc6a6273165782"
         },
-        "posix": {
-          "type": "posix",
-          "mountPoint": "/mnt/posix/onedata-space"
+        "swift": {
+          "type": "swift",
+          "authUrl": "http://keystone2.example.com",
+          "tenantName": "Project1",
+          "containerName": "Container1",
+          "username": "user",
+          "password": "p@$$w0rd"
         }
       }
     },
     "StorageModifyRequest": {
       "type": "object",
-      "description": "The storage parameters to be changed. Should be a single-valued dictionary with storage name as the key and parameters to be changed as the value. If changing the storage name, use old name as dictionary key and provide new name among the changed params.\n",
+      "description": "The storage parameters to be changed. Should be a single-valued dictionary with storage name as the key and parameters to be changed as the value. If changing the storage name, use old name as dictionary key and provide new name among the changed params.",
       "x-onedata-dictionary": true,
       "x-onedata-dictionary-value-type": "storage_modify_details",
       "additionalProperties": {
@@ -11828,7 +11312,7 @@
       "description": "The zone cluster configuration.",
       "properties": {
         "cluster": {
-          "$ref": "#/definitions/ZoneClusterConfigurationDetails"
+          "$ref": "#/definitions/ClusterConfigurationDetails"
         },
         "onezone": {
           "type": "object",
@@ -11926,39 +11410,6 @@
       },
       "required": [
         "nodes",
-        "databases",
-        "managers",
-        "workers"
-      ]
-    },
-    "ZoneClusterConfigurationDetails": {
-      "type": "object",
-      "description": "The cluster configuration.",
-      "properties": {
-        "master": {
-          "type": "string",
-          "description": "Host responsible for deploying cluster and coordinating cluster restarts."
-        },
-        "hosts": {
-          "type": "array",
-          "description": "List of hosts belonging to the Onepanel cluster.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "databases": {
-          "$ref": "#/definitions/DatabaseHosts"
-        },
-        "managers": {
-          "$ref": "#/definitions/ManagerHosts"
-        },
-        "workers": {
-          "$ref": "#/definitions/WorkerHosts"
-        }
-      },
-      "required": [
-        "master",
-        "hosts",
         "databases",
         "managers",
         "workers"
@@ -12101,7 +11552,7 @@
       "description": "The provider deployment configuration.",
       "properties": {
         "cluster": {
-          "$ref": "#/definitions/ProviderClusterConfigurationDetails"
+          "$ref": "#/definitions/ClusterConfigurationDetails"
         },
         "oneprovider": {
           "type": "object",
@@ -12140,11 +11591,6 @@
               "node1.oneprovider.onedata.example.com"
             ]
           },
-          "oneS3": {
-            "hosts": [
-              "node1.oneprovider.onedata.example.com"
-            ]
-          },
           "databases": {
             "hosts": [
               "node1.oneprovider.onedata.example.com"
@@ -12156,43 +11602,6 @@
           "configured": true
         }
       }
-    },
-    "ProviderClusterConfigurationDetails": {
-      "type": "object",
-      "description": "The provider cluster configuration.",
-      "properties": {
-        "master": {
-          "type": "string",
-          "description": "Host responsible for deploying cluster and coordinating cluster restarts."
-        },
-        "hosts": {
-          "type": "array",
-          "description": "List of hosts belonging to the Onepanel cluster.",
-          "items": {
-            "type": "string"
-          }
-        },
-        "databases": {
-          "$ref": "#/definitions/DatabaseHosts"
-        },
-        "managers": {
-          "$ref": "#/definitions/ManagerHosts"
-        },
-        "oneS3": {
-          "$ref": "#/definitions/OneS3Hosts"
-        },
-        "workers": {
-          "$ref": "#/definitions/WorkerHosts"
-        }
-      },
-      "required": [
-        "master",
-        "hosts",
-        "databases",
-        "managers",
-        "oneS3",
-        "workers"
-      ]
     },
     "ProviderClusterConfiguration": {
       "type": "object",
@@ -12228,9 +11637,6 @@
         },
         "managers": {
           "$ref": "#/definitions/ClusterManagers"
-        },
-        "oneS3": {
-          "$ref": "#/definitions/ClusterOneS3"
         },
         "workers": {
           "$ref": "#/definitions/ClusterWorkers"
@@ -12514,6 +11920,160 @@
         }
       }
     },
+    "ServiceStatus": {
+      "type": "object",
+      "description": "The collection of hosts with associated service status, for each host\nwhere given service has been deployed.\n",
+      "x-onedata-dictionary": true,
+      "x-onedata-dictionary-value-type": "service_status_host",
+      "additionalProperties": {
+        "$ref": "#/definitions/ServiceStatusHost"
+      },
+      "example": {
+        "node1.oneprovider.onedata.example.com": "healthy",
+        "node2.oneprovider.onedata.example.com": "stopped"
+      }
+    },
+    "ServiceStatusHost": {
+      "type": "string",
+      "description": "The service status.",
+      "enum": [
+        "starting",
+        "healthy",
+        "unhealthy",
+        "stopping",
+        "stopped",
+        "missing"
+      ]
+    },
+    "ServiceHosts": {
+      "type": "object",
+      "description": "The service hosts configuration.",
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "description": "The list of hosts where service should be deployed.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "hosts"
+      ],
+      "example": {
+        "hosts": [
+          "node1.example.com",
+          "node2.example.com",
+          "node3.example.com"
+        ]
+      }
+    },
+    "ServiceDatabases": {
+      "type": "object",
+      "description": "The service hosts configuration.",
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "description": "The list of hosts where service should be deployed.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serverQuota": {
+          "type": "integer",
+          "description": "The server quota is the RAM memory in bytes that is allocated to the server when Couchbase Server is first installed. This sets the limit of RAM allocated by Couchbase for caching data for all buckets and is configured on a per-node basis.\n"
+        },
+        "bucketQuota": {
+          "type": "integer",
+          "description": "The bucket quota is the amount of RAM memory in bytes allocated to an individual bucket for caching data.\n"
+        }
+      },
+      "required": [
+        "hosts"
+      ],
+      "example": {
+        "hosts": [
+          "node1.example.com",
+          "node2.example.com",
+          "node3.example.com"
+        ]
+      }
+    },
+    "DatabaseHosts": {
+      "type": "object",
+      "description": "The cluster database service hosts configuration.",
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "description": "The list of service hosts.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "hosts"
+      ],
+      "example": {
+        "hosts": [
+          "node1.example.com",
+          "node2.example.com",
+          "node3.example.com"
+        ]
+      }
+    },
+    "ManagerHosts": {
+      "type": "object",
+      "description": "The cluster manager service hosts configuration.",
+      "properties": {
+        "mainHost": {
+          "type": "string",
+          "description": "The main cluster manager host. Main cluster manager node is responsible for monitoring cluster worker nodes. Other nodes, which are redundant, are suspended. In case of main cluster manager node failure one of redundant nodes is resumed and takes over main node responsibilities.\n"
+        },
+        "hosts": {
+          "type": "array",
+          "description": "The list of service hosts.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "mainHost",
+        "hosts"
+      ],
+      "example": {
+        "mainHost": "node1.example.com",
+        "hosts": [
+          "node1.example.com",
+          "node2.example.com",
+          "node3.example.com"
+        ]
+      }
+    },
+    "WorkerHosts": {
+      "type": "object",
+      "description": "The cluster worker service hosts configuration.",
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "description": "The list of service hosts.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "hosts"
+      ],
+      "example": {
+        "hosts": [
+          "node1.example.com",
+          "node2.example.com",
+          "node3.example.com"
+        ]
+      }
+    },
     "Node": {
       "type": "object",
       "description": "Details of a onepanel node.",
@@ -12534,6 +12094,39 @@
       "required": [
         "hostname",
         "clusterType"
+      ]
+    },
+    "ClusterConfigurationDetails": {
+      "type": "object",
+      "description": "The cluster configuration.",
+      "properties": {
+        "master": {
+          "type": "string",
+          "description": "Host responsible for deploying cluster and coordinating cluster restarts."
+        },
+        "hosts": {
+          "type": "array",
+          "description": "List of hosts belonging to the Onepanel cluster.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "databases": {
+          "$ref": "#/definitions/DatabaseHosts"
+        },
+        "managers": {
+          "$ref": "#/definitions/ManagerHosts"
+        },
+        "workers": {
+          "$ref": "#/definitions/WorkerHosts"
+        }
+      },
+      "required": [
+        "master",
+        "hosts",
+        "databases",
+        "managers",
+        "workers"
       ]
     },
     "TaskId": {
@@ -13296,14 +12889,7 @@
         },
         "domain": {
           "type": "string",
-          "description": "**DEPRECATED** The domain (Common Name) for which current certificate  was issued.\n"
-        },
-        "dnsNames": {
-          "type": "array",
-          "description": "List of DNS names included in certificate's Subject Alternative Name extension.\n",
-          "items": {
-            "type": "string"
-          }
+          "description": "The domain (Common Name) for which current certificate was issued.\n"
         },
         "issuer": {
           "type": "string",

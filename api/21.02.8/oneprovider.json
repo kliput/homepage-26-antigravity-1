@@ -2,18 +2,18 @@
   "swagger": "2.0",
   "basePath": "/api/v3/oneprovider",
   "info": {
-    "version": "25.0",
+    "version": "21.02.8",
     "title": "Oneprovider",
-    "description": "# Overview\n\nThis is the RESTful API definition of Oneprovider component of Onedata data management system \n[onedata.org](http://onedata.org).\n\n> This API is defined using [Swagger](http://swagger.io/), the JSON specification can be used to automatically generate\n> client libraries - [swagger.json](../../../swagger/oneprovider/swagger.json).\n\nIn addition to REST API, Oneprovider also provides support for\n[CDMI](http://onedata.org/#/home/documentation/doc/advanced/cdmi.html) protocol. Keep in mind that CDMI is\nless performant, mainly because it uses Base64 encoded strings for binary file content\ntransmission, resulting in approximately 33% larger I/O traffic compared to\nREST, which works with plain binaries.\n\n\n## Authentication\nTo use the APIs, the REST client must authenticate with the Oneprovider service and present\na proof of authorization to perform a specific operation. This is done using access tokens,\nwhich can be generated using the Onedata GUI or Onezone's REST API.\n\nThe token is passed in the request header like this:\n```\nX-Auth-Token: MIIFrzCCA5egAwIBAgIBEzANBgkqhkiG9w0BAQUFADBcMQswCQYDVQQGEwJQTDET...\n```\n\nThe authorization to perform a specific operation depends on the authenticated user's privileges\nin the corresponding space, file level permissions (posix, ACL) and caveats (restrictions)\ninscribed in the provided access token.\n\n\n## Data management basics\nThe Onedata system organizes all user data into logical containers called spaces.\n<!--- TODO VFS-7218 uncomment when the new docs are deployed -->\n<!--- TODO VFS-7218 remove redundant information and provide a link to the new docs -->\n<!--- For more information, please refer to the [documentation](https://onedata.org/#/home/documentation). -->\n\nAny file in Onedata (**regular**, **directory**, **symbolic link**, or **hard\nlink**) can be globally identified using its unique **File Id** or **logical\npath**.\n\nAll **logical paths** in Onedata use the slash (`/`) delimiter and must start with a\nleading slash and a space name:\n\n<pre>\n/CMS 1/directory/images&videos/garden.png\n</pre>\n\n**File Id** is a unique, global identifier associated with a file, structured as\na string of alphanumeric characters:\n\n<pre>\n094576776E667431723230677767776C6B497031394E445F6E3868677873...\n</pre>\n\nThe path-based navigation is used mainly in the Web GUI and Oneclient\ninterfaces. In the REST and CDMI APIs, it is **recommended to use File\nIDs**, due to better performance and no need for escaping or encoding.\n  \n### Find out the File Id\n\n**Web GUI** - click on Information in the file/directory context menu and look for File Id.\n\n**REST API** - use the File Id [resolution endpoint](#operation/lookup_file_id). \nBelow example returns the File Id of <br />\n`/CMS 1/directory/images&videos/garden.png`, where `CMS 1` is the space name:\n\n```bash\ncurl -H \"X-Auth-Token: ${ACCESS_TOKEN}\" -X POST \\\n\"https://${PROVIDER_DOMAIN}/api/v3/oneprovider/lookup-file-id/CMS%201/directory/images%26videos/garden.png\"\n```\n\n```json\n{\n  \"fileId\": \"094576776E667431723230677767776C6B497031394E445F6E3868677873...\"\n}\n```\n\n> **NOTE:** Paths used in URLs must be url-encoded, e.g.:\n\n```\n{...}/CMS%201/directory/images%26videos/garden.png\n```\n\n### Space Id\n\nSpace Id is a unique, global identifier associated with a space and can be used universally in the REST APIs.\nIn order to find out the Space Id:\n\n**Web GUI** - click on Information in the file/directory context menu and look for Space Id.\n\n**REST API** - use the [Get all user spaces](#operation/get_all_spaces) endpoint.\n\nThe Space Id can be used interchangeably with the space root directory's File Id in the path-based enpoints.\n\n**Remove specific file relative to the space root**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$SPACE_ID/path/dir1/file.txt\"\n# is equivalent to\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$SPACE_ROOT_FILE_ID/path/dir1/file.txt\"\n```\n**Remove specific file relative to any parent directory**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$PARENT_FILE_ID/path/dir1/file.txt\"\n```\n\n\n## API structure\n\nThe API is divided into the following sections:\n\n### Space management\nThese methods provide means for getting basic information about spaces directly\nfrom the Oneprovider service, but also allows to define database views.\n\n### File access and management\nThe API provides capabilities for:\n  - browsing files in spaces and directories,\n  - creating and deleting files as well as updating their content\n  - querying for file attributes, such as 'mode' file permissions and updating them,\n  - managing custom file metadata (extended attributes, JSON, RDF),\n  - manual registration of files for imported storage backends.\n\nMore information can be found [here](#section/Overview/Data-management-basics).\n\n### Replica and QoS management\nThese methods allow viewing file replica distribution, requesting file replication\n(transfers) between Oneproviders, viewing ongoing and historical transfers data,\nas well as managing QoS requirements that trigger automatic replication according to the QoS rules.\n\n### Share management\nOffers methods for creating, modyfying and deleting shares.\nShares are files or directories that were made publicly available,\nso that they can be viewed by everyone through a public URL.\n\n### Dataset & archive management\nAPI for managing datasets - designated files or directories that are used to facilitate\nbuilding collections of data meaningful for the users with additional features, such as\nwrite protection and archivisation mechanisms.\n\n### Automation\nBasic API for scheduling and viewing workflow executions.\n\n### Monitoring\nThe API provides means for subscribing (through HTTP long-polling technique) for\nfile related events such as reads, writes or deletes which are returned as complete file metadata\nrecords with sequence numbers representing their current version.\n\n### Service information\nPublicly available, basic configuration of the Oneprovider service.\n\nDetailed examples of API usage are available in the documentation of each operation.\n",
+    "description": "# Overview\n\nThis is the RESTful API definition of Oneprovider component of Onedata data management system \n[onedata.org](http://onedata.org).\n\n> This API is defined using [Swagger](http://swagger.io/), the JSON specification can be used to automatically generate\n> client libraries - [swagger.json](../../../swagger/oneprovider/swagger.json).\n\nIn addition to REST API, Oneprovider also provides support for\n[CDMI](http://onedata.org/#/home/documentation/doc/advanced/cdmi.html) protocol. Keep in mind that CDMI is\nless performant, mainly because it uses Base64 encoded strings for binary file content\ntransmission, resulting in approximately 33% larger I/O traffic compared to\nREST, which works with plain binaries.\n\n\n## Authentication\nTo use the APIs, the REST client must authenticate with the Oneprovider service and present\na proof of authorization to perform a specific operation. This is done using access tokens,\nwhich can be generated using the Onedata GUI or Onezone's REST API.\n\nThe token is passed in the request header like this:\n```\nX-Auth-Token: MIIFrzCCA5egAwIBAgIBEzANBgkqhkiG9w0BAQUFADBcMQswCQYDVQQGEwJQTDET...\n```\n\nThe authorization to perform a specific operation depends on the authenticated user's privileges\nin the corresponding space, file level permissions (posix, ACL) and caveats (restrictions)\ninscribed in the provided access token.\n\n\n## Data management basics\nThe Onedata system organizes all user data into logical containers called spaces.\n<!--- TODO VFS-7218 uncomment when the new docs are deployed -->\n<!--- TODO VFS-7218 remove redundant information and provide a link to the new docs -->\n<!--- For more information, please refer to the [documentation](https://onedata.org/#/home/documentation). -->\n\nAny file in Onedata (**regular**, **directory**, **symbolic link**, or **hard\nlink**) can be globally identified using its unique **File Id** or **logical\npath**.\n\nAll **logical paths** in Onedata use the slash (`/`) delimiter and must start with a\nleading slash and a space name:\n\n<pre>\n/CMS 1/directory/images&videos/garden.png\n</pre>\n\n**File Id** is a unique, global identifier associated with a file, structured as\na string of alphanumeric characters:\n\n<pre>\n094576776E667431723230677767776C6B497031394E445F6E3868677873...\n</pre>\n\nThe path-based navigation is used mainly in the Web GUI and Oneclient\ninterfaces. In the REST and CDMI APIs, it is **recommended to use File\nIDs**, due to better performance and no need for escaping or encoding.\n  \n### Find out the File Id\n\n**Web GUI** - click on Information in the file/directory context menu and look for File Id.\n\n**REST API** - use the File Id [resolution endpoint](#operation/lookup_file_id). \nBelow example returns the File Id of <br />\n`/CMS 1/directory/images&videos/garden.png`, where `CMS 1` is the space name:\n\n```bash\ncurl -H \"X-Auth-Token: ${ACCESS_TOKEN}\" -X POST \\\n\"https://${PROVIDER_DOMAIN}/api/v3/oneprovider/lookup-file-id/CMS%201/directory/images%26videos/garden.png\"\n```\n\n```json\n{\n  \"fileId\": \"094576776E667431723230677767776C6B497031394E445F6E3868677873...\"\n}\n```\n\n> **NOTE:** Paths used in URLs must be url-encoded, e.g.:\n\n```\n{...}/CMS%201/directory/images%26videos/garden.png\n```\n\n### Space Id\n\nSpace Id is a unique, global identifier associated with a space and can be used universally in the REST APIs.\nIn order to find out the Space Id:\n\n**Web GUI** - click on Information in the file/directory context menu and look for Space Id.\n\n**REST API** - use the [Get all user spaces](#operation/get_all_spaces) endpoint.\n\nThe Space Id can be used interchangeably with the space root directory's File Id in the path-based enpoints.\n\n**Remove specific file relative to the space root**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$SPACE_ID/path/dir1/file.txt\"\n# is equivalent to\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$SPACE_ROOT_FILE_ID/path/dir1/file.txt\"\n```\n**Remove specific file relative to any parent directory**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$PARENT_FILE_ID/path/dir1/file.txt\"\n```\n\n\n## API structure\n\nThe API is divided into the following sections:\n\n### Space management\nThese methods provide means for getting basic information about spaces directly\nfrom the Oneprovider service, but also allows to define database views.\n\n### File access and management\nThe API provides capabilities for:\n  - browsing files in spaces and directories,\n  - creating and deleting files as well as updating their content\n  - querying for file attributes, such as 'mode' file permissions and updating them,\n  - managing custom file metadata (extended attributes, JSON, RDF),\n  - manual registration of files for imported storages.\n\nMore information can be found [here](#section/Overview/Data-management-basics).\n\n### Replica and QoS management\nThese methods allow viewing file replica distribution, requesting file replication\n(transfers) between Oneproviders, viewing ongoing and historical transfers data,\nas well as managing QoS requirements that trigger automatic replication according to the QoS rules.\n\n### Share management\nOffers methods for creating, modyfying and deleting shares.\nShares are files or directories that were made publicly available,\nso that they can be viewed by everyone through a public URL.\n\n### Dataset & archive management\nAPI for managing datasets - designated files or directories that are used to facilitate\nbuilding collections of data meaningful for the users with additional features, such as\nwrite protection and archivisation mechanisms.\n\n### Automation\nBasic API for scheduling and viewing workflow executions.\n\n### Monitoring\nThe API provides means for subscribing (through HTTP long-polling technique) for\nfile related events such as reads, writes or deletes which are returned as complete file metadata\nrecords with sequence numbers representing their current version.\n\n### Service information\nPublicly available, basic configuration of the Oneprovider service.\n\nDetailed examples of API usage are available in the documentation of each operation.\n",
     "x-bash-codegen-description": "# Overview\n\nThis is the RESTful API definition of Oneprovider component of Onedata data management system \n[onedata.org](http://onedata.org).\n\n> This API is defined using [Swagger](http://swagger.io/), the JSON specification can be used to automatically generate\n> client libraries - [swagger.json](../../../swagger/oneprovider/swagger.json).\n\nIn addition to REST API, Oneprovider also provides support for\n[CDMI](http://onedata.org/#/home/documentation/doc/advanced/cdmi.html) protocol. Keep in mind that CDMI is\nless performant, mainly because it uses Base64 encoded strings for binary file content\ntransmission, resulting in approximately 33% larger I/O traffic compared to\nREST, which works with plain binaries.\n\n\n## Authentication\nTo use the APIs, the REST client must authenticate with the Oneprovider service and present\na proof of authorization to perform a specific operation. This is done using access tokens,\nwhich can be generated using the Onedata GUI or Onezone's REST API.\n\nThe token is passed in the request header like this:\n```\nX-Auth-Token: MIIFrzCCA5egAwIBAgIBEzANBgkqhkiG9w0BAQUFADBcMQswCQYDVQQGEwJQTDET...\n```\n\nThe authorization to perform a specific operation depends on the authenticated user's privileges\nin the corresponding space, file level permissions (posix, ACL) and caveats (restrictions)\ninscribed in the provided access token.\n\n\n## Data management basics\nThe Onedata system organizes all user data into logical containers called spaces.\n<!--- TODO VFS-7218 uncomment when the new docs are deployed -->\n<!--- TODO VFS-7218 remove redundant information and provide a link to the new docs -->\n<!--- For more information, please refer to the [documentation](https://onedata.org/#/home/documentation). -->\n\nAny file in Onedata (**regular**, **directory**, **symbolic link**, or **hard\nlink**) can be globally identified using its unique **File Id** or **logical\npath**.\n\nAll **logical paths** in Onedata use the slash (`/`) delimiter and must start with a\nleading slash and a space name:\n\n<pre>\n/CMS 1/directory/images&videos/garden.png\n</pre>\n\n**File Id** is a unique, global identifier associated with a file, structured as\na string of alphanumeric characters:\n\n<pre>\n094576776E667431723230677767776C6B497031394E445F6E3868677873...\n</pre>\n\nThe path-based navigation is used mainly in the Web GUI and Oneclient\ninterfaces. In the REST and CDMI APIs, it is **recommended to use File\nIDs**, due to better performance and no need for escaping or encoding.\n\n### Find out the File Id\n\n**Web GUI** - click on Information in the file/directory context menu and look for File Id.\n\n**REST API** - use the File Id [resolution endpoint](#operation/lookup_file_id). \nBelow example returns the File Id of <br />\n`/CMS 1/directory/images&videos/garden.png`, where `CMS 1` is the space name:\n\n```bash\ncurl -H \"X-Auth-Token: ${ACCESS_TOKEN}\" -X POST \\\n\"https://${PROVIDER_DOMAIN}/api/v3/oneprovider/lookup-file-id/CMS%201/directory/images%26videos/garden.png\"\n```\n\n```json\n{\n  \"fileId\": \"094576776E667431723230677767776C6B497031394E445F6E3868677873...\"\n}\n```\n\n> **NOTE:** Paths used in URLs must be url-encoded, e.g.:\n\n```\n{...}/CMS%201/directory/images%26videos/garden.png\n```\n\n### Space Id\n\nSpace Id is a unique, global identifier associated with a space and can be used universally in the REST APIs.\nIn order to find out the Space Id:\n\n**Web GUI** - click on Information in the file/directory context menu and look for Space Id.\n\n**REST API** - use the [Get all user spaces](#operation/get_all_spaces) endpoint.\n\nThe Space Id can be used interchangeably with the space root directory's File Id in the path-based enpoints.\n\n**Remove specific file relative to the space root**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$SPACE_ID/path/dir1/file.txt\"\n# is equivalent to\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$SPACE_ROOT_FILE_ID/path/dir1/file.txt\"\n```\n**Remove specific file relative to any parent directory**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X DELETE \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$PARENT_FILE_ID/path/dir1/file.txt\"\n```\n\n\n## API structure\n\nThe API is divided into the following sections:\n\n### Space management\nThese methods provide means for getting basic information about spaces directly\nfrom the Oneprovider service, but also allows to define database views.\n\n### File access and management\nThe API provides capabilities for:\n  - browsing files in spaces and directories,\n  - creating and deleting files as well as updating their content\n  - querying for file attributes, such as 'mode' file permissions and updating them,\n  - managing custom file metadata (extended attributes, JSON, RDF),\n  - miscellaneous operations related to file management.\n\nMore information can be found [here](#section/Overview/Data-management-basics).\n\n### Replica and QoS management\nThese methods allow viewing file replica distribution, requesting file replication\n(transfers) between Oneproviders, viewing ongoing and historical transfers data,\nas well as managing QoS requirements that trigger automatic replication according to the QoS rules.\n\n### Share management\nOffers methods for creating, modyfying and deleting shares.\nShares are files or directories that were made publicly available,\nso that they can be viewed by everyone through a public URL.\n\n### Dataset & archive management\nAPI for managing datasets - designated files or directories that are used to facilitate\nbuilding collections of data meaningful for the users with additional features, such as\nwrite protection and archivisation mechanisms.\n\n### Automation\nBasic API for scheduling and viewing workflow executions.\n\n### Monitoring\nThe API provides means for subscribing (through HTTP long-polling technique) for\nfile related events such as reads, writes or deletes which are returned as complete file metadata\nrecords with sequence numbers representing their current version.\n\n### Service information\nPublicly available, basic configuration of the Oneprovider service.\n\nDetailed examples of API usage are available in the documentation of each operation.\n",
     "contact": {
       "name": "Onedata support",
-      "url": "https://onedata.org",
+      "url": "https://onedata.org/support",
       "email": "info@onedata.org"
     },
     "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "x-logo": {
       "url": "https://onedata.org/assets/images/api/oneprovider-logo.svg",
@@ -845,7 +845,7 @@
           "View"
         ],
         "x-bash-codegen-description": "This method returns the list of result objects for files which match the query \non a predefined view.\nThose objects contains following fields:\n- id - for use as `startkey_docid` or `endkey_docid` in following queries\n- key - the first element of list returned by user defined mapping/spatial function\n- value - the second element of list returned by user defined mapping/spatial function\n- geometry - describes geometry of data (only available in case of spatial views)\n\nCurrently, views are defined per space, i.e. the result will be limited\nto files and directories in a space for which the view was defined.\n\nThis operation supports custom view query attributes as provided by\nCouchbase:\n  [http://docs.couchbase.com/admin/admin/Views/views-querying.html].\n\nAdditionally, Couchbase spatial queries:\n  [http://docs.couchbase.com/admin/admin/Views/views-geospatial.html] are\npossible using the `bbox` query parameter.\nThese queries are possible on views which emit values conforming to the\n[http://geojson.org/] format.\n\nThis operation requires `space_query_views` privilege.\n",
-        "description": "This method returns the list of result objects for files which match the query on a predefined view.\nThose objects contains following fields:\n* ``id`` - for use as `startkey_docid` or `endkey_docid` in following queries\n* ``key`` - the first element of list returned by user defined mapping/spatial function\n* ``value`` - the second element of list returned by user defined mapping/spatial function\n* ``geometry`` - describes geometry of data (only available in case of spatial views)\n\nCurrently, views are defined per space, i.e. the result will be limited to files and directories in a space for which the view was defined.\n\nThis operation supports also custom view query attributes as provided by [Couchbase](http://docs.couchbase.com/admin/admin/Views/views-querying.html).\n\nAdditionaly, Couchbase [spatial queries](http://docs.couchbase.com/admin/admin/Views/views-geospatial.html) are possible using `bbox` query parameter.\nThese queries are possible on views which emit values conforming to the [GeoJSON](http://geojson.org/) format.\n\nThis operation requires `space_query_views` privilege.\n\n***Example cURL requests***\n\n**Get 4 files from view skipping first 10**\n\nWith example map function used:\n```javascript\nfunction (id, type, meta, ctx) {\n    if(type == 'custom_metadata' && meta['onexattr']) {\n        return [meta['onexattr'], id];\n    }\n    return null;\n}\n```\n\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/views/VIEW_NAME/query?skip=10&limit=4\n\n[\n    {\n        \"id\": \"fd18b793d446099ae84f8bd5c054ad34\",\n        \"key\": 1,\n        \"value\": \"00000000002C45416775696423633062636533343133336336636633393238336134323333396430656461393323737061636531\"\n    },\n    {\n        \"id\": \"2785dbd91120e341265f9ee2370ccf08\",\n        \"key\": 2,\n        \"value\": \"00000000002CF7DB6775696423396261373964653764643866336432393436323262313133393738643338383323737061636531\"\n    },\n    {\n        \"id\": \"60a9e6da61e12deeb3e6c688fe861c01\",\n        \"key\": 3,\n        \"value\": \"00000000002C47916775696423336330336538623730333439353233383631313966346139343731316631656323737061636531\"\n    },\n    {\n        \"id\": \"651d696a8446e92ab55de163f9b8594d\",\n        \"key\": 4,\n        \"value\": \"00000000002CA8906775696423633835366438613139666565336337666165623538303736356465383039356223737061636531\"\n    },\n    ...\n]\n```\n\n**Get list of files associated with geospatial coordinates**\n\nWith example spatial function used:\n```javascript\nfunction (id, type, meta, ctx) {\n    if(type == 'custom_metadata' && meta['onexattr']) {\n        return [meta['onexattr'], id];\n    }\n    return null;\n}\n```\n\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/views/$VIEW_NAME/query?spatial=true&stale=false\n\n[\n    {\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [0, 0]\n        },\n        \"id\": \"36cfb018c312653e65b346c421d7a678\",\n        \"key\": [[0, 0], [0, 0]],\n        \"value\": \"00000000002C5DA36775696423663535633934306564393632656530666133663330633137393362333765356223737061636531\"\n    },\n    {\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [5.1, 10.22]\n        },\n        \"id\": \"972eb78ff8e262c4bebdc11799c20f51\",\n        \"key\": [[5.1, 5.1], [10.22, 10.22]],\n        \"value\": \"00000000002C678A6775696423363030666461383130623030386333616664363637396666653334366137656623737061636531\"\n    }\n]\n```\n\n**Get file popularity for a specific space**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/views/file-popularity/query?start_range=\\[1,0,0,0,0,0\\]&end_range=\\[null,null,null,null,null,null\\]\"\n```\n",
+        "description": "This method returns the list of result objects for files which match the query on a predefined view.\nThose objects contains following fields:\n* ``id`` - for use as `startkey_docid` or `endkey_docid` in following queries\n* ``key`` - the first element of list returned by user defined mapping/spatial function\n* ``value`` - the second element of list returned by user defined mapping/spatial function\n* ``geometry`` - describes geometry of data (only available in case of spatial views)\n\nCurrently, views are defined per space, i.e. the result will be limited to files and directories in a space for which the view was defined.\n\nThis operation supports also custom view query attributes as provided by [Couchbase](http://docs.couchbase.com/admin/admin/Views/views-querying.html).\n\nAdditionaly, Couchbase [spatial queries](http://docs.couchbase.com/admin/admin/Views/views-geospatial.html) are possible using `bbox` query parameter.\nThese queries are possible on views which emit values conforming to the [GeoJSON](http://geojson.org/) format.\n\nThis operation requires `space_query_views` privilege.\n\n***Example cURL requests***\n\n**Get 4 files from view skipping first 10**\n\nWith example map function used:\n```javascript\nfunction (id, type, meta, ctx) {\n    if(type == 'custom_metadata' && meta['onexattr']) {\n        return [meta['onexattr'], id];\n    }\n    return null;\n}\n```\n\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/views/VIEW_NAME/query?skip=10&limit=4\n\n[\n    {\n        \"id\": \"fd18b793d446099ae84f8bd5c054ad34\",\n        \"key\": 1,\n        \"value\": \"00000000002C45416775696423633062636533343133336336636633393238336134323333396430656461393323737061636531\"\n    },\n    {\n        \"id\": \"2785dbd91120e341265f9ee2370ccf08\",\n        \"key\": 2,\n        \"value\": \"00000000002CF7DB6775696423396261373964653764643866336432393436323262313133393738643338383323737061636531\"\n    },\n    {\n        \"id\": \"60a9e6da61e12deeb3e6c688fe861c01\",\n        \"key\": 3,\n        \"value\": \"00000000002C47916775696423336330336538623730333439353233383631313966346139343731316631656323737061636531\"\n    },\n    {\n        \"id\": \"651d696a8446e92ab55de163f9b8594d\",\n        \"key\": 4,\n        \"value\": \"00000000002CA8906775696423633835366438613139666565336337666165623538303736356465383039356223737061636531\"\n    },\n    ...\n]\n```\n\n**Get list of files associated with geospatial coordinates**\n\nWith example spatial function used:\n```javascript\nfunction (id, type, meta, ctx) {\n    if(type == 'custom_metadata' && meta['onexattr']) {\n        return [meta['onexattr'], id];\n    }\n    return null;\n}\n```\n\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/views/$VIEW_NAME/query?spatial=true&stale=false\n\n[\n    {\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [0, 0]\n        },\n        \"id\": \"36cfb018c312653e65b346c421d7a678\",\n        \"key\": [[0, 0], [0, 0]],\n        \"value\": \"00000000002C5DA36775696423663535633934306564393632656530666133663330633137393362333765356223737061636531\"\n    },\n    {\n        \"geometry\": {\n            \"type\": \"Point\",\n            \"coordinates\": [5.1, 10.22]\n        },\n        \"id\": \"972eb78ff8e262c4bebdc11799c20f51\",\n        \"key\": [[5.1, 5.1], [10.22, 10.22]],\n        \"value\": \"00000000002C678A6775696423363030666461383130623030386333616664363637396666653334366137656623737061636531\"\n    }\n]\n```\n\n**Get file popularity for a specific space**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/views/file-popularity/query?spatial=true&start_range=\\[1,0,0,0,0,0\\]&end_range=\\[null,null,null,null,null,null\\]\"\n```\n",
         "produces": [
           "application/json"
         ],
@@ -1193,16 +1193,9 @@
             "default": "REG"
           },
           {
-            "name": "posixPermissions",
-            "in": "query",
-            "description": "POSIX file permissions in decimal format.",
-            "required": false,
-            "type": "integer"
-          },
-          {
             "name": "mode",
             "in": "query",
-            "description": "(deprecated) POSIX file permissions in decimal format.",
+            "description": "POSIX file permissions in decimal format.",
             "required": false,
             "type": "integer"
           },
@@ -1258,8 +1251,8 @@
           "Basic File Operations"
         ],
         "summary": "List directory files and subdirectories",
-        "x-bash-codegen-description": "Returns the list of directory files and subdirectories for directory\nspecified by [$DIR_ID](#operation/lookup_file_id).\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.5**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n",
-        "description": "Returns the list of directory files and subdirectories for directory\nspecified by [$DIR_ID](#operation/lookup_file_id).\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.5**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n\n***Example cURL requests***\n\n**Get files in space subdirectory**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -H 'Content-type: application/json' \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/children\" -d '{\n  \"attributes\": [\"name\", \"size\", \"xattr.key\"],\n  \"limit\": 2\n}'\n\n{\n    \"children\": [\n        { \n            \"name\": File1.txt,\n            \"size\": 1024,\n            \"xattr.key\": \"extended_attribute_value\"\n        },\n        { \n            \"name\": File2.txt,\n            \"size\": 16384,\n            \"xattr.key\": null\n        }\n    ],\n    \"isLast\": false,\n    \"nextPageToken\": \"g2gDZAAKbGlua190b2tlbmgCZAAMY2FjaGVkX3Rva2VuWgADY...\"\n}\n```\n",
+        "x-bash-codegen-description": "Returns the list of directory files and subdirectories for directory\nspecified by [$DIR_ID](#operation/lookup_file_id).\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.8**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n",
+        "description": "Returns the list of directory files and subdirectories for directory\nspecified by [$DIR_ID](#operation/lookup_file_id).\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.8**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n\n***Example cURL requests***\n\n**Get files in space subdirectory**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -H 'Content-type: application/json' \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/children\" -d '{\n  \"attributes\": [\"name\", \"size\", \"xattr.key\"],\n  \"limit\": 2\n}'\n\n{\n    \"children\": [\n        { \n            \"name\": File1.txt,\n            \"size\": 1024,\n            \"xattr.key\": \"extended_attribute_value\"\n        },\n        { \n            \"name\": File2.txt,\n            \"size\": 16384,\n            \"xattr.key\": null\n        }\n    ],\n    \"isLast\": false,\n    \"nextPageToken\": \"g2gDZAAKbGlua190b2tlbmgCZAAMY2FjaGVkX3Rva2VuWgADY...\"\n}\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -1318,7 +1311,7 @@
             "name": "legacy_options",
             "in": "query",
             "required": false,
-            "description": "The old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for deletion in the future major release. You may refer to the  [docs for 21.02.4](https://onedata.org/#/home/api/21.02.4/oneprovider?anchor=operation/list_files_recursively), but it's recommended to use the new API with options as JSON body.\n",
+            "description": "The old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for deletion in the future major release. You may refer to the  [docs for 21.02.8](https://onedata.org/#/home/api/21.02.3/oneprovider?anchor=operation/list_files_recursively), but it's recommended to use the new API with options as JSON body.\n",
             "type": "string"
           }
         ],
@@ -1343,8 +1336,8 @@
           "Basic File Operations"
         ],
         "summary": "List files recursively",
-        "x-bash-codegen-description": "Recursively lists non-directory files (i.e regular files, symbolic links, and hard links)\nin directory specified by [$DIR_ID](#operation/lookup_file_id) (listing root).\nFiles are listed in lexicographical order by their paths, which are relative to the listing root directory.\nIf there is no access to the specified directory, its own relative path (`\".\"`) will be included in the\n`inaccessiblePaths` field and the listing result (i.e. `files` field) will be empty.\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.5**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n",
-        "description": "Recursively lists non-directory files (i.e regular files, symbolic links, and hard links)\nin directory specified by [$DIR_ID](#operation/lookup_file_id) (listing root).\nFiles are listed in lexicographical order by their paths, which are relative to the listing root directory.\nIf there is no access to the specified directory, its own relative path (`\".\"`) will be included in the\n`inaccessiblePaths` field and the listing result (i.e. `files` field) will be empty.\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.5**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n\n***Example cURL requests***\n\n**List files recursively**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -H 'Content-type: application/json' \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/files\" -d '{\n  \"start_after\": \"ParentDirName/Dir1\",\n  \"attributes\": [\"fileId\", \"path\"]\n}'\n\n{\n    \"files\": [\n        {\n            \"fileId\": \"FILE_ID1\",\n            \"path\": \"ParentDirName/Dir2\"\n        },\n        {\n            \"fileId\": \"FILE_ID2\",\n            \"path\": \"ParentDirName/File1.txt\"\n        },\n    ],\n    \"inaccessiblePaths\": [\n        \"ParentDirName/Dir3\"\n    ],\n    \"isLast\": false,\n    \"nextPageToken\": \"$PAGING_TOKEN\"\n}\n```\n",
+        "x-bash-codegen-description": "Recursively lists non-directory files (i.e regular files, symbolic links, and hard links)\nin directory specified by [$DIR_ID](#operation/lookup_file_id) (listing root).\nFiles are listed in lexicographical order by their paths, which are relative to the listing root directory.\nIf there is no access to the specified directory, its own relative path (`\".\"`) will be included in the\n`inaccessiblePaths` field and the listing result (i.e. `files` field) will be empty.\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.8**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n",
+        "description": "Recursively lists non-directory files (i.e regular files, symbolic links, and hard links)\nin directory specified by [$DIR_ID](#operation/lookup_file_id) (listing root).\nFiles are listed in lexicographical order by their paths, which are relative to the listing root directory.\nIf there is no access to the specified directory, its own relative path (`\".\"`) will be included in the\n`inaccessiblePaths` field and the listing result (i.e. `files` field) will be empty.\n\n**NOTE**: the listing may contain files that are not fully synchronized or have been deleted in parallel.\nFor that reason, it's recommended to safeguard consecutive calls referring to the directory children\nagainst `ENOENT` errors.\n\n**NOTE**: since version **21.02.8**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n\n***Example cURL requests***\n\n**List files recursively**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -H 'Content-type: application/json' \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/files\" -d '{\n  \"start_after\": \"ParentDirName/Dir1\",\n  \"attributes\": [\"fileId\", \"path\"]\n}'\n\n{\n    \"files\": [\n        {\n            \"fileId\": \"FILE_ID1\",\n            \"path\": \"ParentDirName/Dir2\"\n        },\n        {\n            \"fileId\": \"FILE_ID2\",\n            \"path\": \"ParentDirName/File1.txt\"\n        },\n    ],\n    \"inaccessiblePaths\": [\n        \"ParentDirName/Dir3\"\n    ],\n    \"isLast\": false,\n    \"nextPageToken\": \"$PAGING_TOKEN\"\n}\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -1403,7 +1396,7 @@
             "name": "legacy_options",
             "in": "query",
             "required": false,
-            "description": "The old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for deletion in the future major release. You may refer to the  [docs for 21.02.4](https://onedata.org/#/home/api/21.02.4/oneprovider?anchor=operation/list_files_recursively), but it's recommended to use the new API with options as JSON body.\n",
+            "description": "The old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for deletion in the future major release. You may refer to the  [docs for 21.02.8](https://onedata.org/#/home/api/21.02.3/oneprovider?anchor=operation/list_files_recursively), but it's recommended to use the new API with options as JSON body.\n",
             "type": "string"
           }
         ],
@@ -1656,8 +1649,8 @@
         "tags": [
           "Basic File Operations"
         ],
-        "x-bash-codegen-description": "This method returns attributes of a file specified by [$FILE_ID](#operation/lookup_file_id).\nBy default, all attributes are returned, except for extended attributes.\nThe list of requested attributes can be optionally narrowed down, and extended attributes can be retrieved\nusing the `xattr.*` attribute(s) (where * is an extended attribute key).\n\n**NOTE**: since version **21.02.5**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n",
-        "description": "This method returns attributes of a file specified by [$FILE_ID](#operation/lookup_file_id).\nBy default, all attributes are returned, except for extended attributes.\nThe list of requested attributes can be optionally narrowed down, and extended attributes can be retrieved\nusing the `xattr.*` attribute(s) (where * is an extended attribute key).\n\n**NOTE**: since version **21.02.5**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n\n***Example cURL requests***\n\n**Get selected file attributes**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -H 'Content-type: application/json' \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID\" -d '{\n  \"attributes\": [\"name\", \"size\", \"xattr.key\"]\n}'\n\n{\n    \"name\": \"File1.txt\",\n    \"size\": 100,\n    \"xattr.key\": \"extended_attribute_value\"\n}\n```\n",
+        "x-bash-codegen-description": "This method returns attributes of a file specified by [$FILE_ID](#operation/lookup_file_id).\nBy default, all attributes are returned, except for extended attributes.\nThe list of requested attributes can be optionally narrowed down, and extended attributes can be retrieved\nusing the `xattr.*` attribute(s) (where * is an extended attribute key).\n\n**NOTE**: since version **21.02.8**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n",
+        "description": "This method returns attributes of a file specified by [$FILE_ID](#operation/lookup_file_id).\nBy default, all attributes are returned, except for extended attributes.\nThe list of requested attributes can be optionally narrowed down, and extended attributes can be retrieved\nusing the `xattr.*` attribute(s) (where * is an extended attribute key).\n\n**NOTE**: since version **21.02.8**, this endpoint accepts **options as JSON body** rather than in the query string.\nMoreover, some of the attributes have been renamed and the list of available ones has been extended.\nThe old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for\ndeletion in the future major release. The following changes in attribute names were introduced:\n* `file_id` -> `fileId`\n* `mode` -> `posixPermissions`\n* `parent_id` -> `parentFileId`\n* `storage_group_id` -> `displayGid`\n* `storage_user_id` -> `displayUid`\n* `is_fully_replicated` -> `isFullyReplicatedLocally`\n* `provider_id` -> `originProviderId`\n* `shares` -> `directShareIds`\n* `owner_id` -> `ownerUserId`\n* `hardlinks_count` -> `hardlinkCount`\n\n***Example cURL requests***\n\n**Get selected file attributes**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -H 'Content-type: application/json' \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID\" -d '{\n  \"attributes\": [\"name\", \"size\", \"xattr.key\"]\n}'\n\n{\n    \"name\": \"File1.txt\",\n    \"size\": 100,\n    \"xattr.key\": \"extended_attribute_value\"\n}\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -1722,7 +1715,7 @@
             "name": "legacy_options",
             "in": "query",
             "required": false,
-            "description": "The old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for deletion in the future major release. You may refer to the  [docs for 21.02.4](https://onedata.org/#/home/api/21.02.4/oneprovider?anchor=operation/list_files_recursively), but it's recommended to use the new API with options as JSON body.\n",
+            "description": "The old behaviour of the endpoint has been retained but is **DEPRECATED** and scheduled for deletion in the future major release. You may refer to the  [docs for 21.02.8](https://onedata.org/#/home/api/21.02.3/oneprovider?anchor=operation/list_files_recursively), but it's recommended to use the new API with options as JSON body.\n",
             "type": "string"
           }
         ],
@@ -1745,8 +1738,8 @@
         "tags": [
           "Basic File Operations"
         ],
-        "x-bash-codegen-description": "This method allows to set a value of a regular file attribute\nfor a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nCurrently only POSIX permissions can be changed by sending:\n```\n  { \"posixPermissions\": \"0777\" }\n```\nwhere the POSIX permissions are specified in octal notation.\n",
-        "description": "This method allows to set a value of a regular file attribute\nfor a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nCurrently only POSIX permissions can be changed by sending:\n```\n  { \"posixPermissions\": \"0777\" }\n```\nwhere the POSIX permissions are specified in octal notation.\n\n***Example cURL requests***\n\n**Set file POSIX mode**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X PUT \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID\" \\\n-H 'Content-Type: application/json' -d '{ \"posixPermissions\": \"0777\" }'\n```\n",
+        "x-bash-codegen-description": "This method allows to set a value of a regular file attribute\nfor a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nCurrently only POSIX mode can be changed by\nsending:\n```\n  { \"mode\": \"0777\" }\n```\nwhere the POSIX mode is specified in octal notation.\n",
+        "description": "This method allows to set a value of a regular file attribute\nfor a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nCurrently only POSIX mode can be changed by sending:\n```\n{ \"mode\": \"0777\" }\n```\nwhere the POSIX mode is specified in octal notation.\n\n***Example cURL requests***\n\n**Set file POSIX mode**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X PUT \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID\" \\\n-H 'Content-Type: application/json' -d '{ \"mode\": \"0777\" }'\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -1793,15 +1786,8 @@
             "description": "Attribute name and value.",
             "schema": {
               "type": "object",
-              "properties": {
-                "posixPermissions": {
-                  "description": "New POSIX permissions of a file.",
-                  "type": "string"
-                },
-                "mode": {
-                  "description": "(deprecated) new POSIX permissions of a file.",
-                  "type": "string"
-                }
+              "additionalProperties": {
+                "type": "string"
               }
             }
           }
@@ -2114,16 +2100,9 @@
             "default": "REG"
           },
           {
-            "name": "posixPermissions",
-            "in": "query",
-            "description": "POSIX file permissions in decimal format.",
-            "required": false,
-            "type": "integer"
-          },
-          {
             "name": "mode",
             "in": "query",
-            "description": "(deprecated) POSIX file permissions in decimal format.",
+            "description": "POSIX file permissions in decimal format.",
             "required": false,
             "type": "integer"
           },
@@ -2337,12 +2316,12 @@
           "id": "?OBJECTID_BINDING(id)",
           "aspect": "json_metadata"
         },
-        "summary": "Get file JSON metadata",
+        "summary": "Get file json metadata",
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "This method returns the JSON metadata associated with file specified by [$FILE_ID](#operation/lookup_file_id).\n\nBy default the method returns the complete JSON metadata. But it is possible to request\nonly a part of the document by specifying `filter_type` and `filter` attributes in the query.\n\nIf there is no JSON metadata associated with the file, this method returns HTTP 400\ncode with `enodata` POSIX error.\n\nSupported filter types are:\n  * **keypath** - list of JSON keys which point to requested JSON object,\n    separated by `.`, array elements should be expressed as `[i]`\n    (e.g. `key1.key2.[2].key3`)\n",
-        "description": "This method returns the JSON metadata associated with file specified by [$FILE_ID](#operation/lookup_file_id).\n\nBy default the method returns the complete JSON metadata. But it is possible to request\nonly a part of the document by specifying `filter_type` and `filter` attributes in the query.\n\nIf there is no JSON metadata associated with the file, this method returns HTTP 400\ncode with `enodata` POSIX error.\n\nSupported filter types are:\n  * **keypath** - list of JSON keys which point to requested JSON object,\n    separated by `.`, array elements should be expressed as `[i]`\n    (e.g. `key1.key2.[2].key3`)\n\n***Example cURL requests***\n\n**Get specific JSON value from metadata document**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/json?filter_type=keypath&filter=key1.key2.[2].key3\n\n{\"key4\": \"value\"}\n```\n",
+        "x-bash-codegen-description": "This method returns the json metadata associated with file specified by [$FILE_ID](#operation/lookup_file_id).\n\nBy default the method returns the complete json metadata. But it is possible to request\nonly a part of the document by specifying `filter_type` and `filter` attributes in the query.\n\nSupported filter types are:\n  * **keypath** - list of JSON keys which point to requested JSON object,\n    separated by `.`, array elements should be expressed as `[i]`\n    (e.g. `key1.key2.[2].key3`)\n",
+        "description": "This method returns the json metadata associated with file specified by [$FILE_ID](#operation/lookup_file_id).\n\nBy default the method returns the complete json metadata. But it is possible to request\nonly a part of the document by specifying `filter_type` and `filter` attributes in the query.\n\nSupported filter types are:\n  * **keypath** - list of JSON keys which point to requested JSON object,\n    separated by `.`, array elements should be expressed as `[i]`\n    (e.g. `key1.key2.[2].key3`)\n\n***Example cURL requests***\n\n**Get specific JSON value from metadata document**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/json?filter_type=keypath&filter=key1.key2.[2].key3\n\n{\"key4\": \"value\"}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -2354,35 +2333,9 @@
             }
           },
           "400": {
-            "description": "No JSON metadata associated with the file or invalid request.",
+            "description": "Invalid request.",
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/Error"
-                },
-                {
-                  "example": {
-                    "error": {
-                      "id": "posix",
-                      "details": {
-                        "errno": "enodata"
-                      },
-                      "description": "Operation failed with POSIX error: enodata.",
-                      "ctx": {
-                        "timestamp": 1750762637248,
-                        "serviceReleaseVersion": "25.0",
-                        "serviceId": "a7ee2722915b8bf7fb064eb65087cc61ch9357",
-                        "serviceDomain": "dev-oneprovider-krakow.default.svc.cluster.local",
-                        "serviceBuildVersion": "231-g8d26f953c3",
-                        "service": "opw",
-                        "onedataErrorsRevision": "ca3af8cb",
-                        "module": "metadata_req",
-                        "line": 45
-                      }
-                    }
-                  }
-                }
-              ]
+              "$ref": "#/definitions/Error"
             }
           },
           "403": {
@@ -2459,12 +2412,12 @@
           "id": "?OBJECTID_BINDING(id)",
           "aspect": "json_metadata"
         },
-        "summary": "Set file JSON metadata",
+        "summary": "Set file json metadata",
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "This method allows to set JSON metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous JSON metadata if any.\n",
-        "description": "This method allows to set JSON metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous JSON metadata if any.\n\n***Example cURL requests***\n\n**Set JSON metadata for file**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X PUT https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/json \\\n-H \"Content-Type: application/json\" -d '{\n    \"key1\": {\n        \"key2\": [\"val1\", \"val2\", \"val3\", \"val4\"]\n    }\n}'\n```\n",
+        "x-bash-codegen-description": "This method allows to set json metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous json metadata if any.\n",
+        "description": "This method allows to set json metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous json metadata if any.\n\n***Example cURL requests***\n\n**Set JSON metadata for file**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X PUT https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/json \\\n-H \"Content-Type: application/json\" -d '{\n    \"key1\": {\n        \"key2\": [\"val1\", \"val2\", \"val3\", \"val4\"]\n    }\n}'\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -2525,7 +2478,7 @@
           {
             "name": "metadata",
             "in": "body",
-            "description": "The JSON metadata.",
+            "description": "The json metadata.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2553,15 +2506,15 @@
           "id": "?OBJECTID_BINDING(id)",
           "aspect": "json_metadata"
         },
-        "summary": "Remove file JSON metadata",
+        "summary": "Remove file json metadata",
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "Removes JSON metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n",
-        "description": "Removes JSON metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n\n***Example cURL requests***\n\n**Remove file JSON metadata**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X DELETE https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/json\n```\n",
+        "x-bash-codegen-description": "Removes json metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n",
+        "description": "Removes json metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n\n***Example cURL requests***\n\n**Remove file json metadata**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X DELETE https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/json\n```\n",
         "responses": {
           "204": {
-            "description": "File JSON metadata has been removed."
+            "description": "File json metadata has been removed."
           },
           "400": {
             "description": "Invalid request.",
@@ -2620,12 +2573,12 @@
           "id": "?OBJECTID_BINDING(id)",
           "aspect": "rdf_metadata"
         },
-        "summary": "Get file RDF metadata",
+        "summary": "Get file rdf metadata",
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "This method returns the RDF metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nIf there is no RDF metadata associated with the file, this method returns HTTP 400\ncode with `enodata` POSIX error.\n",
-        "description": "This method returns the RDF metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nIf there is no RDF metadata associated with the file, this method returns HTTP 400\ncode with `enodata` POSIX error.\n\n***Example cURL requests***\n\n**Get complete RDF metadata document for file**\n\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/rdf\n\n<RDF><homepage>https://www.onedata.org</homepage></RDF>\n```\n",
+        "x-bash-codegen-description": "This method returns the rdf metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n",
+        "description": "This method returns the rdf metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\n***Example cURL requests***\n\n**Get complete RDF metadata document for file**\n\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/rdf\n\n<RDF><homepage>https://www.onedata.org</homepage></RDF>\n```\n",
         "produces": [
           "application/rdf+xml"
         ],
@@ -2638,24 +2591,9 @@
             }
           },
           "400": {
-            "description": "No RDF metadata associated with the file or invalid request.",
+            "description": "Invalid request.",
             "schema": {
-              "allOf": [
-                {
-                  "$ref": "#/definitions/Error"
-                },
-                {
-                  "example": {
-                    "error": {
-                      "id": "posix",
-                      "details": {
-                        "errno": "enodata"
-                      },
-                      "description": "Operation failed with POSIX error: enodata."
-                    }
-                  }
-                }
-              ]
+              "$ref": "#/definitions/Error"
             }
           },
           "403": {
@@ -2708,12 +2646,12 @@
           "id": "?OBJECTID_BINDING(id)",
           "aspect": "rdf_metadata"
         },
-        "summary": "Set file RDF metadata",
+        "summary": "Set file rdf metadata",
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "This method allows to set specific RDF metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous RDF metadata if any.\n",
-        "description": "This method allows to set specific RDF metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous RDF metadata if any.\n\n***Example cURL requests***\n\n**Set RDF metadata for space from RDF file**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X PUT https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/rdf \\\n-H \"Content-Type: application/rdf+xml\" -d \"@./space1_dublincore.rdf\"\n```\n",
+        "x-bash-codegen-description": "This method allows to set specific rdf metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous rdf metadata if any.\n",
+        "description": "This method allows to set specific rdf metadata for a file specified by [$FILE_ID](#operation/lookup_file_id).\n\nThis operation will replace the previous rdf metadata if any.\n\n***Example cURL requests***\n\n**Set RDF metadata for space from RDF file**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X PUT https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/rdf \\\n-H \"Content-Type: application/rdf+xml\" -d \"@./space1_dublincore.rdf\"\n```\n",
         "consumes": [
           "application/rdf+xml"
         ],
@@ -2757,7 +2695,7 @@
           {
             "name": "metadata",
             "in": "body",
-            "description": "The RDF metadata.",
+            "description": "The rdf metadata.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2785,15 +2723,15 @@
           "id": "?OBJECTID_BINDING(id)",
           "aspect": "rdf_metadata"
         },
-        "summary": "Remove file RDF metadata",
+        "summary": "Remove file rdf metadata",
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "Removes RDF metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n",
-        "description": "Removes RDF metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n\n***Example cURL requests***\n\n**Remove file RDF metadata**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X DELETE https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/rdf\n```\n",
+        "x-bash-codegen-description": "Removes rdf metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n",
+        "description": "Removes rdf metadata from the file specified by [$FILE_ID](#operation/lookup_file_id).\n\n***Example cURL requests***\n\n**Remove file rdf metadata**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X DELETE https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/rdf\n```\n",
         "responses": {
           "204": {
-            "description": "File RDF metadata has been removed."
+            "description": "File rdf metadata has been removed."
           },
           "400": {
             "description": "Invalid request.",
@@ -2856,8 +2794,8 @@
         "tags": [
           "Custom File Metadata"
         ],
-        "x-bash-codegen-description": "This method returns the selected extended attributes associated with file\nspecified by [$FILE_ID](#operation/lookup_file_id).\n\nIf there are no extended attributes associated with the file, this method returns\nHTTP 200 code with an empty JSON object.\n",
-        "description": "This method returns the selected extended attributes associated with file\nspecified by [$FILE_ID](#operation/lookup_file_id).\n\nIf there are no extended attributes associated with the file, this method returns\nHTTP 200 code with an empty JSON object.\n\n***Example cURL requests***\n\n**Get extended file attributes**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/xattrs?attribute=license\"\n\n{\n    \"license\": \"CC-0\"\n}\n```\n",
+        "x-bash-codegen-description": "This method returns the selected extended attributes associated with file\nspecified by [$FILE_ID](#operation/lookup_file_id).\n",
+        "description": "This method returns the selected extended attributes associated with file\nspecified by [$FILE_ID](#operation/lookup_file_id).\n\n***Example cURL requests***\n\n**Get extended file attributes**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/metadata/xattrs?attribute=license\"\n\n{\n    \"license\": \"CC-0\"\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -2922,7 +2860,7 @@
           {
             "name": "show_internal",
             "in": "query",
-            "description": "When set to true, this operation returns all attributes including those normally not shown (e.g. JSON/RDF metadata, ACL and CDMI attributes).\n",
+            "description": "When set to true, this operation returns all attributes including those normally not shown (e.g. json/rdf metadata, acl and cdmi attributes).\n",
             "type": "boolean",
             "default": false,
             "required": false
@@ -3120,8 +3058,8 @@
         "tags": [
           "Miscellaneous"
         ],
-        "x-bash-codegen-description": "Retrieves historical size statistics over time for a directory.\nThe response includes only the information pertaining to the queried provider;\nin order to collect globally-complete statistics, all providers supporting the\nspace must be queried. There may be discrepancies in statistics such as logical\nsize of data, which stem from synchronization delays between providers.\n\nSize statistics over time are available only for directories. They are collected hierarchically i.e. for a \ncertain directory, its statistics are a sum of statistics for the directory (regarding its direct children),\nand the statistics from all its subdirectories. Additionally, size statistics for the space directory\nencompass relevant information from archives.\n\n**This endpoint requires the size statistics to be enabled for the containing space on the queried provider.**\nOtherwise, an adequate error will be returned.\n\nTwo request modes are supported: \n  * `layout` - returns information about the structure of stats collection, \ni.e. the names of the available time series and metrics within them\n  * `slice` - returns a slice of statistics as a collection of slices of \nrequested time series and metrics\n\nThe following time series are available for each directory:\n  * `logical_size` - total size of file data contained in the directory, i.e. the sum of logical sizes of all \nregular files in its subtree. If a file has multiple hardlinks in the subtree, each hardlink is counted separately.\n  * `virtual_size` - consolidated logical size, where hardlinks of the same file in the subtree are counted only \nonce. Represents the storage space required for a complete replica of the directory.\n  * `physical_size_$STORAGE_ID` - actual amount of storage consumed on a given storage backend by all regular files \nin the directory’s subtree. May be smaller than the virtual size if some file replicas are incomplete. \nOnly the storage backends owned by the queried providers are returned.\n  * `reg_file_and_link_count` - the count of regular files, hard links, \nand symbolic links contained in the directory.\n  * `dir_count` - the count of directories contained in the directory.\n  * `file_error_count` - the count of error occurrences when the statistics \nmechanisms were not able to gather size information about a certain file.\n  * `dir_error_count` - like above, for directories.\n\nIf the values of `file_errors_count` or `dir_errors_count` are not zero, the statistics may not be accurate.\n\nThe following metrics are available for each time series: `day`, `hour`, `minute`, `month`.\n",
-        "description": "Retrieves historical size statistics over time for a directory.\nThe response includes only the information pertaining to the queried provider;\nin order to collect globally-complete statistics, all providers supporting the\nspace must be queried. There may be discrepancies in statistics such as logical\nsize of data, which stem from synchronization delays between providers.\n\nSize statistics over time are available only for directories. They are collected hierarchically i.e. for a \ncertain directory, its statistics are a sum of statistics for the directory (regarding its direct children),\nand the statistics from all its subdirectories. Additionally, size statistics for the space directory\nencompass relevant information from archives.\n\n**This endpoint requires the size statistics to be enabled for the containing space on the queried provider.**\nOtherwise, an adequate error will be returned.\n\nTwo request modes are supported: \n  * `layout` - returns information about the structure of stats collection, \ni.e. the names of the available time series and metrics within them\n  * `slice` - returns a slice of statistics as a collection of slices of \nrequested time series and metrics\n\nThe following time series are available for each directory:\n  * `logical_size` - total size of file data contained in the directory, i.e. the sum of logical sizes of all \nregular files in its subtree. If a file has multiple hardlinks in the subtree, each hardlink is counted separately.\n  * `virtual_size` - consolidated logical size, where hardlinks of the same file in the subtree are counted only \nonce. Represents the storage space required for a complete replica of the directory.\n  * `physical_size_$STORAGE_ID` - actual amount of storage consumed on a given storage backend by all regular files \nin the directory’s subtree. May be smaller than the virtual size if some file replicas are incomplete. \nOnly the storage backends owned by the queried providers are returned.\n  * `reg_file_and_link_count` - the count of regular files, hard links, \nand symbolic links contained in the directory.\n  * `dir_count` - the count of directories contained in the directory.\n  * `file_error_count` - the count of error occurrences when the statistics \nmechanisms were not able to gather size information about a certain file.\n  * `dir_error_count` - like above, for directories.\n\nIf the values of `file_errors_count` or `dir_errors_count` are not zero, the statistics may not be accurate.\n\nThe following metrics are available for each time series: `day`, `hour`, `minute`, `month`.\n\n***Example cURL requests***\n\n**Get the layout of directory size statistics**    \n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/dir_size_stats\" \\\n-H \"Content-Type: application/json\" -d '{\n    \"mode\": \"layout\"  \n}'\n\n{\n    \"layout\": {\n        \"total_size\": [\n            \"day\",\n            \"hour\",\n            \"minute\",\n            \"month\"\n        ],\n        \"storage_use_7ab46e96fdb27a2694493c2c5bd7491dch8f55\": [...],\n        \"reg_file_and_link_count\": [...],\n        \"file_errors_count\": [...],\n        \"dir_errors_count\": [...],\n        \"dir_count\": [...]\n    }\n}\n```\n\n**Get a slice of directory size statistics**    \n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/dir_size_stats\" \\\n-H \"Content-Type: application/json\" -d '{\n    \"mode\": \"slice\",\n    \"extendedInfo\": true,\n    \"layout\": {\n        \"total_size\": [\n            \"minute\"\n        ],\n        \"storage_use_7ab46e96fdb27a2694493c2c5bd7491dch8f55\": [\n            \"minute\"\n        ]\n    },\n    \"startTimestamp\": 1687513285,\n    \"stopTimestamp\": 1687499802,\n    \"windowLimit\": 31\n}'\n\n{\n    \"slice\": {\n        \"total_size\": {\n            \"minute\": [\n                {\n                    \"value\": 883365,\n                    \"timestamp\": 1687513260,\n                    \"lastMeasurementTimestamp\": 1687513287,\n                    \"firstMeasurementTimestamp\": 1687513287\n                },\n                ...\n            ]\n        },\n        \"storage_use_7ab46e96fdb27a2694493c2c5bd7491dch8f55\": {\n            \"minute\": [\n                {\n                    \"value\": 56280,\n                    \"timestamp\": 1687513260,\n                    \"lastMeasurementTimestamp\": 1687513287,\n                    \"firstMeasurementTimestamp\": 1687513287\n                },\n                ...\n            ]\n        }\n    }\n}'\n```\n",
+        "x-bash-codegen-description": "Retrieves historical size statistics over time for a directory.\nThe response includes only the information pertaining to the queried provider;\nin order to collect globally-complete statistics, all providers supporting the\nspace must be queried. There may be discrepancies in statistics such as logical\nsize of data, which stem from synchronization delays between providers.\n\nSize statistics over time are available only for directories. They are collected hierarchically i.e. for a \ncertain directory, its statistics are a sum of statistics for the directory (regarding its direct children),\nand the statistics from all its subdirectories. Additionally, size statistics for the space directory\nencompass relevant information from archives.\n\n**This endpoint requires the size statistics to be enabled for the containing space on the queried provider.**\nOtherwise, an adequate error will be returned.\n\nTwo request modes are supported: \n  * `layout` - returns information about the structure of stats collection, \ni.e. the names of the available time series and metrics within them\n  * `slice` - returns a slice of statistics as a collection of slices of \nrequested time series and metrics\n\nThe following time series are available for each directory:\n  * `total_size` - the total logical size of file data contained in the directory, \ni.e. the sum of logical byte sizes of all regular files.\n  * `storage_use_$STORAGE_ID` - storage size used to store the physical data\nof the contained files for given `$STORAGE_ID`. Only the storage backends\nowned by the queried providers are returned.\n  * `reg_file_and_link_count` - the count of regular files, hard links, \nand symbolic links contained in the directory.\n  * `dir_count` - the count of directories contained in the directory.\n  * `file_errors_count` - the count of error occurrences when the statistics \nmechanisms were not able to gather size information about a certain file.\n  * `dir_errors_count` - like above, for directories.\n\nIf the values of `file_errors_count` or `dir_errors_count` are not zero, the statistics may not be accurate.\n\nThe following metrics are available for each time series: `day`, `hour`, `minute`, `month`.\n",
+        "description": "Retrieves historical size statistics over time for a directory.\nThe response includes only the information pertaining to the queried provider;\nin order to collect globally-complete statistics, all providers supporting the\nspace must be queried. There may be discrepancies in statistics such as logical\nsize of data, which stem from synchronization delays between providers.\n\nSize statistics over time are available only for directories. They are collected hierarchically i.e. for a \ncertain directory, its statistics are a sum of statistics for the directory (regarding its direct children),\nand the statistics from all its subdirectories. Additionally, size statistics for the space directory\nencompass relevant information from archives.\n\n**This endpoint requires the size statistics to be enabled for the containing space on the queried provider.**\nOtherwise, an adequate error will be returned.\n\nTwo request modes are supported: \n  * `layout` - returns information about the structure of stats collection, \ni.e. the names of the available time series and metrics within them\n  * `slice` - returns a slice of statistics as a collection of slices of \nrequested time series and metrics\n\nThe following time series are available for each directory:\n  * `total_size` - the total logical size of file data contained in the directory, \ni.e. the sum of logical byte sizes of all regular files.\n  * `storage_use_$STORAGE_ID` - storage size used to store the physical data\nof the contained files for given `$STORAGE_ID`. Only the storage backends\nowned by the queried providers are returned.\n  * `reg_file_and_link_count` - the count of regular files, hard links, \nand symbolic links contained in the directory.\n  * `dir_count` - the count of directories contained in the directory.\n  * `file_errors_count` - the count of error occurrences when the statistics \nmechanisms were not able to gather size information about a certain file.\n  * `dir_errors_count` - like above, for directories.\n\nIf the values of `file_errors_count` or `dir_errors_count` are not zero, the statistics may not be accurate.\n\nThe following metrics are available for each time series: `day`, `hour`, `minute`, `month`.\n\n***Example cURL requests***\n\n**Get the layout of directory size statistics**    \n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/dir_size_stats\" \\\n-H \"Content-Type: application/json\" -d '{\n    \"mode\": \"layout\"  \n}'\n\n{\n    \"layout\": {\n        \"total_size\": [\n            \"day\",\n            \"hour\",\n            \"minute\",\n            \"month\"\n        ],\n        \"storage_use_7ab46e96fdb27a2694493c2c5bd7491dch8f55\": [...],\n        \"reg_file_and_link_count\": [...],\n        \"file_errors_count\": [...],\n        \"dir_errors_count\": [...],\n        \"dir_count\": [...]\n    }\n}\n```\n\n**Get a slice of directory size statistics**    \n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" \\\n-X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$DIR_ID/dir_size_stats\" \\\n-H \"Content-Type: application/json\" -d '{\n    \"mode\": \"slice\",\n    \"extendedInfo\": true,\n    \"layout\": {\n        \"total_size\": [\n            \"minute\"\n        ],\n        \"storage_use_7ab46e96fdb27a2694493c2c5bd7491dch8f55\": [\n            \"minute\"\n        ]\n    },\n    \"startTimestamp\": 1687513285,\n    \"stopTimestamp\": 1687499802,\n    \"windowLimit\": 31\n}'\n\n{\n    \"slice\": {\n        \"total_size\": {\n            \"minute\": [\n                {\n                    \"value\": 883365,\n                    \"timestamp\": 1687513260,\n                    \"lastMeasurementTimestamp\": 1687513287,\n                    \"firstMeasurementTimestamp\": 1687513287\n                },\n                ...\n            ]\n        },\n        \"storage_use_7ab46e96fdb27a2694493c2c5bd7491dch8f55\": {\n            \"minute\": [\n                {\n                    \"value\": 56280,\n                    \"timestamp\": 1687513260,\n                    \"lastMeasurementTimestamp\": 1687513287,\n                    \"firstMeasurementTimestamp\": 1687513287\n                },\n                ...\n            ]\n        }\n    }\n}'\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -3192,8 +3130,8 @@
           "Miscellaneous"
         ],
         "summary": "Register file",
-        "x-bash-codegen-description": "Registers a file located on an `imported storage backend`.\nThis operation is available only in spaces supported with `imported storage backends` with `manual import mode` enabled.\nIn such setup, the files existing on the storage are not automatically visible\nin the space and must be registered manually by the space users -\n[learn more](https://onedata.org/#/home/documentation/stable/doc/using_onedata/file-registration.html).\n\nThe operation creates the necessary metadata for the file and registers its physical location on the storage in Onedata,\nwhich makes the file visible and accessible within the space. The metadata can be provided explicitly by the registering user,\nor an automatic detection will be performed (although not all storage backends support the required `stat` operation or\nequivalent - in such case some metadata must be provided for the operation to succeed).\n\nThe registration of the same file can be repeated, which updates the previous metadata with the new information.\nIn most cases, the metadata is overwritten with new values, with exception of extended attributes - previous values \nare merged with new ones.\n\nThis operation requires:\n  * space_register_file privilege\n\n**Notes for HTTP storage backends**:\n* Regardless of the root server endpoint provided in the HTTP storage backend configuration, \n   one can register **any valid URL**. The root endpoint is only relevant as far as custom\n   authorization credentials are required.\n* For this kind of storage, the automatic detection of file metadata is **always forced** to ensure that the \n   HTTP endpoint supports required operations: the `HEAD` method and `Range: bytes=...` header, allowing \n   range reads. If the server lacks those, an error `statOperationNotSupported` is returned. If a request\n   with `autoDetectAttributes: false` is made, a data validation error is returned.\n",
-        "description": "Registers a file located on an `imported storage backend`.\nThis operation is available only in spaces supported with `imported storage backends` with `manual import mode` enabled.\nIn such setup, the files existing on the storage are not automatically visible\nin the space and must be registered manually by the space users -\n[learn more](https://onedata.org/#/home/documentation/stable/doc/using_onedata/file-registration.html).\n\nThe operation creates the necessary metadata for the file and registers its physical location on the storage in Onedata,\nwhich makes the file visible and accessible within the space. The metadata can be provided explicitly by the registering user,\nor an automatic detection will be performed (although not all storage backends support the required `stat` operation or\nequivalent - in such case some metadata must be provided for the operation to succeed).\n\nThe registration of the same file can be repeated, which updates the previous metadata with the new information.\nIn most cases, the metadata is overwritten with new values, with exception of extended attributes - previous values \nare merged with new ones.\n\nThis operation requires:\n  * space_register_file privilege\n\n**Notes for HTTP storage backends**:\n* Regardless of the root server endpoint provided in the HTTP storage backend configuration, \n   one can register **any valid URL**. The root endpoint is only relevant as far as custom\n   authorization credentials are required.\n* For this kind of storage, the automatic detection of file metadata is **always forced** to ensure that the \n   HTTP endpoint supports required operations: the `HEAD` method and `Range: bytes=...` header, allowing \n   range reads. If the server lacks those, an error `statOperationNotSupported` is returned. If a request\n   with `autoDetectAttributes: false` is made, a data validation error is returned.\n\n***Example cURL requests***\n\n**Register file from a remote, read-only HTTP storage**\n```bash\n  curl -H \"X-Auth-Token: $TOKEN\" -X POST \"https://$PROVIDER_HOST/api/v3/oneprovider/data/register\" \\\n  -H \"Content-Type: application/json\"  -d '{\n    \"storageId\": \"$STORAGE_ID\",\n    \"spaceId\": \"$SPACE_ID\",\n    \"storageFileId\": \"https://example-files.online-convert.com/document/txt/example.txt\",\n    \"destinationPath\": \"example.txt\"\n  }'  \n```\n",
+        "x-bash-codegen-description": "Registers a file located on an `imported storage`.\nThis operation is available only in spaces supported with `imported storages` with `manual import mode` enabled.\nIn such setup, the files existing on the storage are not automatically visible\nin the space and must be registered manually by the space users -\n[learn more](https://onedata.org/#/home/documentation/stable/doc/using_onedata/file-registration.html).\n\nThe operation creates the necessary metadata for the file and registers its physical location on the storage in Onedata,\nwhich makes the file visible and accessible within the space. The metadata can be provided explicitly by the registering user,\nor an automatic detection will be performed (although not all storage backends support the required `stat` operation or\nequivalent - in such case some metadata must be provided for the operation to succeed).\n\nThe registration of the same file can be repeated, which updates the previous metadata with the new information.\nIn most cases, the metadata is overwritten with new values, with exception of extended attributes - previous values \nare merged with new ones.\n\nThis operation requires:\n  * space_register_file privilege\n",
+        "description": "Registers a file located on an `imported storage`.\nThis operation is available only in spaces supported with `imported storages` with `manual import mode` enabled.\nIn such setup, the files existing on the storage are not automatically visible\nin the space and must be registered manually by the space users -\n[learn more](https://onedata.org/#/home/documentation/stable/doc/using_onedata/file-registration.html).\n\nThe operation creates the necessary metadata for the file and registers its physical location on the storage in Onedata,\nwhich makes the file visible and accessible within the space. The metadata can be provided explicitly by the registering user,\nor an automatic detection will be performed (although not all storage backends support the required `stat` operation or\nequivalent - in such case some metadata must be provided for the operation to succeed).\n\nThe registration of the same file can be repeated, which updates the previous metadata with the new information.\nIn most cases, the metadata is overwritten with new values, with exception of extended attributes - previous values \nare merged with new ones.\n\nThis operation requires:\n  * space_register_file privilege\n\n***Example cURL requests***\n\n**Register file from a remote, read-only HTTP storage**\n```bash\n  curl -H \"X-Auth-Token: $TOKEN\" -X POST \"https://$PROVIDER_HOST/api/v3/oneprovider/data/register\" \\\n  -H \"Content-Type: application/json\"  -d '{\n    \"storageId\": \"$STORAGE_ID\",\n    \"spaceId\": \"$SPACE_ID\",\n    \"storageFileId\": \"https://example-files.online-convert.com/document/txt/example.txt\",\n    \"destinationPath\": \"example.txt\"\n  }'  \n```\n",
         "consumes": [
           "application/json"
         ],
@@ -3232,7 +3170,7 @@
             }
           },
           "404": {
-            "description": "At least one of the required resources (space, storage backend or file on the storage) does not exist.",
+            "description": "At lease one of the required resources (space, storage or file on the storage) does not exist.",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -3275,8 +3213,8 @@
           "Data Distribution"
         ],
         "summary": "Get data distribution",
-        "x-bash-codegen-description": "Returns information about distribution of a specific file among different storage providers.\nSymbolic links are not supported, since data distribution is not applicable for them.\nThe `locationsPerStorageBackend` field is the same as for the [Get file storage locations](#operation/get_file_storage_locations) \nendpoint.\n",
-        "description": "Returns information about distribution of a specific file among different storage providers.\nSymbolic links are not supported, since data distribution is not applicable for them.\nThe `locationsPerStorageBackend` field is the same as for the [Get file storage locations](#operation/get_file_storage_locations) \nendpoint.\n\n***Example cURL requests***\n\n**Get file distribution**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/distribution\"\n\n{\n  \"type\": \"REG\",\n  \"distributionPerProvider\": {\n    \"$PROVIDER_ID1\": {\n      \"success\": true,\n      \"logicalSize\": 8,\n      \"locationsPerStorageBackend\": {\n        \"$STORAGE_ID\": {\n          \"success\": true,\n          \"location\": \"/file/location/on/storage\"\n        }\n      },\n      \"distributionPerStorageBackend\": {\n        \"$STORAGE_ID\": {\n          \"success\": true,\n          \"blocks\": [[0,4],[6,2]],\n          \"physicalSize\": 6\n        }\n      }\n    },\n    \"$PROVIDER_ID2\": {\n      \"success\": false,\n      \"error\": {\n        \"description\": \"Operation failed with POSIX error: enoent.\",\n        \"details\": {\"errno\":\"enoent\"}\n      }\n    },\n    \"$PROVIDER_ID3\": {\n      \"success\": true,\n      \"logicalSize\": 8,\n      \"locationsPerStorageBackend\": {\n        \"$STORAGE_ID\": {\n          \"success\": false,\n          \"error\": {\n            \"id\": \"requiresPosixCompatibleStorage\",\n            \"details\": {\n              \"storageId\": \"b2ce3858c7267a9c016296e51dc9c41cch3618\",\n              \"posixCompatibleStorages\": [\"posix\",\"glusterfs\",\"nfs\",\"nulldevice\"]\n            },\n            \"description\": \"Cannot apply for the storage backend \\\"b2ce3858c7267a9c016296e51dc9c41cch3618\\\". This operation requires a POSIX-compatible storage backend (any of: posix, glusterfs, nfs, nulldevice).\"\n          }\n        }\n      },\n      \"distributionPerStorageBackend\": {\n        \"$STORAGE_ID\": {\n          \"success\": true,\n          \"blocks\": [[0,4],[6,2]],\n          \"physicalSize\": 6\n        }\n      }\n    },\n    \"$PROVIDER_ID4\": {\n      \"success\": true,\n      \"logicalSize\": 8,\n      \"locationsPerStorageBackend\": {\n        \"$STORAGE_ID\": {\n          \"success\": true,\n          \"location\": null\n        }\n      },\n      \"distributionPerStorageBackend\": {\n        \"$STORAGE_ID\": {\n          \"success\": true,\n          \"blocks\": [],\n          \"physicalSize\": 0\n        }\n      }\n    }\n  }\n}\n```\n",
+        "x-bash-codegen-description": "Returns information about distribution of a specific file among different storage providers.\n",
+        "description": "Returns information about distribution of a specific file among different storage providers.\n\n***Example cURL requests***\n\n**Get file distribution**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/distribution\"\n\n{\n  \"type\": \"REG\"\n  \"distributionPerProvider\": {\n    \"$PROVIDER_ID1\": {\n      \"success\": true\n      \"virtualSize\": 8\n      \"locationsPerStorage\": {\n        \"$STORAGE_ID\": \"/file/location/on/storage\"\n      },\n      \"distributionPerStorage\": {\n        \"$STORAGE_ID\": {\n          \"blocks\": [[0, 4], [6, 2]]\n          \"physicalSize\": 6\n        }\n      }\n    }\n    \"$PROVIDER_ID2\": {\n      \"success\": false\n      \"distributionPerStorage\": {\n        \"$STORAGE_ID\": {\n          \"error\": {\n            \"description\": \"Operation failed with POSIX error: enoent.\"\n            \"details\": {\n              \"errno\": \"enoent\"\n            }\n          }\n        }\n      }\n    }\n  }\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -3341,8 +3279,8 @@
           "Data Distribution"
         ],
         "summary": "Get file storage locations",
-        "x-bash-codegen-description": "Returns information about file location on each storage backend. `null` value for a storage backend\nmeans that there is no file replica on this storage backend. \nSupported for directories and regular files. \nThis endpoint returns a subset of information offered by the \n[Get data distribution](#operation/get_data_distribution) endpoint.\n",
-        "description": "Returns information about file location on each storage backend. `null` value for a storage backend\nmeans that there is no file replica on this storage backend. \nSupported for directories and regular files. \nThis endpoint returns a subset of information offered by the \n[Get data distribution](#operation/get_data_distribution) endpoint.\n\n***Example cURL requests***\n\n**Get file storage locations**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/storage_locations\"\n\n{\n  \"locationsPerProvider\": {\n    \"$PROVIDER_ID1\": {\n      \"success\": true,\n      \"locationsPerStorageBackend\": {\n        \"$STORAGE_ID1\": {\n          \"success\": \"true\",\n          \"location\": \"path/to/file\"\n        }\n      }\n    },\n    \"$PROVIDER_ID2\": {\n      \"success\": true,\n      \"locationsPerStorageBackend\": {\n        \"$STORAGE_ID2\": {\n          \"success\": \"true\",\n          \"location\": null\n        }\n      }\n    },\n    \"$PROVIDER_ID3\": {\n      \"success\": true,\n      \"locationsPerStorageBackend\": {\n        \"$STORAGE_ID2\": {\n          \"success\": false,\n          \"error\": {\n            \"id\": \"requiresPosixCompatibleStorage\",\n              \"details\": {\n                \"storageId\": \"b2ce3858c7267a9c016296e51dc9c41cch3618\",\n                \"posixCompatibleStorages\": [\"posix\", \"glusterfs\", \"nfs\", \"nulldevice\"]\n              },\n            \"description\": \"Cannot apply for the storage backend \\\"b2ce3858c7267a9c016296e51dc9c41cch3618\\\". This operation requires a POSIX-compatible storage backend (any of: posix, glusterfs, nfs, nulldevice).\",\n          }\n        }\n      }\n    }\n  }\n}\n```\n",
+        "x-bash-codegen-description": "Returns information about regular file location on each storage. `null` value for a storage \nmeans that there is no file replica on this storage.\n",
+        "description": "Returns information about regular file location on each storage. `null` value for a storage \nmeans that there is no file replica on this storage.\n\n***Example cURL requests***\n\n**Get file storage locations**\n```bash\ncurl -H \"X-Auth-Token: $TOKEN\" -X GET \"https://$PROVIDER_HOST/api/v3/oneprovider/data/$FILE_ID/storage_locations\"\n\n{\n  \"locationsPerProvider\": {\n    \"$PROVIDER_ID1\": {\n      \"locationsPerStorage\": {\n        \"$STORAGE_ID1\": \"path/to/file\"\n      }\n    },\n    \"$PROVIDER_ID2\": {\n      \"locationsPerStorage\": {\n        \"$STORAGE_ID2\": null\n      }\n    }\n  }\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -4163,8 +4101,8 @@
           "QoS"
         ],
         "summary": "Evaluate QoS expression",
-        "x-bash-codegen-description": "Parses given QoS expression and evaluates it against the parameters of storage backends supporting the space.\nReturns the list of storage backends that match the expression. In case of invalid expression, returns an error\nwith the parser report.\n\nThis operation requires `space_manage_qos` privilege.\n",
-        "description": "Parses given QoS expression and evaluates it against the parameters of storage backends supporting the space.\nReturns the list of storage backends that match the expression. In case of invalid expression, returns an error\nwith the parser report.\n\nThis operation requires `space_manage_qos` privilege.\n\n***Example cURL requests***\n\n**Evaluate QoS expression**\n```bash\ncurl -X POST -H \"X-Auth-Token: $TOKEN\" \\\n-H \"Content-type: application/json\" \\\n-d \"{\"expression\": \"key = value\"}\" \\\n\"https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/evaluate_qos_expression\"\n\n{\n  \"matchingStorageBackends\": [\n    {\n      \"id\": \"$STORAGE_ID\",\n      \"name\": \"storage_name\",\n      \"providerId\": \"$PROVIDER_ID\"\n    }\n  ],\n  \"matchingStorages\": [\n    {\n      \"id\": \"$STORAGE_ID\",\n      \"name\": \"storage_name\",\n      \"providerId\": \"$PROVIDER_ID\"\n    }\n  ]\n}\n```\n",
+        "x-bash-codegen-description": "Parses given QoS expression and evaluates it against the parameters of storages supporting the space.\nReturns the list of storages that match the expression. In case of invalid expression, returns an error\nwith the parser report.\n\nThis operation requires `space_manage_qos` privilege.\n",
+        "description": "Parses given QoS expression and evaluates it against the parameters of storages supporting the space.\nReturns the list of storages that match the expression. In case of invalid expression, returns an error\nwith the parser report.\n\nThis operation requires `space_manage_qos` privilege.\n\n***Example cURL requests***\n\n**Evaluate QoS expression**\n```bash\ncurl -X POST -H \"X-Auth-Token: $TOKEN\" \\\n-H \"Content-type: application/json\" \\\n-d \"{\"expression\": \"key = value\"}\" \\\n\"https://$PROVIDER_HOST/api/v3/oneprovider/spaces/$SPACE_ID/evaluate_qos_expression\"\n\n{\n  \"matchingStorages\": {\n    [{\n      \"id\": \"$STORAGE_ID\",\n      \"name\": \"storage_name\",\n      \"providerId\": \"$PROVIDER_ID\"\n    }]\n}\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -4173,19 +4111,11 @@
         ],
         "responses": {
           "200": {
-            "description": "The list of storage backends matching given QoS expression (objects containing basic storage details)",
+            "description": "The list of storages matching given QoS expression (objects containing basic storage details)",
             "schema": {
               "type": "object",
               "properties": {
-                "matchingStorageBackends": {
-                  "description": "The list of storage backends matching given QoS expression (objects containing basic storage details)",
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/StorageDetails"
-                  }
-                },
                 "matchingStorages": {
-                  "description": "The list of storage backends matching given QoS expression (objects containing basic storage details) [deprecated]",
                   "type": "array",
                   "items": {
                     "$ref": "#/definitions/StorageDetails"
@@ -6510,7 +6440,7 @@
     "/changes/metadata/{sid}": {
       "post": {
         "operationId": "get_space_changes",
-        "x-onedata-custom-handler": "space_monitoring_stream_handler",
+        "x-onedata-custom-handler": "changes_stream_handler",
         "x-onedata-gri": {
           "type": "op_metrics",
           "id": "?BINDING(sid)",
@@ -6684,117 +6614,41 @@
     },
     "Error": {
       "type": "object",
-      "description": "The generic error model for REST requests.",
+      "description": "Generic error model for REST requests.",
       "properties": {
         "error": {
-          "$ref": "#/definitions/ErrorJson"
+          "description": "Identifier representing internal error code.",
+          "type": "string"
+        },
+        "error_description": {
+          "description": "Detailed error message.",
+          "type": "string"
         }
       },
-      "required": [
-        "error"
-      ],
       "example": {
-        "error": {
-          "id": "example",
-          "description": "This is an example error.",
-          "ctx": {
-            "timestamp": 1750762637248,
-            "serviceReleaseVersion": "25.0",
-            "serviceId": "a7ee2722915b8bf7fb064eb65087cc61ch9357",
-            "serviceDomain": "dev-oneprovider-krakow.default.svc.cluster.local",
-            "serviceBuildVersion": "231-g8d26f953c3",
-            "service": "opw",
-            "onedataErrorsRevision": "ca3af8cb",
-            "module": "metadata_req",
-            "line": 45
-          }
-        }
+        "error": "invalid_token",
+        "error_description": "Provided token could not be validated."
       }
     },
     "ErrorJson": {
       "type": "object",
-      "description": "Object describing an error.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "String identifying the error type. Does not change between error instances."
-        },
         "description": {
-          "type": "string",
-          "description": "Human readable error description. May contain information specific to given error instance."
+          "description": "Detailed description of the error.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id of the error.",
+          "type": "string"
         },
         "details": {
-          "type": "object",
-          "description": "Details about the error instance. The object schema is specific to each error type."
-        },
-        "ctx": {
-          "$ref": "#/definitions/ErrorJsonCtx"
+          "description": "Key value map with details describing the error.",
+          "type": "object"
         }
       },
       "required": [
-        "id",
         "description",
-        "ctx"
-      ]
-    },
-    "ErrorJsonCtx": {
-      "type": "object",
-      "description": "Technical information about error.",
-      "properties": {
-        "timestamp": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Timestamp in milliseconds."
-        },
-        "serviceReleaseVersion": {
-          "type": "string",
-          "description": "Release version of a product, for example \"25.0\"."
-        },
-        "serviceId": {
-          "type": "string",
-          "description": "Identifier of a service instance — either Oneprovider Id or \"onezone\"."
-        },
-        "serviceDomain": {
-          "type": "string",
-          "description": "Domain of the service."
-        },
-        "serviceBuildVersion": {
-          "type": "string",
-          "description": "Build version of the service."
-        },
-        "service": {
-          "type": "string",
-          "description": "Short name of service.",
-          "enum": [
-            "ozw",
-            "opw",
-            "ozp",
-            "opp"
-          ]
-        },
-        "onedataErrorsRevision": {
-          "type": "string",
-          "description": "Revision of onedata-errors repo, where the error is defined."
-        },
-        "module": {
-          "type": "string",
-          "description": "Module where the error occurred."
-        },
-        "line": {
-          "type": "integer",
-          "description": "Line number in the module where the error occurred."
-        }
-      },
-      "required": [
-        "timestamp",
-        "serviceReleaseVersion",
-        "serviceId",
-        "serviceDomain",
-        "serviceBuildVersion",
-        "service",
-        "onedataErrorsRevision",
-        "module",
-        "line"
+        "id"
       ]
     },
     "Timestamp": {
@@ -7020,101 +6874,71 @@
     "DataDistribution": {
       "type": "object",
       "description": "Describes distribution of a single file among different storage providers.\n",
-      "discriminator": "type",
-      "x-onedata-oneof": true,
-      "x-onedata-subclasses": [
-        "REG",
-        "DIR"
-      ],
       "properties": {
         "type": {
-          "description": "The type of the file:\n* `REG` - regular file,\n* `DIR` - directory,\n",
-          "enum": [
-            "REG",
-            "DIR"
-          ]
-        }
-      }
-    },
-    "REG": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/DataDistribution"
+          "$ref": "#/definitions/FileType"
         },
-        {
+        "distributionPerProvider": {
           "type": "object",
-          "properties": {
-            "distributionPerProvider": {
-              "type": "object",
-              "additionalProperties": {
+          "additionalProperties": {
+            "type": "object",
+            "description": "Data distribution for a specific provider.",
+            "properties": {
+              "success": {
+                "type": "boolean",
+                "description": "Indicates whether fetching file distribution for this provider was successful."
+              },
+              "virtualSize": {
+                "type": "integer",
+                "description": "Virtual size of file/dir as seen by this provider (only if `success` = true). See also [directory size statistics](#operation/get_directory_size_stats) for more information about different data size metrics.\n"
+              },
+              "locationsPerStorage": {
                 "type": "object",
-                "description": "Data distribution for a specific provider.",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "description": "Indicates whether fetching file distribution for this provider was successful. If false, the `error` field carries the reason and the rest of the fields are absent.  If true, the error field is absent.\n"
-                  },
-                  "error": {
-                    "$ref": "#/definitions/Error",
-                    "description": "Error that occurred for this provider."
-                  },
-                  "logicalSize": {
-                    "type": "integer",
-                    "description": "Total number of bytes in the file content, from the point of view of the Onedata logical namespace.  Independent of the file’s distribution or replication.\n"
-                  },
-                  "locationsPerStorageBackend": {
-                    "type": "object",
-                    "description": "Map with file locations per storage backend.\n",
-                    "additionalProperties": {
-                      "type": "object",
-                      "description": "Information about file location on each storage backend.",
-                      "properties": {
-                        "success": {
-                          "type": "boolean",
-                          "description": "Indicates whether fetching file location for this storage backend was successful.  If false, the `error` field carries the reason and the rest of the fields are absent. If true, the error field is absent.\n"
+                "description": "Map with file locations per storage (only for `type = REG`).\n",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "Information about regular file location on each storage. `null` value for a storage means that there is no file replica on this storage."
+                }
+              },
+              "distributionPerStorage": {
+                "type": "object",
+                "description": "Map with file distribution per storage.\n",
+                "additionalProperties": {
+                  "type": "object",
+                  "description": "File distribution for a specific storage.",
+                  "properties": {
+                    "blocks": {
+                      "type": "array",
+                      "description": "A list of blocks in byte ranges stored on this storage (only for REG file type and `success` = true).\n",
+                      "items": {
+                        "type": "array",
+                        "description": "File block specified as a pair [offset, size].",
+                        "items": {
+                          "type": "integer"
                         },
-                        "error": {
-                          "$ref": "#/definitions/Error",
-                          "description": "Error that occurred for this storage backend."
-                        },
-                        "location": {
-                          "type": "string",
-                          "description": "File location on this storage backend. `null` value for a storage backend means that there is no file replica on this storage backend.\n"
-                        }
+                        "maxItems": 2,
+                        "minItems": 2
                       }
-                    }
-                  },
-                  "distributionPerStorageBackend": {
-                    "type": "object",
-                    "description": "Map with file distribution per storage backend.\n",
-                    "additionalProperties": {
+                    },
+                    "physicalSize": {
+                      "type": "integer",
+                      "description": "Physical size of the file on this storage (only when `success` = true)."
+                    },
+                    "error": {
                       "type": "object",
-                      "description": "File distribution for a specific storage backend.",
+                      "description": "Error that occured for this storage (only when `success` = false).",
                       "properties": {
-                        "success": {
-                          "type": "boolean",
-                          "description": "Indicates whether fetching file distribution for this storage backend was successful.  If false, the `error` field carries the reason and the rest of the fields are absent.  If true, the error field is absent.\n"
+                        "description": {
+                          "description": "Detailed description of the error.",
+                          "type": "string"
                         },
-                        "error": {
-                          "$ref": "#/definitions/Error",
-                          "description": "Error that occurred for this provider."
+                        "id": {
+                          "description": "Id of the error.",
+                          "type": "string"
                         },
-                        "blocks": {
-                          "type": "array",
-                          "description": "A list of blocks in byte ranges stored on this storage backend.\n",
-                          "items": {
-                            "type": "array",
-                            "description": "File block specified as a pair [offset, size].",
-                            "items": {
-                              "type": "integer"
-                            },
-                            "maxItems": 2,
-                            "minItems": 2
-                          }
-                        },
-                        "physicalSize": {
-                          "type": "integer",
-                          "description": "Actual amount of storage consumed to store the file on a given storage backend. May be smaller  than the logical size if the file replica is incomplete.\n"
+                        "details": {
+                          "description": "Key value map with details describing the error.",
+                          "type": "object"
                         }
                       }
                     }
@@ -7124,22 +6948,18 @@
             }
           }
         }
-      ],
+      },
       "example": {
         "type": "REG",
         "distributionPerProvider": {
           "$PROVIDER_ID1": {
             "success": true,
             "logicalSize": 8,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "location": "/file/location/on/storage"
-              }
+            "locationsPerStorage": {
+              "$STORAGE_ID": "/file/location/on/storage"
             },
-            "distributionPerStorageBackend": {
+            "distributionPerStorage": {
               "$STORAGE_ID": {
-                "success": true,
                 "blocks": [
                   [
                     0,
@@ -7155,227 +6975,15 @@
             }
           },
           "$PROVIDER_ID2": {
-            "success": true,
-            "logicalSize": 8,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "location": null
-              }
-            },
-            "distributionPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "blocks": [],
-                "physicalSize": 0
-              }
-            }
-          },
-          "$PROVIDER_ID3": {
-            "success": true,
-            "logicalSize": 8,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": false,
-                "error": {
-                  "id": "requiresPosixCompatibleStorage",
-                  "description": "Cannot apply for the storage backend \"b2ce3858c7267a9c016296e51dc9c41cch3618\". This operation requires a POSIX-compatible storage backend (any of: posix, glusterfs, nfs, nulldevice).",
-                  "details": {
-                    "storageId": "$STORAGE_ID",
-                    "posixCompatibleStorages\"": [
-                      "posix",
-                      "glusterfs",
-                      "nfs",
-                      "nulldevice"
-                    ]
-                  }
-                }
-              }
-            },
-            "distributionPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "blocks": [
-                  [
-                    0,
-                    4
-                  ],
-                  [
-                    6,
-                    2
-                  ]
-                ],
-                "physicalSize": 6
-              }
-            }
-          },
-          "$PROVIDER_ID4": {
             "success": false,
-            "error": {
-              "description": "Operation failed with POSIX error: enoent.",
-              "details": {
-                "errno": "enoent"
-              }
-            }
-          }
-        }
-      }
-    },
-    "DIR": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/DataDistribution"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "distributionPerProvider": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "object",
-                "description": "Data distribution for a specific provider.",
-                "properties": {
-                  "success": {
-                    "type": "boolean",
-                    "description": "Indicates whether fetching directory distribution for this provider was successful. If false, the `error` field carries the reason and the rest of the fields are absent.  If true, the error field is absent.\n"
-                  },
-                  "error": {
-                    "$ref": "#/definitions/Error",
-                    "description": "Error that occurred for this provider."
-                  },
-                  "logicalSize": {
-                    "type": "integer",
-                    "description": "Total size of file data contained in the directory, i.e. the sum of logical sizes of all regular files  in its subtree. If a file has multiple hardlinks in the subtree, each hardlink is counted separately. `null` if directory statistics collecting is disabled in a space.\n"
-                  },
-                  "virtualSize": {
-                    "type": "integer",
-                    "description": "Consolidated logical size, where hardlinks of the same file in the subtree are counted only once.  Represents the storage space required for a complete replica of the directory. `null` if directory statistics collecting is disabled in a space.\n"
-                  },
-                  "locationsPerStorageBackend": {
-                    "type": "object",
-                    "description": "Map with directory locations per storage backend.\n",
-                    "additionalProperties": {
-                      "type": "object",
-                      "description": "Information about directory location on each storage backend.",
-                      "properties": {
-                        "success": {
-                          "type": "boolean",
-                          "description": "Indicates whether fetching directory location for this storage backend was successful.  If false, the `error` field carries the reason and the rest of the fields are absent. If true, the error field is absent.\n"
-                        },
-                        "error": {
-                          "$ref": "#/definitions/Error",
-                          "description": "Error that occurred for this storage backend."
-                        },
-                        "location": {
-                          "type": "string",
-                          "description": "Directory location on this storage backend. `null` value for a storage backend means that the directory was not yet created on this storage backend.\n"
-                        }
-                      }
-                    }
-                  },
-                  "distributionPerStorageBackend": {
-                    "type": "object",
-                    "description": "Map with directory distribution per storage backend.\n",
-                    "additionalProperties": {
-                      "type": "object",
-                      "description": "Directory distribution for a specific storage backend.",
-                      "properties": {
-                        "success": {
-                          "type": "boolean",
-                          "description": "Indicates whether fetching directory distribution for this storage backend was successful.  If false, the `error` field carries the reason and the rest of the fields are absent.  If true, the error field is absent.\n"
-                        },
-                        "error": {
-                          "$ref": "#/definitions/Error",
-                          "description": "Error that occurred for this provider."
-                        },
-                        "physicalSize": {
-                          "type": "integer",
-                          "description": "Actual amount of storage consumed on a given storage backend by all regular files in the  directory’s subtree. May be smaller than the virtual size if some file replicas are incomplete.\n"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      ],
-      "example": {
-        "type": "DIR",
-        "distributionPerProvider": {
-          "$PROVIDER_ID1": {
-            "success": true,
-            "logicalSize": 8,
-            "virtualSize": 8,
-            "locationsPerStorageBackend": {
+            "distributionPerStorage": {
               "$STORAGE_ID": {
-                "success": false,
                 "error": {
-                  "id": "requiresPosixCompatibleStorage",
-                  "description": "Cannot apply for the storage backend \"b2ce3858c7267a9c016296e51dc9c41cch3618\". This operation requires a POSIX-compatible storage backend (any of: posix, glusterfs, nfs, nulldevice).",
+                  "description": "Operation failed with POSIX error: enoent.",
                   "details": {
-                    "storageId": "$STORAGE_ID",
-                    "posixCompatibleStorages\"": [
-                      "posix",
-                      "glusterfs",
-                      "nfs",
-                      "nulldevice"
-                    ]
+                    "errno": "enoent"
                   }
                 }
-              }
-            },
-            "distributionPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "physicalSize": 6
-              }
-            }
-          },
-          "$PROVIDER_ID2": {
-            "success": true,
-            "logicalSize": 8,
-            "virtualSize": 8,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "location": null
-              }
-            },
-            "distributionPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "physicalSize": 0
-              }
-            }
-          },
-          "$PROVIDER_ID3": {
-            "success": true,
-            "logicalSize": null,
-            "virtualSize": null,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "location": "/file/location/on/storage"
-              }
-            },
-            "distributionPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": false,
-                "error": {
-                  "id": "dirStatsDisabledForSpace",
-                  "description": "Directory statistics collection is disabled for this space."
-                }
-              }
-            }
-          },
-          "$PROVIDER_ID4": {
-            "success": false,
-            "error": {
-              "description": "Operation failed with POSIX error: enoent.",
-              "details": {
-                "errno": "enoent"
               }
             }
           }
@@ -7392,34 +7000,12 @@
             "type": "object",
             "description": "File storage locations for a specific provider.",
             "properties": {
-              "success": {
-                "type": "boolean",
-                "description": "Indicates whether fetching file storage locations for this provider was successful."
-              },
-              "error": {
-                "$ref": "#/definitions/Error",
-                "description": "Error that occurred for this provider (only if `success` = false)."
-              },
-              "locationsPerStorageBackend": {
+              "locationsPerStorage": {
                 "type": "object",
-                "description": "Map with file storage location per storage (only when `success` = true).\n",
+                "description": "Map with file storage location per storage.\n",
                 "additionalProperties": {
-                  "type": "object",
-                  "description": "Information about file location on each storage.",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "description": "Indicates whether fetching file location for this storage was successful."
-                    },
-                    "location": {
-                      "type": "string",
-                      "description": "File location on this storage (only if `success` = true).  `null` value for a storage means that there is no file replica on this storage.\n"
-                    },
-                    "error": {
-                      "$ref": "#/definitions/Error",
-                      "description": "Error that occurred for this storage (only if `success` = false)."
-                    }
-                  }
+                  "type": "string",
+                  "description": "File storage location for a specific storage."
                 }
               }
             }
@@ -7429,51 +7015,13 @@
       "example": {
         "locationsPerProvider": {
           "$PROVIDER_ID1": {
-            "success": true,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "location": "path/to/file"
-              }
+            "locationsPerStorage": {
+              "$STORAGE_ID": "path/to/file"
             }
           },
           "$PROVIDER_ID2": {
-            "success": true,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": true,
-                "location": null
-              }
-            }
-          },
-          "$PROVIDER_ID3": {
-            "success": false,
-            "error": {
-              "description": "Operation failed with POSIX error: enoent.",
-              "details": {
-                "errno": "enoent"
-              }
-            }
-          },
-          "$PROVIDER_ID4": {
-            "success": true,
-            "locationsPerStorageBackend": {
-              "$STORAGE_ID": {
-                "success": false,
-                "error": {
-                  "id": "requiresPosixCompatibleStorage",
-                  "description": "Cannot apply for the storage backend \"b2ce3858c7267a9c016296e51dc9c41cch3618\". This operation requires a POSIX-compatible storage backend (any of: posix, glusterfs, nfs, nulldevice).",
-                  "details": {
-                    "storageId": "$STORAGE_ID",
-                    "posixCompatibleStorages\"": [
-                      "posix",
-                      "glusterfs",
-                      "nfs",
-                      "nulldevice"
-                    ]
-                  }
-                }
-              }
+            "locationsPerStorage": {
+              "$STORAGE_ID": null
             }
           }
         }
@@ -7491,7 +7039,7 @@
     },
     "FileAttributeNames": {
       "type": "array",
-      "description": "List of names of the attributes to be included in the result. For a shared file/directory accessed in public mode, only the following attributes are available:  `fileId`, `index`, `type`, `activePermissionsType`, `mode`, `name`, `conflictingName`, `parentFileId`,  `creationTime`, `atime`, `mtime`, `ctime`, `size`, `directShareIds`, `symlinkValue`, `hasCustomMetadata`,  `hasJsonMetadata`, `jsonMetadata`, `xattr.*`. If not provided, by default all attributes are returned.\n",
+      "description": "List of names of the attributes to be included in the result. For a shared file/directory accessed in public mode, only the following attributes are available:  `fileId`, `index`, `type`, `activePermissionsType`, `mode`, `name`, `conflictingName`, `parentFileId`,  `creationTime`, `atime`, `mtime`, `ctime`, `size`, `directShareIds`, `symlinkValue`, `hasCustomMetadata`, `xattr.*`. If not provided, by default all attributes are returned.\n",
       "items": {
         "type": "string",
         "enum": [
@@ -7519,15 +7067,13 @@
           "ownerUserId",
           "hardlinkCount",
           "symlinkValue",
+          "hasCustomMetadata",
           "effProtectionFlags",
           "effDatasetProtectionFlags",
           "effDatasetInheritancePath",
           "effQosInheritancePath",
           "aggregateQosStatus",
           "archiveRecallRootFileId",
-          "hasCustomMetadata",
-          "hasJsonMetadata",
-          "jsonMetadata",
           "xattr.*"
         ]
       }
@@ -7588,7 +7134,7 @@
         },
         "creationTime": {
           "type": "integer",
-          "description": "Item's creation timestamp (UNIX epoch, in seconds). NOTE: in case of items imported from storage or created in  Oneproviders in version 21.02.5 or lower it is assumed as minimum of atime, mtime and ctime.\n"
+          "description": "Item's creation timestamp (UNIX epoch, in seconds). NOTE: in case of items imported from storage or created in  Oneproviders in version 21.02.8 or lower it is assumed as minimum of atime, mtime and ctime.\n"
         },
         "atime": {
           "type": "integer",
@@ -7637,6 +7183,10 @@
           "type": "string",
           "description": "The path to which the symbolic link points. Applicable only for symlinks (`null` otherwise). **NOTE**: The path is shown even for a shared file/directory accessed in public mode.\n"
         },
+        "hasCustomMetadata": {
+          "type": "boolean",
+          "description": "Indicates whether this file/directory has any [custom metadata](#tag/Custom-File-Metadata) attached."
+        },
         "effProtectionFlags": {
           "allOf": [
             {
@@ -7684,18 +7234,6 @@
           "type": "string",
           "description": "Id of the archive recall that this file/directory belongs to (is in the subtree of).  Archive recall is a process that creates a copy of a dataset archive (snapshot) in the space filesystem,  i.e. creates a regular directory, but the files and directories inside are assigned this attribute.       `null` when the file does not belong to any archive recall.\n"
         },
-        "hasCustomMetadata": {
-          "type": "boolean",
-          "description": "Indicates whether this file/directory has any [custom metadata](#tag/Custom-File-Metadata) attached (xattr, JSON or RDF)."
-        },
-        "hasJsonMetadata": {
-          "type": "boolean",
-          "description": "Indicates whether this file/directory has any JSON [custom metadata](#tag/Custom-File-Metadata) attached."
-        },
-        "jsonMetadata": {
-          "type": "object",
-          "description": "JSON metadata associated with the file. Special cases:\n  * `jsonMetadata==null` and `hasJsonMetadata==true` - the JSON metadata is set and equal to `null` (which is a valid JSON itself).\n  * `jsonMetadata==null` and `hasJsonMetadata==false` - there is no JSON metadata at all.\n"
-        },
         "xattr.*": {
           "type": "string",
           "description": "Value of requested extended attribute key (`*` is replaced with the key). Repeated for each requested key. `null` when given extended attribute was not found.\n"
@@ -7729,7 +7267,6 @@
         "hardlinkCount": 1,
         "symlinkValue": null,
         "hasCustomMetadata": true,
-        "hasJsonMetadata": true,
         "effProtectionFlags": [
           "data_protection",
           "metadata_protection"
@@ -7741,9 +7278,6 @@
         "effQosInheritancePath": "ancestor",
         "aggregateQosStatus": "fulfilled",
         "archiveRecallRootFileId": "000006431633765446F4D76546D6F47067D67686431633765446F4D76546D6....",
-        "jsonMetadata": {
-          "key": "value"
-        },
         "xattr.key1": "value1",
         "xattr.key2": null
       }
@@ -8261,7 +7795,7 @@
       "properties": {
         "spaceId": {
           "type": "string",
-          "description": "Id of the space in which the file will be registered - the space must be supported by the storage backend hosting the file (`storageId`). The space support must have `manual import mode`.\n"
+          "description": "Id of the space in which the file will be registered - the space must be supported by the storage hosting the file (`storageId`). The space support must have `manual import mode`.\n"
         },
         "storageId": {
           "type": "string",
@@ -8269,7 +7803,7 @@
         },
         "storageFileId": {
           "type": "string",
-          "description": "Identifier of the file on storage, relevant for given storage backend:\n   * path on POSIX-compatible or canonical object storage backends, e.g. `/dir/file.txt`\n   * URL on HTTP based storage backends, e.g. `https://www.example.org/data/21/run123.tar`\n"
+          "description": "Identifier of the file on storage, relevant for given storage backend:\n   * path on POSIX-compatible or canonical object storages, e.g. `/dir/file.txt`\n   * URL on HTTP based storages, e.g. `https://www.example.org/data/21/run123.tar`\n"
         },
         "destinationPath": {
           "type": "string",
@@ -8817,7 +8351,7 @@
         },
         "handleId": {
           "type": "string",
-          "description": "The Id of Public Data Handle (e.g. DOI or PID) assigned to this share, or null."
+          "description": "The Id of open data Handle (e.g. DOI or PID) assigned to this share or null."
         }
       },
       "required": [
@@ -9573,7 +9107,7 @@
         },
         "expression": {
           "type": "string",
-          "description": "Expression used to select storage backends on which file should be replicated."
+          "description": "Expression used to select storages on which file should be replicated."
         },
         "replicasNum": {
           "type": "integer",
@@ -9608,7 +9142,7 @@
         },
         "expression": {
           "type": "string",
-          "description": "Expression used to select storage backends on which file should be replicated."
+          "description": "Expression used to select storages on which file should be replicated."
         },
         "replicasNum": {
           "type": "integer",
@@ -9623,7 +9157,7 @@
       }
     },
     "QosStatus": {
-      "description": "Status of QoS requirement fulfillment for given file/directory. Possible statuses:\n  * `fulfilled` - desired number of replicas have been created on matching storage backends and their contents are up-to-date.\n  * `pending` - data replication is still ongoing.\n  * `impossible` - there are not enough storage backends matching the expression to meet the required number of replicas.\n",
+      "description": "Status of QoS requirement fulfillment for given file/directory. Possible statuses:\n  * `fulfilled` - desired number of replicas have been created on matching storages and their contents are up-to-date.\n  * `pending` - data replication is still ongoing.\n  * `impossible` - there are not enough storage backends matching the expression to meet the required number of replicas.\n",
       "type": "string",
       "enum": [
         "fulfilled",
@@ -9634,7 +9168,7 @@
     "AggregateQosStatus": {
       "allOf": [
         {
-          "description": "Aggregate status of all effective QoS requirements that concern this file/directory. Possible statuses:\n  * `fulfilled` - desired number of replicas have been created on matching storage backends and their contents are up-to-date.\n  * `pending` - data replication is still ongoing.\n  * `impossible` - there are not enough storage backends matching the expression to meet the required number of replicas.\n"
+          "description": "Aggregate status of all effective QoS requirements that concern this file/directory. Possible statuses:\n  * `fulfilled` - desired number of replicas have been created on matching storages and their contents are up-to-date.\n  * `pending` - data replication is still ongoing.\n  * `impossible` - there are not enough storage backends matching the expression to meet the required number of replicas.\n"
         },
         {
           "$ref": "#/definitions/QosStatus"
@@ -9771,15 +9305,15 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "Id of storage backend."
+          "description": "Id of storage."
         },
         "name": {
           "type": "string",
-          "description": "Name of storage backend."
+          "description": "Name of storage."
         },
         "providerId": {
           "type": "string",
-          "description": "Id of provider storage backend belongs to."
+          "description": "Id of provider storage belongs to."
         }
       },
       "example": {

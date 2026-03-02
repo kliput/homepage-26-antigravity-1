@@ -2,18 +2,18 @@
   "swagger": "2.0",
   "basePath": "/api/v3/onezone",
   "info": {
-    "version": "25.0",
+    "version": "21.02.7",
     "title": "Onezone",
     "x-bash-codegen-description": "This is the RESTful API definition of Onezone component of Onedata\ndata management system [onedata.org](http://onedata.org).\n\nThis API allows control and configuration of local Onezone service deployment,\nin particular management of users, groups, spaces, shares, providers,\nhandle services, handles and clusters.\n\n## Authentication and authorization\nTo be able to use this API, the REST client must authenticate with the Onezone\nservice and posses required authorization, which is determined based on\nclient's privileges and relations in the system.\n\nThere are essentially three types of REST clients depending on the authentication:\n  * **users** - can authenticate using an access token or basic credentials\n  (only for users originating from Onezone's onepanel). Examples:\n  ```bash\n  curl -H \"x-auth-token: $TOKEN\" [...]\n  curl -H \"authorization: Bearer $TOKEN\" [...]\n  curl -u \"username:password\" [...]\n  curl -H \"macaroon: $TOKEN\" [...]   # DEPRECATED\n  ```\n  > `$TOKEN` can ba a Onedata access token, obtained via Onezone GUI or API, in the form\n  `MDAxNWxvY2F00aW9...`. If authority delegation for given IdP is enabled,\n  it is possible to provide an access token from the IdP, which must be prefixed\n  properly (depending on the configuration), e.g.: `github/GST5aasdA...`.\n\n  * **Oneproviders** - can authenticate using the provider root token,\n  which was assigned during registration in Onezone. It can be found in\n  `/etc/op_worker/provider_root_token.txt`. It is used just like a user\n  access token, for example:\n  ```bash\n  curl -H \"x-auth-token: $TOKEN\" [...]\n  curl -H \"authorization: Bearer $TOKEN\" [...]\n  curl -H \"macaroon: $TOKEN\" [...]   # DEPRECATED\n  ```\n  > Please mind that the provider root token is highly confidential and must\n  be kept secret (similarly to a private RSA key).\n\n  * **anonymous** - there is a small subset of operations that do not require\n    any authentication and are publicly available (look for information about\n    public availability in the endpoint descriptions).\n\nThe authorization of the client is determined based on existing relations and\nprivileges in the system. In most cases, the rules below can be roughly applied:\n  * users and providers can access and modify their own data\n  * users can perform operations in groups, spaces, handle services, handles\n    and clusters depending on their privileges in subject entity - the required\n    privileges are listed in the description of each operation\n  * users can be given special admin privileges (fine-grained) that allow to\n    access and modify all entities in the system - see certain operations for\n    details.\n\nAuthentication and Authorization errors have the following meaning:\n  * HTTP 401 UNAUTHORIZED - the client could not be authenticated\n  * HTTP 403 FORBIDDEN - the client was authenticated, but is not permitted to\n    perform the action\n\n## Effective users and effective groups and spaces\nOnedata supports creation of arbitrary nested group and space membership tree\nstructures. In order to determine if a given user belongs to the group\ndirectly or indirectly by belonging to a subgroup of a group, separate API\ncalls are provided for getting information about group users\n(direct group members) and effective users (indirect group members).\n\n## API structure\nThe API is divided into several categories, corresponding to entities in Onedata:\n\n**Space management**\nThe space management operations of this API provide means for accessing\ninformation about spaces and their management.\n\n**Share management**\nThe share management operations of this API provide means for accessing\ninformation about shares and their management.\n\n**Group management**\nThe group management operations allow creation of user groups, assigning\ntheir authorization rights, adding and removing users from groups.\n\n**User management**\nThe user management methods allow creation of users, managing their\nauthorization credentials as well as space and group membership.\n\n**Provider management**\nProvider specific calls allow getting global information about the spaces\nmanaged by the provider, and some administrative operations which can be used\nfor monitoring or accounting.\n\n**Handle service management**\nThe handle service management operations of this API provide means for\naccessing information about handle services and their management.\n\n**Handle API**\nOnezone provides extensive support for integration with Handle system\nregistration services, including support for DOI and PID identifier assignment\nservices. The API provides methods for adding new Handle services to the\nsystem, managing which users can use which registration services and complete\nAPI for registering identifiers to users' data sets which are made public.\n\n**Cluster management**\nOperations for managing Onezone / Oneprovider clusters and their members -\nusers and groups that can access the Onepanel interfaces (REST or GUI) of\na cluster.\n",
-    "description": "# Overview\nThis is the RESTful API definition of Onezone component of Onedata\ndata management system [onedata.org](http://onedata.org).\n\n> This API is defined using [Swagger](http://swagger.io/), the JSON\nspecification can be used to automatically generate client libraries -\n[swagger.json](../../../swagger/onezone/swagger.json).\n\nThis API allows control and configuration of local Onezone service deployment,\nin particular management of users, groups, spaces, shares, providers,\nhandle services, handles and clusters.\n\n## Authentication and authorization\nTo be able to use this API, the REST client must authenticate with the Onezone\nservice and posses required authorization, which is determined based on\nclient's privileges and relations in the system.\n\nThere are essentially three types of REST clients depending on the authentication:\n  * **users** - can authenticate using an access token or basic credentials\n  (only for users originating from Onezone's onepanel). Examples:\n  ```bash\n  curl -H \"x-auth-token: $TOKEN\" [...]\n  curl -H \"authorization: Bearer $TOKEN\" [...]\n  curl -u \"username:password\" [...]\n  curl -H \"macaroon: $TOKEN\" [...]   # DEPRECATED\n  ```\n  > `$TOKEN` can ba a Onedata access token, obtained via Onezone GUI or API, in the form\n  `MDAxNWxvY2F00aW9...`. If authority delegation for given IdP is enabled,\n  it is possible to provide an access token from the IdP, which must be prefixed\n  properly (depending on the configuration), e.g.: `github/GST5aasdA...`.\n\n  * **Oneproviders** - can authenticate using the provider root token,\n  which was assigned during registration in Onezone. It can be found in\n  `/etc/op_worker/provider_root_token.txt`. It is used just like a user\n  access token, for example:\n  ```bash\n  curl -H \"x-auth-token: $TOKEN\" [...]\n  curl -H \"authorization: Bearer $TOKEN\" [...]\n  curl -H \"macaroon: $TOKEN\" [...]   # DEPRECATED\n  ```\n  > Please mind that the provider root token is highly confidential and must\n  be kept secret (similarly to a private RSA key).\n\n  * **anonymous** - there is a small subset of operations that do not require\n    any authentication and are publicly available (look for information about\n    public availability in the endpoint descriptions).\n\nThe authorization of the client is determined based on existing relations and\nprivileges in the system. In most cases, the rules below can be roughly applied:\n  * users and providers can access and modify their own data\n  * users can perform operations in groups, spaces, handle services, handles\n    and clusters depending on their privileges in subject entity - the required\n    privileges are listed in the description of each operation\n  * users can be given special admin privileges (fine-grained) that allow to\n    access and modify all entities in the system - see certain operations for\n    details.\n\nAuthentication and Authorization errors have the following meaning:\n  * HTTP 401 UNAUTHORIZED - the client could not be authenticated\n  * HTTP 403 FORBIDDEN - the client was authenticated, but is not permitted to\n    perform the action\n\n## Effective users and effective groups and spaces\nOnedata supports creation of arbitrary nested group and space membership tree\nstructures. In order to determine if a given user belongs to the group\ndirectly or indirectly by belonging to a subgroup of a group, separate API\ncalls are provided for getting information about group users\n(direct group members) and effective users (indirect group members).\n\n## API structure\nThe API is divided into several categories, corresponding to entities in Onedata:\n\n**Space management**\nThe space management operations of this API provide means for accessing\ninformation about spaces and their management.\n\n**Share management**\nThe share management operations of this API provide means for accessing\ninformation about shares and their management.\n\n**Group management**\nThe group management operations allow creation of user groups, assigning\ntheir authorization rights, adding and removing users from groups.\n\n**User management**\nThe user management methods allow creation of users, managing their\nauthorization credentials as well as space and group membership.\n\n**Provider management**\nProvider specific calls allow getting global information about the spaces\nmanaged by the provider, and some administrative operations which can be used\nfor monitoring or accounting.\n\n**Handle service management**\nThe handle service management operations of this API provide means for\naccessing information about handle services and their management.\n\n**Handle API**\nOnezone provides extensive support for integration with Handle system\nregistration services, including support for DOI and PID identifier assignment\nservices. The API provides methods for adding new Handle services to the\nsystem, managing which users can use which registration services and complete\nAPI for registering identifiers to users' data sets which are made public.\n\n**Cluster management**\nOperations for managing Onezone / Oneprovider clusters and their members -\nusers and groups that can access the Onepanel interfaces (REST or GUI) of\na cluster.\n\n\n## Using the API\nOnezone API is quite complex and thus it might be difficult to quickly figure\nout how to perform specific action, however the following guidelines might\nbe useful:\n  * Operations performed by a regular users on their resources are grouped under\n    `/user` path (**USER** group in the menu)\n  * Operations performed by administrators of specific resources (e.g. groups,\n    spaces, shares) start with specific resource (e.g. `/groups`)\n  * By default the operations which list resource membership\n    (e.g. `/spaces/SPACE_ID/groups/`) will list explicit resource membership.\n    To get list of effective resource membership (i.e. including indirect\n    membership), special paths are provided\n    (e.g. `/spaces/SPACE_ID/effective_groups/`)\n\nFurthermore, we have prepared a command-line client environment based on Docker\nwhich gives easy access to each of Onedata services via command-line clients,\nwith pre-configured shell with full help on the APIs and autocomplete for\noperations and attributes.\n\n```\ndocker run -it onedata/rest-cli:25.0\n```\n\nBelow you can find some tutorials which show how to use this API in practice:\n  * [User oriented tutorial](https://onedata.org/#/home/documentation/doc/using_onedata/using_onedata_from_cli.html)\n  * [Administrator oriented tutorial](https://onedata.org/#/home/documentation/doc/administering_onedata/administering_onedata_from_cli.html)\n\n\n## Examples\n\n**Generate new authentication token**\n```bash\ncurl -u user:password -X POST -H 'Content-type: application/json' -d '{}' \\\nhttps://$ONEZONE_HOST/api/v3/onezone/user/client_tokens\n```\n\n**Get user details**\n```bash\ncurl -H 'X-Auth-Token: $TOKEN' -X GET \\\nhttps://$ONEZONE_HOST/api/v3/onezone/user\n```\n\n**Get user details using an access token from github**\n```bash\ncurl -H 'X-Auth-Token: github/ijaAVWq3j9234jA9gPoR9agFja89t9UiPf8tiueSdx' -X GET \\\nhttps://$ONEZONE_HOST/api/v3/onezone/user\n```\n> Note that GitHub IdP must be properly configured for the example to work:\n> * authority delegation must be enabled\n> * tokenPrefix must be set to \"github/\"\n>\n> You can learn more in\n> [the documentation](https://onedata.org/#/home/documentation/doc/administering_onedata/openid_saml_configuration/openid_saml_configuration_19_02[authority-delegation].html).\n",
+    "description": "# Overview\nThis is the RESTful API definition of Onezone component of Onedata\ndata management system [onedata.org](http://onedata.org).\n\n> This API is defined using [Swagger](http://swagger.io/), the JSON\nspecification can be used to automatically generate client libraries -\n[swagger.json](../../../swagger/onezone/swagger.json).\n\nThis API allows control and configuration of local Onezone service deployment,\nin particular management of users, groups, spaces, shares, providers,\nhandle services, handles and clusters.\n\n## Authentication and authorization\nTo be able to use this API, the REST client must authenticate with the Onezone\nservice and posses required authorization, which is determined based on\nclient's privileges and relations in the system.\n\nThere are essentially three types of REST clients depending on the authentication:\n  * **users** - can authenticate using an access token or basic credentials\n  (only for users originating from Onezone's onepanel). Examples:\n  ```bash\n  curl -H \"x-auth-token: $TOKEN\" [...]\n  curl -H \"authorization: Bearer $TOKEN\" [...]\n  curl -u \"username:password\" [...]\n  curl -H \"macaroon: $TOKEN\" [...]   # DEPRECATED\n  ```\n  > `$TOKEN` can ba a Onedata access token, obtained via Onezone GUI or API, in the form\n  `MDAxNWxvY2F00aW9...`. If authority delegation for given IdP is enabled,\n  it is possible to provide an access token from the IdP, which must be prefixed\n  properly (depending on the configuration), e.g.: `github/GST5aasdA...`.\n\n  * **Oneproviders** - can authenticate using the provider root token,\n  which was assigned during registration in Onezone. It can be found in\n  `/etc/op_worker/provider_root_token.txt`. It is used just like a user\n  access token, for example:\n  ```bash\n  curl -H \"x-auth-token: $TOKEN\" [...]\n  curl -H \"authorization: Bearer $TOKEN\" [...]\n  curl -H \"macaroon: $TOKEN\" [...]   # DEPRECATED\n  ```\n  > Please mind that the provider root token is highly confidential and must\n  be kept secret (similarly to a private RSA key).\n\n  * **anonymous** - there is a small subset of operations that do not require\n    any authentication and are publicly available (look for information about\n    public availability in the endpoint descriptions).\n\nThe authorization of the client is determined based on existing relations and\nprivileges in the system. In most cases, the rules below can be roughly applied:\n  * users and providers can access and modify their own data\n  * users can perform operations in groups, spaces, handle services, handles\n    and clusters depending on their privileges in subject entity - the required\n    privileges are listed in the description of each operation\n  * users can be given special admin privileges (fine-grained) that allow to\n    access and modify all entities in the system - see certain operations for\n    details.\n\nAuthentication and Authorization errors have the following meaning:\n  * HTTP 401 UNAUTHORIZED - the client could not be authenticated\n  * HTTP 403 FORBIDDEN - the client was authenticated, but is not permitted to\n    perform the action\n\n## Effective users and effective groups and spaces\nOnedata supports creation of arbitrary nested group and space membership tree\nstructures. In order to determine if a given user belongs to the group\ndirectly or indirectly by belonging to a subgroup of a group, separate API\ncalls are provided for getting information about group users\n(direct group members) and effective users (indirect group members).\n\n## API structure\nThe API is divided into several categories, corresponding to entities in Onedata:\n\n**Space management**\nThe space management operations of this API provide means for accessing\ninformation about spaces and their management.\n\n**Share management**\nThe share management operations of this API provide means for accessing\ninformation about shares and their management.\n\n**Group management**\nThe group management operations allow creation of user groups, assigning\ntheir authorization rights, adding and removing users from groups.\n\n**User management**\nThe user management methods allow creation of users, managing their\nauthorization credentials as well as space and group membership.\n\n**Provider management**\nProvider specific calls allow getting global information about the spaces\nmanaged by the provider, and some administrative operations which can be used\nfor monitoring or accounting.\n\n**Handle service management**\nThe handle service management operations of this API provide means for\naccessing information about handle services and their management.\n\n**Handle API**\nOnezone provides extensive support for integration with Handle system\nregistration services, including support for DOI and PID identifier assignment\nservices. The API provides methods for adding new Handle services to the\nsystem, managing which users can use which registration services and complete\nAPI for registering identifiers to users' data sets which are made public.\n\n**Cluster management**\nOperations for managing Onezone / Oneprovider clusters and their members -\nusers and groups that can access the Onepanel interfaces (REST or GUI) of\na cluster.\n\n\n## Using the API\nOnezone API is quite complex and thus it might be difficult to quickly figure\nout how to perform specific action, however the following guidelines might\nbe useful:\n  * Operations performed by a regular users on their resources are grouped under\n    `/user` path (**USER** group in the menu)\n  * Operations performed by administrators of specific resources (e.g. groups,\n    spaces, shares) start with specific resource (e.g. `/groups`)\n  * By default the operations which list resource membership\n    (e.g. `/spaces/SPACE_ID/groups/`) will list explicit resource membership.\n    To get list of effective resource membership (i.e. including indirect\n    membership), special paths are provided\n    (e.g. `/spaces/SPACE_ID/effective_groups/`)\n\nFurthermore, we have prepared a command-line client environment based on Docker\nwhich gives easy access to each of Onedata services via command-line clients,\nwith pre-configured shell with full help on the APIs and autocomplete for\noperations and attributes.\n\n```\ndocker run -it onedata/rest-cli:21.02.7\n```\n\nBelow you can find some tutorials which show how to use this API in practice:\n  * [User oriented tutorial](https://onedata.org/#/home/documentation/doc/using_onedata/using_onedata_from_cli.html)\n  * [Administrator oriented tutorial](https://onedata.org/#/home/documentation/doc/administering_onedata/administering_onedata_from_cli.html)\n\n\n## Examples\n\n**Generate new authentication token**\n```bash\ncurl -u user:password -X POST -H 'Content-type: application/json' -d '{}' \\\nhttps://$ONEZONE_HOST/api/v3/onezone/user/client_tokens\n```\n\n**Get user details**\n```bash\ncurl -H 'X-Auth-Token: $TOKEN' -X GET \\\nhttps://$ONEZONE_HOST/api/v3/onezone/user\n```\n\n**Get user details using an access token from github**\n```bash\ncurl -H 'X-Auth-Token: github/ijaAVWq3j9234jA9gPoR9agFja89t9UiPf8tiueSdx' -X GET \\\nhttps://$ONEZONE_HOST/api/v3/onezone/user\n```\n> Note that GitHub IdP must be properly configured for the example to work:\n> * authority delegation must be enabled\n> * tokenPrefix must be set to \"github/\"\n>\n> You can learn more in\n> [the documentation](https://onedata.org/#/home/documentation/doc/administering_onedata/openid_saml_configuration/openid_saml_configuration_19_02[authority-delegation].html).\n",
     "contact": {
       "name": "Onedata support",
-      "url": "https://onedata.org",
+      "url": "https://onedata.org/#/home/support",
       "email": "info@onedata.org"
     },
     "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "x-logo": {
       "url": "https://onedata.org/assets/images/api/onezone-logo.svg",
@@ -34,7 +34,7 @@
         "x-onedata-permissions": [],
         "summary": "Returns public configuration of Onezone service.",
         "x-bash-codegen-description": "Returns public information about the Onezone service.\n\nThis endpoint does not require authentication.\n",
-        "description": "Returns public information about the Onezone service.\n\nThis endpoint does not require authentication.\n\n***Example cURL requests***\n\n**Get public information about the Onezone service**\n```bash\ncurl https://$ZONE_HOST/api/v3/onezone/configuration\n\n{\n  \"name\": \"Example zone\",\n  \"domain\": \"zone.example.com\",\n  \"version\": \"25.0\",\n  \"build\": \"g52dbeca23\",\n  \"subdomainDelegationSupported\": true,\n  \"compatibleOneproviderVersions\": [\n      \"20.02.1\",\n      \"20.02.2\",\n      \"25.0\"\n  ],\n  \"compatibilityRegistryRevision\": 2022122100,\n  \"supportedIdPs\": [\n    {\n      \"id\": \"google\",\n      \"offlineAccess\": true\n    },\n    {\n      \"id\": \"basicAuth\",\n      \"offlineAccess\": false\n    }\n  ],\n  \"availableSpaceTags\": {\n    \"general\": [\n        \"big-data\",\n        \"demo\",\n        \"open-data\",\n        \"simulation\"\n    ],\n    \"domains\": [\n        \"agriculture\",\n        \"forestry\",\n        \"justice\",\n        \"science\"\n    ]\n  }\n}\n```\n",
+        "description": "Returns public information about the Onezone service.\n\nThis endpoint does not require authentication.\n\n***Example cURL requests***\n\n**Get public information about the Onezone service**\n```bash\ncurl https://$ZONE_HOST/api/v3/onezone/configuration\n\n{\n  \"name\": \"Example zone\",\n  \"domain\": \"zone.example.com\",\n  \"version\": \"21.02.7\",\n  \"build\": \"g52dbeca23\",\n  \"subdomainDelegationSupported\": true,\n  \"compatibleOneproviderVersions\": [\n      \"20.02.1\",\n      \"20.02.2\",\n      \"21.02.7\"\n  ],\n  \"compatibilityRegistryRevision\": 2022122100,\n  \"supportedIdPs\": [\n    {\n      \"id\": \"google\",\n      \"offlineAccess\": true\n    },\n    {\n      \"id\": \"basicAuth\",\n      \"offlineAccess\": false\n    }\n  ],\n  \"availableSpaceTags\": {\n    \"general\": [\n        \"big-data\",\n        \"demo\",\n        \"open-data\",\n        \"simulation\"\n    ],\n    \"domains\": [\n        \"agriculture\",\n        \"forestry\",\n        \"justice\",\n        \"science\"\n    ]\n  }\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -3840,8 +3840,8 @@
           "handle_service_register_handle"
         ],
         "summary": "Create a new handle for the current user",
-        "x-bash-codegen-description": "Registers a new Public Data handle in the specified handle service as the current user.\n\nA Public Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as a Public Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Public Data records, to be harvested by Public Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation can be invoked on behalf of the current user only and requires\n'handle_service_register_handle' privilege in the handle service\nwhere the new handle is to be registered.\n",
-        "description": "Registers a new Public Data handle in the specified handle service as the current user.\n\nA Public Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as a Public Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Public Data records, to be harvested by Public Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation can be invoked on behalf of the current user only and requires\n'handle_service_register_handle' privilege in the handle service\nwhere the new handle is to be registered.\n\n***Example cURL requests***\n\n**Create new handle for the current user**\n```bash\ncurl -H \"x-auth-token: $TOKEN\" -H \"content-type: application/json\" \\\n  -X POST https://$ZONE_HOST/api/v3/onezone/user/handles \\\n  -d '{ \n    \"handleServiceId\": \"ddb06ed993bae95f2f430664fff122f7\", \n    \"resourceType\": \"Share\", \n    \"resourceId\": \"4fa683cbda8d8f686d15d42720af431d\", \n    \"metadataSchema\": \"oai_dc\", \n    \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?><metadata><dc:contributor>John Doe</dc:contributor></metadata>\"\n  }'\n```\n",
+        "x-bash-codegen-description": "Registers a new Open Data handle in the specified handle service as the current user.\n\nAn Open Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as an Open Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Open Data records, to be harvested by Open Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation can be invoked on behalf of the current user only and requires\n'handle_service_register_handle' privilege in the handle service\nwhere the new handle is to be registered.\n",
+        "description": "Registers a new Open Data handle in the specified handle service as the current user.\n\nAn Open Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as an Open Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Open Data records, to be harvested by Open Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation can be invoked on behalf of the current user only and requires\n'handle_service_register_handle' privilege in the handle service\nwhere the new handle is to be registered.\n\n***Example cURL requests***\n\n**Create new handle for the current user**\n```bash\ncurl -H \"x-auth-token: $TOKEN\" -H \"content-type: application/json\" \\\n  -X POST https://$ZONE_HOST/api/v3/onezone/user/handles \\\n  -d '{ \n    \"handleServiceId\": \"ddb06ed993bae95f2f430664fff122f7\", \n    \"resourceType\": \"Share\", \n    \"resourceId\": \"4fa683cbda8d8f686d15d42720af431d\", \n    \"metadataPrefix\": \"oai_dc\", \n    \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>...\" \n  }'\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -3920,7 +3920,7 @@
         "x-onedata-auth-hint": "?THROUGH_USER(?CLIENT_ID)",
         "summary": "Get handle details",
         "x-bash-codegen-description": "Returns the details of a specific handle.\n\nThis operation can be invoked on behalf of the current user only.\n",
-        "description": "Returns the details of a specific handle.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get handle details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific handle.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get handle details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -4124,7 +4124,7 @@
         "x-onedata-auth-hint": "?THROUGH_USER(?CLIENT_ID)",
         "summary": "Get effective handle details",
         "x-bash-codegen-description": "Returns information about a specific effective handle to which the user has access.\n\nThis operation can be invoked on behalf of the current user only.\n",
-        "description": "Returns information about a specific effective handle to which the user has access.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get user effective handle**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/effective_handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns information about a specific effective handle to which the user has access.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get user effective handle**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/effective_handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -4266,7 +4266,7 @@
         "x-onedata-auth-hint": "?AS_USER(?CLIENT_ID)",
         "summary": "Create a new harvester for the current user",
         "x-bash-codegen-description": "Creates a new harvester as current user. The user automaticaly becomes\nthe harvesters' member.\n\nThis operation can be invoked on behalf of the current user only.\n",
-        "description": "Creates a new harvester as current user. The user automaticaly becomes\nthe harvesters' member.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Create new user harvester**\n```bash\ncurl -u admin:password -H \"Content-type: application/json\" -X POST \\\n-X POST -d '{ \"name\" : \"new_harvester\", \"harvestingBackendEndpoint\" : \"example.elastic.com:9200\", \"harvestingBackendType\" : \"elasticsearch_harvesting_backend\"  \\\n\"config\" : { \"typeMapping\": [ { \"id\": 0, \"name\": \"Type 1\" }, { \"id\": 1, \"name\": \"Type 1\" } ],\n             \"externalHelpLink\": \"http://example.com/some_help_page\",\n             \"refreshDataTimeout\": 1000 }, \\\nhttps://$ZONE_HOST/api/v3/onezone/user/harvesters\n```\n",
+        "description": "Creates a new harvester as current user. The user automaticaly becomes\nthe harvesters' member.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Create new user harvester**\n```bash\ncurl -u admin:password -H \"Content-type: application/json\" -X POST \\\n-X POST -d '{ \"name\" : \"new_harvester\", \"endpoint\" : \"example.elastic.com:9200\", \"harvestingBackendType\" : \"elasticsearch_harvesting_backend\"  \\\n\"config\" : { \"typeMapping\": [ { \"id\": 0, \"name\": \"Type 1\" }, { \"id\": 1, \"name\": \"Type 1\" } ],\n             \"externalHelpLink\": \"http://example.com/some_help_page\",\n             \"refreshDataTimeout\": 1000 }, \\\nhttps://$ZONE_HOST/api/v3/onezone/user/harvesters\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -4907,7 +4907,7 @@
         "x-onedata-auth-hint": "?THROUGH_USER(?CLIENT_ID)",
         "summary": "Get user's cluster details",
         "x-bash-codegen-description": "Returns the details of a specific user's cluster.\n\nThis operation can be invoked on behalf of the current user only.\n",
-        "description": "Returns the details of a specific user's cluster.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get user's cluster details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific user's cluster.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get user's cluster details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -5111,7 +5111,7 @@
         "x-onedata-auth-hint": "?THROUGH_USER(?CLIENT_ID)",
         "summary": "Get user's effective cluster details",
         "x-bash-codegen-description": "Returns information about a specific user's effective cluster.\n\nThis operation can be invoked on behalf of the current user only.\n",
-        "description": "Returns information about a specific user's effective cluster.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get user's effective cluster details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns information about a specific user's effective cluster.\n\nThis operation can be invoked on behalf of the current user only.\n\n***Example cURL requests***\n\n**Get user's effective cluster details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/user/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -9859,8 +9859,8 @@
           "oz_groups_add_relationships"
         ],
         "summary": "Create a new handle for given group",
-        "x-bash-codegen-description": "Registers a new Public Data handle in the specified handle service on behalf of a group.\n\nA Public Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as a Public Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Public Data records, to be harvested by Public Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation requires `group_create_handle` privilege in the group and\n`handle_service_register_handle` privilege in the handle service specified\nin the `handleServiceId` field.  \nFor administrator who does not belong to this group\n`oz_groups_add_relationships` and `oz_handles_create` privilege is required.\n",
-        "description": "Registers a new Public Data handle in the specified handle service on behalf of a group.\n\nA Public Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as a Public Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Public Data records, to be harvested by Public Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation requires `group_create_handle` privilege in the group and\n`handle_service_register_handle` privilege in the handle service specified\nin the `handleServiceId` field.  \nFor administrator who does not belong to this group\n`oz_groups_add_relationships` and `oz_handles_create` privilege is required.\n\n***Example cURL requests***\n\n**Create new handle for given group**\n```bash\ncurl -H \"x-auth-token: $TOKEN\" -H \"content-type: application/json\" \\\n  -X POST https://$ZONE_HOST/api/v3/onezone/groups/$GROUP_ID/handles \\\n  -d '{ \n    \"handleServiceId\": \"ddb06ed993bae95f2f430664fff122f7\", \n    \"resourceType\": \"Share\", \n    \"resourceId\": \"4fa683cbda8d8f686d15d42720af431d\", \n    \"metadataSchema\": \"oai_dc\", \n    \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?><metadata><dc:contributor>John Doe</dc:contributor></metadata>\"\n  }'\n```\n",
+        "x-bash-codegen-description": "Registers a new Open Data handle in the specified handle service on behalf of a group.\n\nAn Open Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as an Open Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Open Data records, to be harvested by Open Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation requires `group_create_handle` privilege in the group and\n`handle_service_register_handle` privilege in the handle service specified\nin the `handleServiceId` field.  \nFor administrator who does not belong to this group\n`oz_groups_add_relationships` and `oz_handles_create` privilege is required.\n",
+        "description": "Registers a new Open Data handle in the specified handle service on behalf of a group.\n\nAn Open Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as an Open Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Open Data records, to be harvested by Open Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation requires `group_create_handle` privilege in the group and\n`handle_service_register_handle` privilege in the handle service specified\nin the `handleServiceId` field.  \nFor administrator who does not belong to this group\n`oz_groups_add_relationships` and `oz_handles_create` privilege is required.\n\n***Example cURL requests***\n\n**Create new handle for given group**\n```bash\ncurl -H \"x-auth-token: $TOKEN\" -H \"content-type: application/json\" \\\n  -X POST https://$ZONE_HOST/api/v3/onezone/groups/$GROUP_ID/handles \\\n  -d '{ \n    \"handleServiceId\": \"ddb06ed993bae95f2f430664fff122f7\", \n    \"resourceType\": \"Share\", \n    \"resourceId\": \"4fa683cbda8d8f686d15d42720af431d\", \n    \"metadataPrefix\": \"oai_dc\", \n    \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>...\" \n  }'\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -9950,7 +9950,7 @@
         ],
         "summary": "Get group handle details",
         "x-bash-codegen-description": "Returns the details of a specific handle.\n\nThis operation requires `group_view` privilege.\nFor administrator who does not belong to this group\n`oz_handles_view` privilege is required.\n",
-        "description": "Returns the details of a specific handle.\n\nThis operation requires `group_view` privilege.\nFor administrator who does not belong to this group\n`oz_handles_view` privilege is required.\n\n***Example cURL requests***\n\n**Get handle details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/groups/$GROUP_ID/handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific handle.\n\nThis operation requires `group_view` privilege.\nFor administrator who does not belong to this group\n`oz_handles_view` privilege is required.\n\n***Example cURL requests***\n\n**Get handle details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/groups/$GROUP_ID/handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -10190,7 +10190,7 @@
         ],
         "summary": "Get effective group handle details",
         "x-bash-codegen-description": "Returns the details of a specific effective handle.\n\nThis operation requires `group_view` privilege.\nFor administrator who does not belong to this group\n`oz_handles_view` privilege is required.\n",
-        "description": "Returns the details of a specific effective handle.\n\nThis operation requires `group_view` privilege.\nFor administrator who does not belong to this group\n`oz_handles_view` privilege is required.\n\n***Example cURL requests***\n\n**Get effective handle details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/groups/$GROUP_ID/effective_handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific effective handle.\n\nThis operation requires `group_view` privilege.\nFor administrator who does not belong to this group\n`oz_handles_view` privilege is required.\n\n***Example cURL requests***\n\n**Get effective handle details**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/groups/$GROUP_ID/effective_handles/$HANDLE_ID\n\n{\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -10994,7 +10994,7 @@
         "x-onedata-auth-hint": "?THROUGH_GROUP(?BINDING(id))",
         "summary": "Get group's cluster details",
         "x-bash-codegen-description": "Returns the details of a specific group's cluster.\n\nThis operation can be invoked on behalf of the current group only.\n",
-        "description": "Returns the details of a specific group's cluster.\n\nThis operation can be invoked on behalf of the current group only.\n\n***Example cURL requests***\n\n**Get group's cluster details**\n```bash\ncurl -u groupname:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/group/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific group's cluster.\n\nThis operation can be invoked on behalf of the current group only.\n\n***Example cURL requests***\n\n**Get group's cluster details**\n```bash\ncurl -u groupname:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/group/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -11221,7 +11221,7 @@
         "x-onedata-auth-hint": "?THROUGH_GROUP(?BINDING(id))",
         "summary": "Get group's effective cluster details",
         "x-bash-codegen-description": "Returns information about a specific effective cluster to which the group belongs.\n\nThis operation can be invoked on behalf of the current group only.\n",
-        "description": "Returns information about a specific effective cluster to which the group belongs.\n\nThis operation can be invoked on behalf of the current group only.\n\n***Example cURL requests***\n\n**Get group's effective cluster details**\n```bash\ncurl -u groupname:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/group/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns information about a specific effective cluster to which the group belongs.\n\nThis operation can be invoked on behalf of the current group only.\n\n***Example cURL requests***\n\n**Get group's effective cluster details**\n```bash\ncurl -u groupname:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/group/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -11498,6 +11498,251 @@
           {
             "lang": "Shell",
             "source": "onezone-rest-cli listSpacePrivileges"
+          }
+        ]
+      }
+    },
+    "/spaces/{id}": {
+      "get": {
+        "operationId": "get_space",
+        "tags": [
+          "Space"
+        ],
+        "x-onedata-gri": {
+          "type": "od_space",
+          "id": "?BINDING(id)",
+          "aspect": "instance",
+          "scope": "protected"
+        },
+        "x-onedata-permissions": [
+          "oz_spaces_view"
+        ],
+        "summary": "Get space details",
+        "x-bash-codegen-description": "Returns the details about a specific space.\n\nThis operation requires any of the following authentication:\n* as user who is an effective member of the space (`{id}`),\n* as provider that supports the space (`{id}`),\n* as user who has `oz_spaces_view` admin privilege.\n",
+        "description": "Returns the details about a specific space.\n\nThis operation requires any of the following authentication:\n* as user who is an effective member of the space (`{id}`),\n* as provider that supports the space (`{id}`),\n* as user who has `oz_spaces_view` admin privilege.\n\n***Example cURL requests***\n\n**Get space details**\n```bash\ncurl -u admin:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/spaces/$SPACE_ID\n\n{\n  \"spaceId\": \"2c0160248ba9a66f45da751ca459535a\",\n  \"name\": \"My Private space\",\n  \"description\": \"My Private data\",\n  \"organizationName\": \"\",\n  \"tags\": [\"images\", \"sport\"],\n  \"advertisedInMarketplace\": false,\n  \"marketplaceContactEmail\": \"\",\n  \"providers\": {\n    \"296ebe3c20e9666dc489b647f8647f12\": 5368709120,\n    \"dcf12429647c204896eebe3b6f686967\": 14400000\n  },\n  \"supportParametersRegistry\": {\n    \"296ebe3c20e9666dc489b647f8647f12\": {\n      \"accountingEnabled\": false,\n      \"dirStatsServiceEnabled\": true,\n      \"dirStatsServiceStatus\": \"enabled\"\n    },\n    \"dcf12429647c204896eebe3b6f686967\": {\n      \"accountingEnabled\": false,\n      \"dirStatsServiceEnabled\": false,\n      \"dirStatsServiceStatus\": \"stopping\"\n    }\n  },\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebfc1a770c3\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Information about a space.",
+            "schema": {
+              "$ref": "#/definitions/Space"
+            }
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Authentication error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Authorization error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server Error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Space Id.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "onezone-rest-cli getSpace id=b752ceafabb662b4e5728b2ded25cdd1"
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "modify_space",
+        "tags": [
+          "Space"
+        ],
+        "x-onedata-gri": {
+          "type": "od_space",
+          "id": "?BINDING(id)",
+          "aspect": "instance"
+        },
+        "x-onedata-permissions": [
+          "space_update",
+          "oz_spaces_update"
+        ],
+        "summary": "Modify space details",
+        "x-bash-codegen-description": "Updates the details about a space.\n\nThis operation requires `space_update` privilege\nor `oz_spaces_update` admin privilege.\n",
+        "description": "Updates the details about a space.\n\nThis operation requires `space_update` privilege\nor `oz_spaces_update` admin privilege.\n\n***Example cURL requests***\n\n**Change space name**\n```bash\ncurl -u username:password -H \"Content-type: application/json\" \\\n-X PATCH -d '{\"name\": \"new_space12\"}' \\\nhttps://$ZONE_HOST/api/v3/onezone/spaces/$SPACE_ID\n```\n",
+        "consumes": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Space has been updated successfully."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Authentication error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Authorization error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server Error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Space Id.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "data",
+            "in": "body",
+            "description": "Space parameters",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The new name of the space."
+                },
+                "description": {
+                  "$ref": "#/definitions/SpaceDescription"
+                },
+                "organizationName": {
+                  "$ref": "#/definitions/SpaceOrganizationName"
+                },
+                "tags": {
+                  "$ref": "#/definitions/SpaceTags"
+                },
+                "advertisedInMarketplace": {
+                  "$ref": "#/definitions/SpaceAdvertisedInMarketplace"
+                },
+                "marketplaceContactEmail": {
+                  "$ref": "#/definitions/SpaceMarketplaceContactEmail"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "onezone-rest-cli modifySpace id=b752ceafabb662b4e5728b2ded25cdd1 name==\"New Space Name\""
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "remove_space",
+        "tags": [
+          "Space"
+        ],
+        "x-onedata-gri": {
+          "type": "od_space",
+          "id": "?BINDING(id)",
+          "aspect": "instance"
+        },
+        "x-onedata-permissions": [
+          "space_delete",
+          "oz_spaces_delete"
+        ],
+        "summary": "Remove space",
+        "x-bash-codegen-description": "Removes a specific space.\n\nThis operation requires `space_delete` privilege\nor `oz_spaces_delete` admin privilege.\n",
+        "description": "Removes a specific space.\n\nThis operation requires `space_delete` privilege\nor `oz_spaces_delete` admin privilege.\n\n***Example cURL requests***\n\n**Remove space**\n```bash\ncurl -u admin:password -X DELETE \\\nhttps://$ZONE_HOST/api/v3/onezone/spaces/$SPACE_ID\n```\n",
+        "responses": {
+          "204": {
+            "description": "The space was removed."
+          },
+          "400": {
+            "description": "Invalid request.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Authentication error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "403": {
+            "description": "Authorization error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "Internal server Error.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Space Id.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "x-code-samples": [
+          {
+            "lang": "Shell",
+            "source": "onezone-rest-cli removeSpace id=b752ceafabb662b4e5728b2ded25cdd1"
           }
         ]
       }
@@ -11832,7 +12077,10 @@
         "x-onedata-gri": {
           "type": "od_space",
           "id": "?BINDING(id)",
-          "aspect": "{membership_requester_info, ?BINDING(rid)}"
+          "aspect": {
+            "membership_requester_info": null,
+            "BINDING(rid)": null
+          }
         },
         "x-onedata-permissions": [
           "space_manage_in_marketplace",
@@ -11912,7 +12160,10 @@
         "x-onedata-gri": {
           "type": "od_space",
           "id": "?BINDING(id)",
-          "aspect": "{resolve_membership_request, ?BINDING(rid)}"
+          "aspect": {
+            "resolve_membership_request": null,
+            "BINDING(rid)": null
+          }
         },
         "summary": "Resolve space membership request",
         "x-bash-codegen-description": "Resolve space membership request made via the Marketplace.\n\nThis operation requires privilege `space_manage_in_marketplace` and,\nin case of positive resolution, `space_add_user` in space for which \nthe request was made.\n",
@@ -12000,251 +12251,6 @@
           {
             "lang": "Shell",
             "source": "onezone-rest-cli resolveSpaceMembershipRequest id=$SPACE_ID rid=$REQUEST_ID decision==grant"
-          }
-        ]
-      }
-    },
-    "/spaces/{id}": {
-      "get": {
-        "operationId": "get_space",
-        "tags": [
-          "Space"
-        ],
-        "x-onedata-gri": {
-          "type": "od_space",
-          "id": "?BINDING(id)",
-          "aspect": "instance",
-          "scope": "protected"
-        },
-        "x-onedata-permissions": [
-          "oz_spaces_view"
-        ],
-        "summary": "Get space details",
-        "x-bash-codegen-description": "Returns the details about a specific space.\n\nThis operation requires any of the following authentication:\n* as user who is an effective member of the space (`{id}`),\n* as provider that supports the space (`{id}`),\n* as user who has `oz_spaces_view` admin privilege.\n",
-        "description": "Returns the details about a specific space.\n\nThis operation requires any of the following authentication:\n* as user who is an effective member of the space (`{id}`),\n* as provider that supports the space (`{id}`),\n* as user who has `oz_spaces_view` admin privilege.\n\n***Example cURL requests***\n\n**Get space details**\n```bash\ncurl -u admin:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/spaces/$SPACE_ID\n\n{\n  \"spaceId\": \"2c0160248ba9a66f45da751ca459535a\",\n  \"name\": \"My Private space\",\n  \"description\": \"My Private data\",\n  \"organizationName\": \"\",\n  \"tags\": [\"images\", \"sport\"],\n  \"advertisedInMarketplace\": false,\n  \"marketplaceContactEmail\": \"\",\n  \"providers\": {\n    \"296ebe3c20e9666dc489b647f8647f12\": 5368709120,\n    \"dcf12429647c204896eebe3b6f686967\": 14400000\n  },\n  \"supportParametersRegistry\": {\n    \"296ebe3c20e9666dc489b647f8647f12\": {\n      \"accountingEnabled\": false,\n      \"dirStatsServiceEnabled\": true,\n      \"dirStatsServiceStatus\": \"enabled\"\n    },\n    \"dcf12429647c204896eebe3b6f686967\": {\n      \"accountingEnabled\": false,\n      \"dirStatsServiceEnabled\": false,\n      \"dirStatsServiceStatus\": \"stopping\"\n    }\n  },\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebfc1a770c3\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "Information about a space.",
-            "schema": {
-              "$ref": "#/definitions/Space"
-            }
-          },
-          "400": {
-            "description": "Invalid request.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "401": {
-            "description": "Authentication error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "403": {
-            "description": "Authorization error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal server Error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Space Id.",
-            "type": "string",
-            "required": true
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onezone-rest-cli getSpace id=b752ceafabb662b4e5728b2ded25cdd1"
-          }
-        ]
-      },
-      "patch": {
-        "operationId": "modify_space",
-        "tags": [
-          "Space"
-        ],
-        "x-onedata-gri": {
-          "type": "od_space",
-          "id": "?BINDING(id)",
-          "aspect": "instance"
-        },
-        "x-onedata-permissions": [
-          "space_update",
-          "oz_spaces_update"
-        ],
-        "summary": "Modify space details",
-        "x-bash-codegen-description": "Updates the details about a space.\n\nThis operation requires `space_update` privilege\nor `oz_spaces_update` admin privilege.\n",
-        "description": "Updates the details about a space.\n\nThis operation requires `space_update` privilege\nor `oz_spaces_update` admin privilege.\n\n***Example cURL requests***\n\n**Change space name**\n```bash\ncurl -u username:password -H \"Content-type: application/json\" \\\n-X PATCH -d '{\"name\": \"new_space12\"}' \\\nhttps://$ZONE_HOST/api/v3/onezone/spaces/$SPACE_ID\n```\n",
-        "consumes": [
-          "application/json"
-        ],
-        "responses": {
-          "204": {
-            "description": "Space has been updated successfully."
-          },
-          "400": {
-            "description": "Invalid request.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "401": {
-            "description": "Authentication error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "403": {
-            "description": "Authorization error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal server Error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Space Id.",
-            "type": "string",
-            "required": true
-          },
-          {
-            "name": "data",
-            "in": "body",
-            "description": "Space parameters",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "The new name of the space."
-                },
-                "description": {
-                  "$ref": "#/definitions/SpaceDescription"
-                },
-                "organizationName": {
-                  "$ref": "#/definitions/SpaceOrganizationName"
-                },
-                "tags": {
-                  "$ref": "#/definitions/SpaceTags"
-                },
-                "advertisedInMarketplace": {
-                  "$ref": "#/definitions/SpaceAdvertisedInMarketplace"
-                },
-                "marketplaceContactEmail": {
-                  "$ref": "#/definitions/SpaceMarketplaceContactEmail"
-                }
-              }
-            },
-            "required": true
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onezone-rest-cli modifySpace id=b752ceafabb662b4e5728b2ded25cdd1 name==\"New Space Name\""
-          }
-        ]
-      },
-      "delete": {
-        "operationId": "remove_space",
-        "tags": [
-          "Space"
-        ],
-        "x-onedata-gri": {
-          "type": "od_space",
-          "id": "?BINDING(id)",
-          "aspect": "instance"
-        },
-        "x-onedata-permissions": [
-          "space_delete",
-          "oz_spaces_delete"
-        ],
-        "summary": "Remove space",
-        "x-bash-codegen-description": "Removes a specific space.\n\nThis operation requires `space_delete` privilege\nor `oz_spaces_delete` admin privilege.\n",
-        "description": "Removes a specific space.\n\nThis operation requires `space_delete` privilege\nor `oz_spaces_delete` admin privilege.\n\n***Example cURL requests***\n\n**Remove space**\n```bash\ncurl -u admin:password -X DELETE \\\nhttps://$ZONE_HOST/api/v3/onezone/spaces/$SPACE_ID\n```\n",
-        "responses": {
-          "204": {
-            "description": "The space was removed."
-          },
-          "400": {
-            "description": "Invalid request.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "401": {
-            "description": "Authentication error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "403": {
-            "description": "Authorization error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          },
-          "500": {
-            "description": "Internal server Error.",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Space Id.",
-            "type": "string",
-            "required": true
-          }
-        ],
-        "x-code-samples": [
-          {
-            "lang": "Shell",
-            "source": "onezone-rest-cli removeSpace id=b752ceafabb662b4e5728b2ded25cdd1"
           }
         ]
       }
@@ -16665,7 +16671,7 @@
           "oz_providers_view"
         ],
         "x-bash-codegen-description": "Returns the domain config of specific Oneprovider.\n\nThis operation requires any of the following authentication:\n* as the subject provider (`{id}`),\n* as user who has `cluster_view` privilege in the cluster corresponding to\n  the subject provider,\n* as user who has `oz_providers_view` admin privilege.\n",
-        "description": "Returns the domain config of specific provider.\n\nThis operation requires any of the following authentication:\n* as the subject provider (`{id}`),\n* as user who has `cluster_view` privilege in the cluster corresponding to\n  the subject provider,\n* as user who has `oz_providers_view` admin privilege.\n\n***Example cURL requests***\n\n**Get provider's domain config**\n```bash\ncurl -sS -u username:password -X GET  \\\nhttps://$ZONE_HOST/api/v3/onezone/providers/$PROVIDER_ID/domain_config\n\n{\n  \"subdomainDelegation\": true,\n  \"domain\": \"provider1.onezone.example.com\",\n  \"subdomain\": \"provider1\",\n  \"ipList\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"],\n  \"opWorkerIpAddresses\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"],\n  \"opWorkerPort\": 443,\n  \"oneS3IpAddresses\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"],\n  \"oneS3Port\": 4443\n}\n```\n",
+        "description": "Returns the domain config of specific provider.\n\nThis operation requires any of the following authentication:\n* as the subject provider (`{id}`),\n* as user who has `cluster_view` privilege in the cluster corresponding to\n  the subject provider,\n* as user who has `oz_providers_view` admin privilege.\n\n***Example cURL requests***\n\n**Get provider's domain config**\n```bash\ncurl -sS -u username:password -X GET  \\\nhttps://$ZONE_HOST/api/v3/onezone/providers/$PROVIDER_ID/domain_config\n\n{\n  \"subdomainDelegation\": true,\n  \"domain\": \"provider1.onezone.example.com\",\n  \"subdomain\": \"provider1\",\n  \"ipList\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"]\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -17608,7 +17614,7 @@
           "oz_providers_view"
         ],
         "x-bash-codegen-description": "Returns the domain config of the Oneprovider that performed the request.\n\nThis operation requires provider authentication - see\n[provider auth token](#section/Overview/Authentication-and-authorization).\n",
-        "description": "Returns the domain config of the Oneprovider that performed the request.\n\nThis operation requires provider authentication - see\n[provider auth token](#section/Overview/Authentication-and-authorization).\n\n***Example cURL requests***\n\n**Get provider's domain config**\n```bash\ncurl -sS -u username:password -X GET  \\\nhttps://$ZONE_HOST/api/v3/onezone/provider/domain_config\n\n{\n  \"subdomainDelegation\": true,\n  \"domain\": \"provider1.onezone.example.com\",\n  \"subdomain\": \"provider1\",\n  \"ipList\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"],\n  \"opWorkerIpAddresses\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"],\n  \"opWorkerPort\": 443,\n  \"oneS3IpAddresses\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"],\n  \"oneS3Port\": 4443\n}\n```\n",
+        "description": "Returns the domain config of the Oneprovider that performed the request.\n\nThis operation requires provider authentication - see\n[provider auth token](#section/Overview/Authentication-and-authorization).\n\n***Example cURL requests***\n\n**Get provider's domain config**\n```bash\ncurl -sS -u username:password -X GET  \\\nhttps://$ZONE_HOST/api/v3/onezone/provider/domain_config\n\n{\n  \"subdomainDelegation\": true,\n  \"domain\": \"provider1.onezone.example.com\",\n  \"subdomain\": \"provider1\",\n  \"ipList\": [\"172.17.0.1\", \"172.17.0.2\", \"172.17.0.3\"]\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -17847,7 +17853,7 @@
         },
         "summary": "Infer access token scope",
         "x-bash-codegen-description": "Analyses the provided\n[access token](https://onedata.org/#/home/documentation/doc/using_onedata/tokens[access-tokens].html)\nin serialized form to infer the scope of data access the token can be used for.\nIn essence, it returns what spaces can be accessed with the token and what Oneprovider\nservices can be called to realize the data access. The response contains essential information\nabout the spaces and supporting providers, which can be especially useful when implementing\nscripts and middleware performing data access on behalf of a user.\n\nIn the process, the token is first verified, but the following caveats are ignored:\n`service`, `interface`, `api`. This way, it is possible to learn the data access scope\nof a token that is limited to e.g. Oneclient access on a specific provider. That\nwould not be possible using the other Onezone API endpoints, since they are disallowed\ndue to the caveats.\n\nRemaining caveats, such as `time` or `ip`, are still verified, hence \nonly a client qualified to use the token can learn its data access scope. \n\nOptionally, a consumer's identity token can be provided in the body to satisfy possible\nconsumer caveats.\n\nIf the token cannot be positively verified, HTTP code 4xx is returned with\nan error describing the reason of failure.\n\nIf a provider access token is specified, the returned `dataAccessScope` is `null`.\n\nThis operation has public access.\n",
-        "description": "Analyses the provided\n[access token](https://onedata.org/#/home/documentation/doc/using_onedata/tokens[access-tokens].html)\nin serialized form to infer the scope of data access the token can be used for.\nIn essence, it returns what spaces can be accessed with the token and what Oneprovider\nservices can be called to realize the data access. The response contains essential information\nabout the spaces and supporting providers, which can be especially useful when implementing\nscripts and middleware performing data access on behalf of a user.\n\nIn the process, the token is first verified, but the following caveats are ignored:\n`service`, `interface`, `api`. This way, it is possible to learn the data access scope\nof a token that is limited to e.g. Oneclient access on a specific provider. That\nwould not be possible using the other Onezone API endpoints, since they are disallowed\ndue to the caveats.\n\nRemaining caveats, such as `time` or `ip`, are still verified, hence \nonly a client qualified to use the token can learn its data access scope. \n\nOptionally, a consumer's identity token can be provided in the body to satisfy possible\nconsumer caveats.\n\nIf the token cannot be positively verified, HTTP code 4xx is returned with\nan error describing the reason of failure.\n\nIf a provider access token is specified, the returned `dataAccessScope` is `null`.\n\nThis operation has public access.\n\n***Example cURL requests***\n\n**Verify an access token**\n```bash\ncurl -X POST https://$ZONE_HOST/api/v3/onezone/tokens/infer_access_token_scope \\\n-H 'Content-type: application/json' \\\n-d '{\"token\": \"MDAxNmxvY2F00aW9uIHZ2...\", \"consumerToken\": \"MDAx0aWNmH8g7SajXXZ8s...\"}'\n\n{\n  \"validUntil\": 1700276800,\n  \"dataAccessScope\": {\n    \"readonly\": false,\n    \"spaces\": {\n      \"f5a7f8b2336fae4bef8fe0fcc73a6e19ch1978\": {\n        \"supports\": {\n          \"6c215505a969202341a74c8f2c394318ch47a3\": {\n            \"readonly\": false,\n            \"storages\": {\n              \"6920215505a94c8f2c394318ch47a3341a76c2\": {\n                \"readonly\": false,\n              }\n            }\n          },\n          \"36e032c90969f520b84bf55bbc4d35c6chd39b\": {\n            \"readonly\": false,\n            \"storages\": {\n              \"f2c36920215505a94c8h47a3341a76c294318c\": {\n                \"readonly\": false,\n              },\n              \"2021558h47a3341a76c294318c05a9f2c3694c\": {\n                \"readonly\": true,\n              }\n            }\n          }\n        },\n        \"name\": \"Gamma\"\n      },\n      \"77849ee136244225207db1457cce8543ch8050\": {\n        \"supports\": {\n          \"36e032c90969f520b84bf55bbc4d35c6chd39b\": {\n            \"readonly\": true,\n            \"storages\": {\n              \"4318cfh47a3341a76c292c36920215505a94c8\": {\n                \"readonly\": true,\n              },\n              \"8h47a3320215541a7605a9f2c3694cc294318c\": {\n                \"readonly\": true,\n              }\n            }\n          }\n        },\n        \"name\": \"Delta\"\n      }\n    },\n    \"providers\": {\n      \"6c215505a969202341a74c8f2c394318ch47a3\": {\n        \"version\": \"25.0\",\n        \"online\": true,\n        \"name\": \"Krakow\",\n        \"domain\": \"krakow.onedata.example.com\",\n        \"storages\": [\n          \"6920215505a94c8f2c394318ch47a3341a76c2\"\n        ]\n      },\n      \"36e032c90969f520b84bf55bbc4d35c6chd39b\": {\n        \"version\": \"21.02.2\",\n        \"online\": false,\n        \"name\": \"Lisbon\",\n        \"domain\": \"lisbon.onedata.example.com\",\n        \"storages\": [\n          \"f2c36920215505a94c8h47a3341a76c294318c\",\n          \"2021558h47a3341a76c294318c05a9f2c3694c\",\n          \"4318cfh47a3341a76c292c36920215505a94c8\",\n          \"8h47a3320215541a7605a9f2c3694cc294318c\"\n        ]\n      }\n    }\n  }\n}\n```\n",
+        "description": "Analyses the provided\n[access token](https://onedata.org/#/home/documentation/doc/using_onedata/tokens[access-tokens].html)\nin serialized form to infer the scope of data access the token can be used for.\nIn essence, it returns what spaces can be accessed with the token and what Oneprovider\nservices can be called to realize the data access. The response contains essential information\nabout the spaces and supporting providers, which can be especially useful when implementing\nscripts and middleware performing data access on behalf of a user.\n\nIn the process, the token is first verified, but the following caveats are ignored:\n`service`, `interface`, `api`. This way, it is possible to learn the data access scope\nof a token that is limited to e.g. Oneclient access on a specific provider. That\nwould not be possible using the other Onezone API endpoints, since they are disallowed\ndue to the caveats.\n\nRemaining caveats, such as `time` or `ip`, are still verified, hence \nonly a client qualified to use the token can learn its data access scope. \n\nOptionally, a consumer's identity token can be provided in the body to satisfy possible\nconsumer caveats.\n\nIf the token cannot be positively verified, HTTP code 4xx is returned with\nan error describing the reason of failure.\n\nIf a provider access token is specified, the returned `dataAccessScope` is `null`.\n\nThis operation has public access.\n\n***Example cURL requests***\n\n**Verify an access token**\n```bash\ncurl -X POST https://$ZONE_HOST/api/v3/onezone/tokens/infer_access_token_scope \\\n-H 'Content-type: application/json' \\\n-d '{\"token\": \"MDAxNmxvY2F00aW9uIHZ2...\", \"consumerToken\": \"MDAx0aWNmH8g7SajXXZ8s...\"}'\n\n{\n  \"validUntil\": 1700276800,\n  \"dataAccessScope\": {\n    \"readonly\": false,\n    \"spaces\": {\n      \"f5a7f8b2336fae4bef8fe0fcc73a6e19ch1978\": {\n        \"supports\": {\n          \"6c215505a969202341a74c8f2c394318ch47a3\": {\n            \"readonly\": false\n          },\n          \"36e032c90969f520b84bf55bbc4d35c6chd39b\": {\n            \"readonly\": false\n          }\n        },\n        \"name\": \"Gamma\"\n      },\n      \"77849ee136244225207db1457cce8543ch8050\": {\n        \"supports\": {\n          \"36e032c90969f520b84bf55bbc4d35c6chd39b\": {\n            \"readonly\": true\n          }\n        },\n        \"name\": \"Delta\"\n      }\n    },\n    \"providers\": {\n      \"6c215505a969202341a74c8f2c394318ch47a3\": {\n        \"version\": \"21.02.7\",\n        \"online\": true,\n        \"name\": \"Krakow\",\n        \"domain\": \"krakow.onedata.example.com\"\n      },\n      \"36e032c90969f520b84bf55bbc4d35c6chd39b\": {\n        \"version\": \"21.02.2\",\n        \"online\": false,\n        \"name\": \"Lisbon\",\n        \"domain\": \"lisbon.onedata.example.com\"\n      }\n    }\n  }\n}\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -20878,8 +20884,8 @@
           "oz_handle_services_delete"
         ],
         "summary": "Delete handle service",
-        "x-bash-codegen-description": "Deletes a handle service. The handle service must not have any registered handles\n(all the handles have to be deleted first, but proceed with caution as Public Data \nrecords should be persistent).\n\nThis operation requires `handle_service_delete` privilege or\n`oz_handle_services_delete` admin privilege.\n",
-        "description": "Deletes a handle service. The handle service must not have any registered handles\n(all the handles have to be deleted first, but proceed with caution as Public Data \nrecords should be persistent).\n\nThis operation requires `handle_service_delete` privilege or\n`oz_handle_services_delete` admin privilege.\n\n***Example cURL requests***\n\n**Delete handle service**\n```bash\ncurl -u username:password -X DELETE \\\nhttps://$ZONE_HOST/api/v3/onezone/handle_services/$HANDLE_SERVICE_ID\n```\n",
+        "x-bash-codegen-description": "Deletes a handle service. The handle service must not have any registered handles\n(all the handles have to be deleted first, but proceed with caution as Open Data \nrecords should be persistent).\n\nThis operation requires `handle_service_delete` privilege or\n`oz_handle_services_delete` admin privilege.\n",
+        "description": "Deletes a handle service. The handle service must not have any registered handles\n(all the handles have to be deleted first, but proceed with caution as Open Data \nrecords should be persistent).\n\nThis operation requires `handle_service_delete` privilege or\n`oz_handle_services_delete` admin privilege.\n\n***Example cURL requests***\n\n**Delete handle service**\n```bash\ncurl -u username:password -X DELETE \\\nhttps://$ZONE_HOST/api/v3/onezone/handle_services/$HANDLE_SERVICE_ID\n```\n",
         "responses": {
           "204": {
             "description": "The handle service was deleted."
@@ -22639,7 +22645,7 @@
         ],
         "summary": "Get handle from handle service",
         "x-bash-codegen-description": "Returns the details of a specific handle registered by handle service.\n\nThis operation requires `handle_service_view` privilege or\n`oz_handles_view` admin privilege.\n",
-        "description": "Returns the details of a specific handle registered by handle service.\n\nThis operation requires `handle_service_view` privilege\nor `oz_handles_view` admin privilege.\n\n***Example cURL requests***\n\n**Get handle services handle**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/handle_services/13c6bf68ed88dd01f396571f976b148d/handles/$HANDLE_ID\n\n{\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific handle registered by handle service.\n\nThis operation requires `handle_service_view` privilege\nor `oz_handles_view` admin privilege.\n\n***Example cURL requests***\n\n**Get handle services handle**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/handle_services/13c6bf68ed88dd01f396571f976b148d/handles/$HANDLE_ID\n\n{\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -22719,8 +22725,8 @@
           "oz_handles_list"
         ],
         "summary": "List handles (admin)",
-        "x-bash-codegen-description": "Returns the list of Ids of all Public Data handles registered in Onezone.\n\nThis operation requires `oz_handles_list` admin privilege.\n",
-        "description": "Returns the list of Ids of all Public Data handles registered in Onezone.\n\nThis operation requires `oz_handles_list` admin privilege.\n\nEquivalent endpoints for regular users: \n* [List effective handles of the current user](#operation/list_user_effective_handles) \n* [List effective handles of given group](#operation/list_effective_group_handles) \n\n***Example cURL requests***\n\n**Get handles**\n```bash\ncurl -u username:password -X GET https://$ZONE_HOST/api/v3/onezone/handles\n\n{\n  \"handles\": [\n    \"0fe7c8a20ffdf07480c46f084bc3b8d5\",\n    \"302da048de67e2ea05f0af1d0fe7c8a2\"\n  ]\n}\n```\n",
+        "x-bash-codegen-description": "Returns the list of Ids of all Open Data handles registered in Onezone.\n\nThis operation requires `oz_handles_list` admin privilege.\n",
+        "description": "Returns the list of Ids of all Open Data handles registered in Onezone.\n\nThis operation requires `oz_handles_list` admin privilege.\n\nEquivalent endpoints for regular users: \n* [List effective handles of the current user](#operation/list_user_effective_handles) \n* [List effective handles of given group](#operation/list_effective_group_handles) \n\n***Example cURL requests***\n\n**Get handles**\n```bash\ncurl -u username:password -X GET https://$ZONE_HOST/api/v3/onezone/handles\n\n{\n  \"handles\": [\n    \"0fe7c8a20ffdf07480c46f084bc3b8d5\",\n    \"302da048de67e2ea05f0af1d0fe7c8a2\"\n  ]\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -22783,8 +22789,8 @@
           "oz_handles_create"
         ],
         "summary": "Register handle",
-        "x-bash-codegen-description": "Registers a new Public Data handle in the specified handle service.\n\nA Public Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as a Public Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Public Data records, to be harvested by Public Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation requires `handle_service_register_handle` privilege in the specified handle service\nor `oz_handles_create` admin privilege.\n",
-        "description": "Registers a new Public Data handle in the specified handle service.\n\nA Public Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as a Public Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Public Data records, to be harvested by Public Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nSee also:  \n* [Create a new handle for the current user](#operation/create_user_handle)  \n* [Create a new handle for given group](#operation/create_group_handle)  \n\nThis operation requires `handle_service_register_handle` privilege in the specified handle service\nor `oz_handles_create` admin privilege.\n\n***Example cURL requests***\n\n**Register handle**\n```bash\ncurl -H \"x-auth-token: $TOKEN\" -H \"content-type: application/json\" \\\n  -X POST https://$ZONE_HOST/api/v3/onezone/handles \\\n  -d '{ \n    \"handleServiceId\": \"ddb06ed993bae95f2f430664fff122f7\", \n    \"resourceType\": \"Share\", \n    \"resourceId\": \"4fa683cbda8d8f686d15d42720af431d\", \n    \"metadataSchema\": \"oai_dc\", \n    \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?><metadata><dc:contributor>John Doe</dc:contributor></metadata>\"\n  }'\n\n```\n",
+        "x-bash-codegen-description": "Registers a new Open Data handle in the specified handle service.\n\nAn Open Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as an Open Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Open Data records, to be harvested by Open Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nThis operation requires `handle_service_register_handle` privilege in the specified handle service\nor `oz_handles_create` admin privilege.\n",
+        "description": "Registers a new Open Data handle in the specified handle service.\n\nAn Open Data handle is essentially a persistent identifier (PID/DOI) that points to\na resource in Onedata that is to be shared publicly as an Open Data record. \nAll handles are advertised via the OAI-PMH protocol (Onezone serves as a repository\nof Open Data records, to be harvested by Open Data aggregators).\n\nThe handle service serves as a proxy that registers persistent identifiers in an external service\nsuch as **DataCite** or **handle.net**. It is typically set up by Onezone admins, who grant\nthe rights to register handles to specific users/groups.\n\nSee also:  \n* [Create a new handle for the current user](#operation/create_user_handle)  \n* [Create a new handle for given group](#operation/create_group_handle)  \n\nThis operation requires `handle_service_register_handle` privilege in the specified handle service\nor `oz_handles_create` admin privilege.\n\n***Example cURL requests***\n\n**Register handle**\n```bash\ncurl -H \"x-auth-token: $TOKEN\" -H \"content-type: application/json\" \\\n  -X POST https://$ZONE_HOST/api/v3/onezone/handles \\\n  -d '{ \n    \"handleServiceId\": \"ddb06ed993bae95f2f430664fff122f7\", \n    \"resourceType\": \"Share\", \n    \"resourceId\": \"4fa683cbda8d8f686d15d42720af431d\", \n    \"metadataPrefix\": \"oai_dc\", \n    \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>...\" \n  }'\n\n```\n",
         "consumes": [
           "application/json"
         ],
@@ -22912,7 +22918,7 @@
         ],
         "summary": "Get handle",
         "x-bash-codegen-description": "Returns the details of a specific handle.\n\nThis operation requires `handle_view` privilege\nor `oz_handles_view` admin privilege.\n",
-        "description": "Returns the details of a specific handle.\n\nThis operation requires `handle_view` privilege\nor `oz_handles_view` admin privilege.\n\n***Example cURL requests***\n\n**Get handle**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/handles/$HANDLE_ID\n\n{\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details of a specific handle.\n\nThis operation requires `handle_view` privilege\nor `oz_handles_view` admin privilege.\n\n***Example cURL requests***\n\n**Get handle**\n```bash\ncurl -u username:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/handles/$HANDLE_ID\n\n{\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -23136,7 +23142,7 @@
         },
         "summary": "Get public handle details",
         "x-bash-codegen-description": "Returns the publicly available details of a specific handle. This endpoint\nis available for anyone knowing the handle Id, without authentication.\n",
-        "description": "Returns the publicly available details of a specific handle. This endpoint\nis available for anyone knowing the handle Id, without authentication.\n\n***Example cURL requests***\n\n**Get public handle details**\n```bash\ncurl -X GET https://$ZONE_HOST/api/v3/onezone/handles/$HANDLE_ID/public\n\n{\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataSchema\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the publicly available details of a specific handle. This endpoint\nis available for anyone knowing the handle Id, without authentication.\n\n***Example cURL requests***\n\n**Get public handle details**\n```bash\ncurl -X GET https://$ZONE_HOST/api/v3/onezone/handles/$HANDLE_ID/public\n\n{\n  \"handleId\": \"95b663a6467c72ab1256865efef9e387\",\n  \"handleServiceId\": \"97c27230017cd54c1220189e357322c4\",\n  \"publicHandle\": \"10.5072/w95Zlng\",\n  \"resourceType\": \"Share\",\n  \"resourceId\": \"d6ee1aecf03b23f09756d6a49e435455\",\n  \"metadataPrefix\": \"oai_dc\",\n  \"metadata\": \"<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?>\n    <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n      <dc:title>Example Resource</dc:title>\n      <dc:creator>John Doe</dc:creator>\n      <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n      <dc:date>2024-06-15</dc:date>\n    </metadata>\",\n  \"timestamp\": \"1997-07-16T19:20\",\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -28625,7 +28631,7 @@
         ],
         "summary": "Get cluster details",
         "x-bash-codegen-description": "Returns the details about a specific cluster.\n\nThis operation requires membership in the cluster or\n`oz_clusters_view` admin privilege.\n",
-        "description": "Returns the details about a specific cluster.\n\nThis operation requires membership in the cluster or\n`oz_clusters_view` admin privilege.\n\n***Example cURL requests***\n\n**Get cluster details**\n```bash\ncurl -u admin:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"25.0\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
+        "description": "Returns the details about a specific cluster.\n\nThis operation requires membership in the cluster or\n`oz_clusters_view` admin privilege.\n\n***Example cURL requests***\n\n**Get cluster details**\n```bash\ncurl -u admin:password -X GET \\\nhttps://$ZONE_HOST/api/v3/onezone/clusters/$CLUSTER_ID\n\n{\n  \"clusterId\": \"f8d843beda24e54545455ecc0f4b8886\",\n  \"type\": \"oneprovider\",\n  \"workerVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"1-gfabf02d\",\n    \"gui\": \"129c549fbe9b3e730c3d9910492228566e39e1236945766a74381405cc57fb04\"\n  },\n  \"onepanelVersion\": {\n    \"release\": \"21.02.7\",\n    \"build\": \"3-89fc6bad\",\n    \"gui\": \"68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3\"\n  },\n  \"online\": true,\n  \"onepanelProxy\": false,\n  \"creator\": {\n    \"type\": \"user\",\n    \"id\": \"7434b256e71e1052e0d5e3e9da657ebf\"\n  },\n  \"creationTime\": 1576152793\n}\n```\n",
         "produces": [
           "application/json"
         ],
@@ -30798,13 +30804,13 @@
       "example": {
         "name": "Example zone",
         "domain": "zone.example.com",
-        "version": "25.0",
+        "version": "21.02.7",
         "build": "g52dbeca23",
         "subdomainDelegationSupported": true,
         "compatibleOneproviderVersions": [
           "20.02.1",
           "20.02.2",
-          "25.0"
+          "21.02.7"
         ],
         "compatibilityRegistryRevision": 2022122100,
         "supportedIdPs": [
@@ -30897,7 +30903,7 @@
         "gui"
       ],
       "example": {
-        "release": "25.0",
+        "release": "21.02.7",
         "build": "1-gfabf02d",
         "gui": "68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3"
       }
@@ -31244,7 +31250,7 @@
         },
         "subdomainDelegation": {
           "type": "boolean",
-          "description": "When enabled, Oneprovider will be assigned a subdomain within Onezone's \ndomain. In this case, the following properties must also be specified:\n- `subdomain`\n- `opWorkerIpAddresses` (successor of the deprecated `ipList`)\n\nIf the OneS3 service is deployed, the `oneS3IpAddresses` and `oneS3Port` \nproperties are additionally required.\n\nIf this option is disabled, the `domain` property must be provided instead. \n"
+          "description": "If enabled, the Oneprovider will be assigned a subdomain in Onezone's domain and 'subdomain', 'ipList' properties must be provided. If disabled, 'domain' property must be provided.\n"
         },
         "subdomain": {
           "type": "string",
@@ -31252,38 +31258,11 @@
         },
         "ipList": {
           "type": "array",
-          "description": "The list of Oneprovider Worker IP addresses advertised by Onezone on behalf of the Oneprovider. **Deprecated in favor of `opWorkerIpAddresses`**. Either this or `opWorkerIpAddresses`  is required if subdomain delegation is enabled.\n",
+          "description": "List of Oneprovider's IPv4 addresses to be advertised by Onezone's DNS. Required if subdomain delegation is enabled.\n",
           "items": {
             "type": "string",
             "description": "IPv4 address in textual representation, for example `\"123.45.6.78\"`.\n"
           }
-        },
-        "opWorkerIpAddresses": {
-          "description": "The list of Oneprovider Worker IP addresses advertised by Onezone on behalf of the Oneprovider. Successor of the **deprecated `ipList`**. Either this or `ipList` is required if subdomain  delegation is enabled.\n",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "opWorkerPort": {
-          "description": "The port number of Oneprovider Worker advertised by Onezone on behalf of the Oneprovider.\n",
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "default": 443
-        },
-        "oneS3IpAddresses": {
-          "description": "The list of Oneprovider OneS3 IP addresses advertised by Onezone on behalf of the Oneprovider. Must be provided alongside `oneS3Port` if subdomain delegation is enabled and OneS3 deployed.\n",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneS3Port": {
-          "description": "The port number of Oneprovider OneS3 advertised by Onezone on behalf of the Oneprovider.\n",
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535
         },
         "domain": {
           "type": "string",
@@ -31431,38 +31410,11 @@
           "type": "string"
         },
         "ipList": {
-          "description": "The list of Oneprovider Worker IP addresses advertised by Onezone on behalf of the Oneprovider. Applicable if subdomain delegation is enabled, empty list otherwise. **Deprecated in favor of `opWorkerIpAddresses`**.\n",
+          "description": "The list of IP addresses advertised by Onezone on behalf of the Oneprovider. Applicable if subdomain delegation is enabled, empty list otherwise.\n",
           "type": "array",
           "items": {
             "type": "string"
           }
-        },
-        "opWorkerIpAddresses": {
-          "description": "The list of Oneprovider Worker IP addresses advertised by Onezone on behalf of the Oneprovider. Applicable if subdomain delegation is enabled, empty list otherwise.\n",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "opWorkerPort": {
-          "description": "The port number of Oneprovider Worker advertised by Onezone on behalf of the Oneprovider.\n",
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "default": 443
-        },
-        "oneS3IpAddresses": {
-          "description": "The list of Oneprovider OneS3 IP addresses advertised by Onezone on behalf of the Oneprovider. Applicable if subdomain delegation is enabled, empty list otherwise.\n",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "oneS3Port": {
-          "description": "The port number of Oneprovider OneS3 advertised by Onezone on behalf of the Oneprovider.\n",
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535
         }
       },
       "example": {
@@ -31473,19 +31425,7 @@
           "172.17.0.1",
           "172.17.0.2",
           "172.17.0.3"
-        ],
-        "opWorkerIpAddresses": [
-          "172.17.0.1",
-          "172.17.0.2",
-          "172.17.0.3"
-        ],
-        "opWorkerPort": 443,
-        "oneS3IpAddresses": [
-          "172.17.0.1",
-          "172.17.0.2",
-          "172.17.0.3"
-        ],
-        "oneS3Port": 9999
+        ]
       }
     },
     "Space": {
@@ -32247,27 +32187,12 @@
                     "description": "A map of supporting provider Ids and corresponding relevant support attributes.\nThe map can be empty if there are no supporting providers that can be accessed with this token.\n",
                     "additionalProperties": {
                       "type": "object",
-                      "description": "Relevant space support attributes for given provider.",
+                      "description": "Relevant space support attributes.",
                       "properties": {
                         "readonly": {
                           "type": "boolean",
-                          "description": "Indicates if the provider offers exclusively readonly access to the data,\nas far as storage configuration is concerned. True if and only if all the\nsupporting storage backends are readonly. Does not take into account\nthe token caveats, which may further limit the access to readonly (see the\nflag at `dataAccessScope.readonly`).\n",
+                          "description": "Indicates if the provider offers exclusively readonly access to the data,\nas far as storage configuration is concerned. Does not take into account\nthe token caveats, which may further limit the access to readonly (see the\nflag at `dataAccessScope.readonly`).\n",
                           "example": false
-                        },
-                        "storages": {
-                          "type": "object",
-                          "description": "A map of supporting storage backend Ids of given provider and corresponding relevant support attributes.\n",
-                          "additionalProperties": {
-                            "type": "object",
-                            "description": "Relevant space support attributes for given storage backend.",
-                            "properties": {
-                              "readonly": {
-                                "type": "boolean",
-                                "description": "Indicates if the storage backend is configured as readonly.",
-                                "example": true
-                              }
-                            }
-                          }
                         }
                       }
                     }
@@ -32297,13 +32222,6 @@
                   "online": {
                     "type": "boolean",
                     "description": "True if this Oneprovider is online - connected to Onezone."
-                  },
-                  "storages": {
-                    "type": "array",
-                    "description": "A list of storage backend Ids owned by the provider which are available with this token.",
-                    "items": {
-                      "type": "string"
-                    }
                   }
                 }
               }
@@ -32324,23 +32242,10 @@
               "name": "Gamma",
               "supports": {
                 "6c215505a969202341a74c8f2c394318ch47a3": {
-                  "readonly": false,
-                  "storages": {
-                    "6920215505a94c8f2c394318ch47a3341a76c2": {
-                      "readonly": false
-                    }
-                  }
+                  "readonly": false
                 },
                 "36e032c90969f520b84bf55bbc4d35c6chd39b": {
-                  "readonly": false,
-                  "storages": {
-                    "f2c36920215505a94c8h47a3341a76c294318c": {
-                      "readonly": false
-                    },
-                    "2021558h47a3341a76c294318c05a9f2c3694c": {
-                      "readonly": true
-                    }
-                  }
+                  "readonly": false
                 }
               }
             },
@@ -32348,40 +32253,23 @@
               "name": "Delta",
               "supports": {
                 "36e032c90969f520b84bf55bbc4d35c6chd39b": {
-                  "readonly": true,
-                  "storages": {
-                    "4318cfh47a3341a76c292c36920215505a94c8": {
-                      "readonly": true
-                    },
-                    "8h47a3320215541a7605a9f2c3694cc294318c": {
-                      "readonly": true
-                    }
-                  }
+                  "readonly": true
                 }
               }
             }
           },
           "providers": {
             "6c215505a969202341a74c8f2c394318ch47a3": {
-              "version": "25.0",
+              "version": "21.02.7",
               "online": true,
               "name": "Krakow",
-              "domain": "krakow.onedata.example.com",
-              "storages": [
-                "6920215505a94c8f2c394318ch47a3341a76c2"
-              ]
+              "domain": "krakow.onedata.example.com"
             },
             "36e032c90969f520b84bf55bbc4d35c6chd39b": {
               "name": "Lisbon",
               "domain": "lisbon.onedata.example.com",
               "version": "21.02.2",
-              "online": false,
-              "storages": [
-                "f2c36920215505a94c8h47a3341a76c294318c",
-                "2021558h47a3341a76c294318c05a9f2c3694c",
-                "4318cfh47a3341a76c292c36920215505a94c8",
-                "8h47a3320215541a7605a9f2c3694cc294318c"
-              ]
+              "online": false
             }
           }
         }
@@ -34962,14 +34850,13 @@
           "type": "string",
           "description": "The Id of the resource to which the handle points (currently, always a share Id)."
         },
-        "metadataSchema": {
+        "metadataPrefix": {
           "type": "string",
           "enum": [
             "oai_dc",
-            "oai_datacite",
             "edm"
           ],
-          "description": "Short keyword that indicates the schema of the metadata attached to the handle.\nThe keywords are borrowed from the concept of metadataPrefix in the OAI-PMH protocol.\n* `oai_dc` - Dublin Core\n* `oai_datacite` - Datacite\n* `edm` - Europeana Data Model\nEach handle metadata schema can be disseminated using one or more OAI-PMH metadata prefixes, \nbut each OAI-PMH metadata prefix has only one corresponding handle metadata schema.\n"
+          "description": "Short keyword that indicates the schema of the metadata that will be attached to the handle \n(refers to the concept of metadataPrefix in the OAI-PMH protocol).\n* `oai_dc` - OAI-PMH-compliant Dublin Core metadata schema.\n* `edm` - Europeana Data Model metadata schema.\n"
         },
         "metadata": {
           "type": "string",
@@ -34993,7 +34880,7 @@
         "publicHandle",
         "resourceType",
         "resourceId",
-        "metadataSchema",
+        "metadataPrefix",
         "metadata",
         "timestamp",
         "creationTime"
@@ -35004,7 +34891,7 @@
         "publicHandle": "10.5072/w95Zlng",
         "resourceType": "Share",
         "resourceId": "3d8cd457cef92ba08261bf1bb8d40438",
-        "metadataSchema": "oai_dc",
+        "metadataPrefix": "oai_dc",
         "metadata": "<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?> <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n  <dc:title>Example Resource</dc:title>\n  <dc:creator>John Doe</dc:creator>\n  <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n  <dc:date>2024-06-15</dc:date>\n</metadata>\n",
         "timestamp": "2016-07-16T18:20:30.450Z",
         "creator": {
@@ -35038,7 +34925,7 @@
     },
     "HandleRegistrationRequest": {
       "type": "object",
-      "description": "Attributes needed to register a Public Data handle identifier for a Onedata resource (e.g. share).\n",
+      "description": "Attributes needed to register an Open Data handle identifier for a Onedata resource (e.g. share).\n",
       "properties": {
         "handleServiceId": {
           "type": "string",
@@ -35055,14 +34942,13 @@
           "type": "string",
           "description": "The Id of the resource to be assigned a handle identifier (currently, always a share Id)."
         },
-        "metadataSchema": {
+        "metadataPrefix": {
           "type": "string",
           "enum": [
             "oai_dc",
-            "oai_datacite",
             "edm"
           ],
-          "description": "Short keyword that indicates the schema of the metadata attached to the handle.\nThe keywords are borrowed from the concept of metadataPrefix in the OAI-PMH protocol.\n* `oai_dc` - Dublin Core\n* `oai_datacite` - Datacite\n* `edm` - Europeana Data Model\nEach handle metadata schema can be disseminated using one or more OAI-PMH metadata prefixes, \nbut each OAI-PMH metadata prefix has only one corresponding handle metadata schema.\n"
+          "description": "Short keyword that indicates the schema of the metadata that will be attached to the handle \n(refers to the concept of metadataPrefix in the OAI-PMH protocol).\n* `oai_dc` - OAI-PMH-compliant Dublin Core metadata schema.\n* `edm` - Europeana Data Model metadata schema.\n"
         },
         "metadata": {
           "type": "string",
@@ -35073,14 +34959,14 @@
         "handleServiceId",
         "resourceType",
         "resourceId",
-        "metadataSchema",
+        "metadataPrefix",
         "metadata"
       ],
       "example": {
         "handleServiceId": "f1c8b1a37aa7447b22eb65a742d40524",
         "resourceType": "Share",
         "resourceId": "f7a6d2ea511e728c9b3f3972cecb7af4",
-        "metadataSchema": "oai_dc",
+        "metadataPrefix": "oai_dc",
         "metadata": "<?xml version=\\\"1.0\\\" encoding=\\\"utf-8\\\" ?> <metadata xmlns:dc=\\\"http://purl.org/dc/elements/1.1/\\\">\n  <dc:title>Example Resource</dc:title>\n  <dc:creator>John Doe</dc:creator>\n  <dc:publisher>ACC Cyfronet AGH</dc:publisher>\n  <dc:date>2024-06-15</dc:date>\n</metadata>\n"
       }
     },
@@ -35247,15 +35133,15 @@
         },
         "fileType": {
           "type": "string",
-          "description": "Denotes the type of the shared element (regular file or directory)",
+          "description": "Denotes the type of the shared element (file or directory)",
           "enum": [
-            "REG",
-            "DIR"
+            "file",
+            "dir"
           ]
         },
         "handleId": {
           "type": "string",
-          "description": "The Id of Public Data Handle (e.g. DOI or PID) assigned to this share, or null."
+          "description": "The Id of open data Handle (e.g. DOI or PID) assigned to this share or null."
         },
         "creator": {
           "description": "The creator of the share.\n*Not included in public share details.*\n",
@@ -35283,7 +35169,7 @@
         "publicUrl": "https://example.com/shares/1f4b762b1380946e73aeca574c77f14c",
         "publicRestUrl": "https://example.com/api/v3/onezone/shares/1f4b762b1380946e73aeca574c77f14c/public",
         "spaceId": "6ec1a5413b6f4e2b01a5c85a8fd797e2",
-        "fileType": "DIR",
+        "fileType": "dir",
         "rootFileId": "00000000006CB663736861726547756964233339643236366165646365\\ 6266666164353939663761373734313235363166342336656331613534313362366634653\\ 2623031613563383561386664373937653223316634623736326231333830393436653733\\ 6165636135373463373766313463",
         "handleId": "70570c0ebcd081835ca29560708fd98f260fb4da",
         "creator": {
@@ -35957,12 +35843,12 @@
         "clusterId": "2c0160248ba9a66f45da751ca459535a",
         "type": "oneprovider",
         "workerVersion": {
-          "release": "25.0",
+          "release": "21.02.7",
           "build": "1-gfabf02d",
           "gui": "68e7e1472adb719ddf2d88908775091dfb10e5d0b916f06125ea1af4056044e3"
         },
         "onepanelVersion": {
-          "release": "25.0",
+          "release": "21.02.7",
           "build": "1-gd76fac2",
           "gui": "5d9dd608775091dfb10ef2d888e7e14720b916f06125ea1af4056044eadb7193"
         },

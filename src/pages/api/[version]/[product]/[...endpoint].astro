@@ -5,7 +5,10 @@ import path from "node:path";
 
 export async function getStaticPaths() {
   const apiDir = path.join(process.cwd(), "api");
-  if (!fs.existsSync(apiDir)) return [];
+  if (!fs.existsSync(apiDir)) {
+    console.warn("API root directory not found");
+    return [];
+  }
 
   const versions = fs
     .readdirSync(apiDir)
@@ -20,7 +23,10 @@ export async function getStaticPaths() {
 
     for (const product of products) {
       const swaggerPath = path.join(versionDir, `${product}.json`);
-      if (!fs.existsSync(swaggerPath)) continue;
+      if (!fs.existsSync(swaggerPath)) {
+        console.warn(`API ${version} ${product} not found`);
+        continue;
+      }
 
       try {
         const swaggerData = JSON.parse(fs.readFileSync(swaggerPath, "utf8"));
