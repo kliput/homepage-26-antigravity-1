@@ -5,21 +5,23 @@ import { getCollection } from "astro:content";
 export async function getStaticPaths() {
   const docsEntries = await getCollection("docs");
 
-  // Extract unique versions based on folder structure
+  // Extract unique versions based on folder structure (using entry.id to preserve dots/casing)
   const versions = [
-    ...new Set(docsEntries.map((entry) => entry.slug.split("/")[0])),
+    ...new Set(docsEntries.map((entry) => entry.id.split("/")[0])),
   ].sort((a, b) => b.localeCompare(a)); // Descending versions
 
   // Build paths for each entry
   return docsEntries.map((entry) => {
-    const parts = entry.slug.split("/");
+    // entry.id is like '25.0/Introduction/overview.md'
+    const idWithoutExt = entry.id.replace(/\.md$/, "");
+    const parts = idWithoutExt.split("/");
     const version = parts[0];
     const chapter = parts[1];
     const innerSlug = parts.slice(2).join("/");
 
     // Create nested tree for sidebar for this version + chapter
     const relevantDocs = docsEntries.filter((e) =>
-      e.slug.startsWith(`${version}/${chapter}/`),
+      e.id.startsWith(`${version}/${chapter}/`),
     );
 
     // Poor man's tree builder
@@ -28,7 +30,8 @@ export async function getStaticPaths() {
 
     relevantDocs.forEach((doc) => {
       let currentLevel = sidebarTree;
-      const docParts = doc.slug.split("/").slice(2); // Skip version/chapter
+      const docIdWithoutExt = doc.id.replace(/\.md$/, "");
+      const docParts = docIdWithoutExt.split("/").slice(2); // Skip version/chapter
 
       for (let i = 0; i < docParts.length; i++) {
         const part = docParts[i];
