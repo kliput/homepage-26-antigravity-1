@@ -1,0 +1,268 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const featuredPost = sortedPosts[0];
+const recentPosts = sortedPosts.slice(1);
+const INITIAL_POSTS_TO_SHOW = 6;
+---
+
+<MainLayout title="Onedata Blog" description="Stay updated on releases, events, case studies, and technical insights from the Onedata community.">
+  <div class="blog-header-section">
+    <div class="container">
+      <h1 class="blog-title">Onedata Blog</h1>
+      <h2 class="blog-subtitle">Stay updated on releases, events, case studies, and technical insights from the Onedata community.</h2>
+    </div>
+  </div>
+
+  <div class="container blog-content">
+    {featuredPost && (
+      <section class="featured-post">
+        <a href={`/blog/${featuredPost.slug}`} class="post-card featured-card">
+          <div class="card-content">
+            <div class="post-meta">
+              <time datetime={featuredPost.data.date.toISOString()}>
+                {featuredPost.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric'})}
+              </time>
+              {featuredPost.data.tags && (
+                <div class="tags">
+                  {featuredPost.data.tags.map(tag => <span class="tag">{tag}</span>)}
+                </div>
+              )}
+            </div>
+            <h3 class="post-title">{featuredPost.data.title}</h3>
+            <p class="post-description">{featuredPost.data.description}</p>
+            <span class="read-more">Read Full Article &rarr;</span>
+          </div>
+        </a>
+      </section>
+    )}
+
+    {recentPosts.length > 0 && (
+      <section class="recent-articles-section">
+        <h3 class="section-heading">Recent Articles</h3>
+        <div class="recent-grid" id="recent-grid">
+          {recentPosts.map((post, index) => (
+            <a href={`/blog/${post.slug}`} class={`post-card recent-card ${index >= INITIAL_POSTS_TO_SHOW ? 'hidden-post' : ''}`}>
+              <div class="card-content">
+                <div class="post-meta">
+                  <time datetime={post.data.date.toISOString()}>
+                    {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric'})}
+                  </time>
+                  {post.data.tags && (
+                    <div class="tags">
+                      {post.data.tags.slice(0, 2).map(tag => <span class="tag">{tag}</span>)}
+                    </div>
+                  )}
+                </div>
+                <h4 class="post-title small">{post.data.title}</h4>
+                <p class="post-description small">{post.data.description}</p>
+                <span class="read-more small">Read Full Article &rarr;</span>
+              </div>
+            </a>
+          ))}
+        </div>
+        
+        {recentPosts.length > INITIAL_POSTS_TO_SHOW && (
+          <div class="load-more-container">
+            <button id="load-more-btn" class="btn btn-outline">Load More Articles</button>
+          </div>
+        )}
+      </section>
+    )}
+  </div>
+</MainLayout>
+
+<style>
+  .blog-header-section {
+    padding: 4rem 0 2rem;
+    text-align: center;
+    background-color: var(--color-bg);
+  }
+
+  .blog-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .blog-subtitle {
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--color-text);
+    opacity: 0.8;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .blog-content {
+    padding-bottom: 5rem;
+  }
+
+  .post-card {
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: var(--color-bg);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    overflow: hidden;
+    color: var(--color-text);
+  }
+
+  .post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+    border-color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  html[data-theme='dark'] .post-card:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.5);
+  }
+
+  .card-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+    flex-wrap: wrap;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    background-color: var(--color-nav-hover);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .post-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .post-title.small {
+    font-size: 1.25rem;
+  }
+
+  .post-description {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    flex-grow: 1;
+  }
+
+  .post-description.small {
+    font-size: 0.95rem;
+  }
+
+  .read-more {
+    font-weight: 600;
+    color: var(--color-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .featured-post {
+    margin-bottom: 4rem;
+  }
+
+  .featured-card {
+    border-width: 2px;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .recent-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .recent-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .recent-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hidden-post {
+    display: none !important;
+  }
+
+  .load-more-container {
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 2px solid var(--color-border);
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        const hiddenPosts = document.querySelectorAll('.hidden-post');
+        for (let i = 0; i < Math.min(6, hiddenPosts.length); i++) {
+          hiddenPosts[i].classList.remove('hidden-post');
+        }
+        
+        // Hide button if no more hidden posts
+        if (document.querySelectorAll('.hidden-post').length === 0) {
+          loadMoreBtn.style.display = 'none';
+        }
+      });
+    }
+  });
+</script>

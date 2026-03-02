@@ -1,0 +1,278 @@
+---
+import MainLayout from './MainLayout.astro';
+
+interface Props {
+  title: string;
+  version: string;
+  availableVersions: string[];
+  activeProduct: string;
+  sidebarGroups: any[];
+}
+
+const products = [
+  { id: 'onezone', label: 'Onezone REST API', icon: 'globe' },
+  { id: 'oneprovider', label: 'Oneprovider REST API', icon: 'database' },
+  { id: 'onepanel', label: 'Onepanel REST API', icon: 'settings' }
+];
+
+const { title, version, availableVersions, activeProduct, sidebarGroups } = Astro.props;
+
+// Current path for active state highlighting
+const currentPath = Astro.url.pathname;
+---
+
+<MainLayout title={title}>
+  <div class="api-header-wrapper">
+    <div class="container">
+      <div class="api-header-content">
+        <div>
+          <h2 class="api-h2">Onedata API Reference</h2>
+          <p class="api-subtitle">REST API references for Onezone, Oneprovider, and Onepanel.</p>
+        </div>
+        <div class="version-selector">
+          <label for="version-select" class="sr-only">Select version</label>
+          <select id="version-select" class="version-select" onchange="window.location.href=this.value">
+            {availableVersions.map(v => (
+              <option value={`/api/${v}/onezone/`} selected={v === version}>{v}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      
+      <div class="product-tabs">
+        {products.map(product => (
+          <a href={`/api/${version}/${product.id}/`} class={`product-tab ${activeProduct === product.id ? 'active' : ''}`}>
+            {product.icon === 'globe' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>}
+            {product.icon === 'database' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>}
+            {product.icon === 'settings' && <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>}
+            {product.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="container api-layout-grid">
+    <aside class="api-sidebar">
+      <nav class="sidebar-nav">
+        <ul class="sidebar-root-list">
+          {sidebarGroups.map(group => {
+            const isExpanded = group.operations.some((op: any) => currentPath.endsWith(op.href));
+            return (
+              <li class={`sidebar-folder ${isExpanded ? 'expanded' : ''}`}>
+                <button class="folder-toggle">
+                  {group.name}
+                  <svg class="chevron" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <ul class="folder-contents" style={{ display: isExpanded ? 'block' : 'none' }}>
+                  {group.operations.map((op: any) => (
+                    <li>
+                      <a href={op.href} class={`api-method-link ${currentPath.endsWith(op.href) ? 'active' : ''}`}>
+                        <span class={`method-badge method-${op.method}`}>{op.method.toUpperCase()}</span>
+                        <span class="method-summary">{op.summary || op.method}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="api-content-area">
+      <slot />
+    </main>
+  </div>
+</MainLayout>
+
+<style is:global>
+  /* API Header Styles (Similar to Docs) */
+  .api-header-wrapper {
+    background-color: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+    padding-top: 2rem;
+  }
+
+  .api-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .api-header-content {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .api-h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .api-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text);
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .product-tabs {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 1px;
+    scrollbar-width: none;
+  }
+  
+  .product-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    opacity: 0.7;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .product-tab:hover {
+    opacity: 1;
+    text-decoration: none;
+    background-color: var(--color-nav-hover);
+    border-radius: 6px 6px 0 0;
+  }
+
+  .product-tab.active {
+    opacity: 1;
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+
+  .api-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 2rem;
+    padding-bottom: 5rem;
+  }
+
+  @media (min-width: 992px) {
+    .api-layout-grid {
+      grid-template-columns: 320px 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .api-sidebar {
+    border-right: 1px solid var(--color-border);
+    padding-right: 1rem;
+  }
+
+  .api-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar-root-list > li {
+    margin-bottom: 0.5rem;
+  }
+
+  .api-method-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.4rem 0.5rem;
+    color: var(--color-text);
+    opacity: 0.8;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .api-method-link:hover {
+    opacity: 1;
+    background-color: var(--color-nav-hover);
+    text-decoration: none;
+  }
+
+  .api-method-link.active {
+    background-color: rgba(var(--color-primary), 0.1);
+    color: var(--color-primary);
+    opacity: 1;
+    font-weight: 600;
+  }
+
+  .method-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .method-get { background-color: rgba(97, 175, 254, 0.2); color: #61affe; }
+  .method-post { background-color: rgba(73, 204, 144, 0.2); color: #49cc90; }
+  .method-put { background-color: rgba(252, 161, 48, 0.2); color: #fca130; }
+  .method-delete { background-color: rgba(249, 62, 62, 0.2); color: #f93e3e; }
+  .method-patch { background-color: rgba(80, 227, 194, 0.2); color: #50e3c2; }
+  
+  html[data-theme='light'] .method-get { color: #0056b3; background-color: rgba(0, 86, 179, 0.1); }
+  html[data-theme='light'] .method-post { color: #1e7e34; background-color: rgba(30, 126, 52, 0.1); }
+
+  .method-summary {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .api-content-area {
+    min-width: 0;
+  }
+
+  .api-endpoint-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+  .api-endpoint-path { font-family: monospace; background-color: var(--color-nav-hover); padding: 0.5rem 1rem; border-radius: 6px; font-size: 1.1rem; margin-bottom: 2rem; display: inline-block; word-break: break-all; }
+  
+  /* Rest of Sidebar toggle styles identical to Docs */
+  .folder-toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; background: none; border: none; padding: 0.4rem 0.5rem; text-align: left; font-weight: 600; font-size: 0.95rem; color: var(--color-text); cursor: pointer; border-radius: 4px; transition: background-color 0.2s; }
+  .folder-toggle:hover { background-color: var(--color-nav-hover); }
+  .folder-toggle .chevron { transition: transform 0.2s; }
+  .sidebar-folder.expanded > .folder-toggle .chevron { transform: rotate(180deg); }
+  .folder-contents { padding-left: 0.5rem !important; margin-top: 0.25rem !important; border-left: 1px solid var(--color-border); margin-left: 0.75rem; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const folders = document.querySelectorAll('.folder-toggle');
+    folders.forEach(folder => {
+      folder.addEventListener('click', (e) => {
+        const li = e.currentTarget.parentElement;
+        const ul = li.querySelector('.folder-contents');
+        
+        if (li.classList.contains('expanded')) {
+          li.classList.remove('expanded');
+          ul.style.display = 'none';
+        } else {
+          li.classList.add('expanded');
+          ul.style.display = 'block';
+        }
+      });
+    });
+  });
+</script>

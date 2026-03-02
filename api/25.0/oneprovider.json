@@ -1,0 +1,31 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Dummy API",
+    "version": "25.0"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Get Users",
+        "tags": [
+          "User Management"
+        ]
+      },
+      "post": {
+        "summary": "Create User",
+        "tags": [
+          "User Management"
+        ]
+      }
+    },
+    "/groups": {
+      "get": {
+        "summary": "Get Groups",
+        "tags": [
+          "Group Management"
+        ]
+      }
+    }
+  }
+}

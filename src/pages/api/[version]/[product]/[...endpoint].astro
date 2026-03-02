@@ -1,0 +1,180 @@
+---
+import ApiLayout from '../../../../layouts/ApiLayout.astro';
+import fs from 'node:fs';
+import path from 'node:path';
+
+export async function getStaticPaths() {
+  const apiDir = path.join(process.cwd(), 'api');
+  if (!fs.existsSync(apiDir)) return [];
+
+  const versions = fs.readdirSync(apiDir).filter(f => fs.statSync(path.join(apiDir, f)).isDirectory()).sort((a,b) => b.localeCompare(a));
+  
+  let paths: any[] = [];
+
+  for (const version of versions) {
+    const versionDir = path.join(apiDir, version);
+    const products = ['onezone', 'oneprovider', 'onepanel'];
+
+    for (const product of products) {
+      const swaggerPath = path.join(versionDir, `${product}.json`);
+      if (!fs.existsSync(swaggerPath)) continue;
+
+      try {
+        const swaggerData = JSON.parse(fs.readFileSync(swaggerPath, 'utf8'));
+        const apiPaths = swaggerData.paths || {};
+
+        // Group operations
+        const groupsMap = new Map();
+
+        Object.entries(apiPaths).forEach(([endpointPattern, methods]: [string, any]) => {
+          Object.entries(methods).forEach(([method, op]: [string, any]) => {
+            const groupName = (op.tags && op.tags.length > 0) ? op.tags[0] : 'General';
+            const endpointSlug = endpointPattern.replace(/^\//, '').replace(/\/+/g, '-').replace(/[{}]/g, '');
+            const slug = `${endpointSlug}-${method}`;
+
+            if (!groupsMap.has(groupName)) {
+              groupsMap.set(groupName, { name: groupName, operations: [] });
+            }
+
+            const operationData = {
+              href: `/api/${version}/${product}/${slug}`,
+              method,
+              summary: op.summary || endpointPattern,
+              endpointPath: endpointPattern,
+              details: op
+            };
+
+            groupsMap.get(groupName).operations.push(operationData);
+
+            paths.push({
+              params: { version, product, endpoint: slug },
+              props: { 
+                version, 
+                product, 
+                operation: operationData,
+                swaggerData 
+              }
+            });
+          });
+        });
+
+        // Add index path for the product dashboard (default to first endpoint or empty)
+        paths.push({
+          params: { version, product, endpoint: undefined },
+          props: { version, product, operation: null, swaggerData }
+        });
+
+      } catch (e) {
+        console.error(`Error processing ${swaggerPath}`, e);
+      }
+    }
+  }
+
+  // Need to pass availableVersions and sidebarGroups correctly to each page
+  // We'll reconstruct sidebarGroups dynamically inside the component instead to simplify getStaticPaths
+  
+  return paths;
+}
+
+const { version, product, operation, swaggerData } = Astro.props;
+
+// Reconstruct Sidebar groups for current product
+const apiPaths = swaggerData.paths || {};
+const groupsMap = new Map();
+Object.entries(apiPaths).forEach(([endpointPattern, methods]: [string, any]) => {
+  Object.entries(methods).forEach(([method, op]: [string, any]) => {
+    const groupName = (op.tags && op.tags.length > 0) ? op.tags[0] : 'General';
+    const endpointSlug = endpointPattern.replace(/^\//, '').replace(/\/+/g, '-').replace(/[{}]/g, '');
+    const slug = `${endpointSlug}-${method}`;
+
+    if (!groupsMap.has(groupName)) {
+      groupsMap.set(groupName, { name: groupName, operations: [] });
+    }
+    groupsMap.get(groupName).operations.push({
+      href: `/api/${version}/${product}/${slug}`,
+      method,
+      summary: op.summary || endpointPattern
+    });
+  });
+});
+const sidebarGroups = Array.from(groupsMap.values());
+
+// Calculate versions dynamically from fs here or pass from getStaticPaths
+const apiDir = path.join(process.cwd(), 'api');
+const availableVersions = fs.readdirSync(apiDir).filter(f => fs.statSync(path.join(apiDir, f)).isDirectory()).sort((a,b) => b.localeCompare(a));
+
+const pageTitle = operation ? `${operation.summary} | API Reference` : `${product.toUpperCase()} API Reference`;
+---
+
+<ApiLayout 
+  title={pageTitle}
+  version={version}
+  availableVersions={availableVersions}
+  activeProduct={product}
+  sidebarGroups={sidebarGroups}
+>
+  {operation ? (
+    <div class="api-endpoint-details">
+      <h1 class="api-endpoint-title">{operation.summary}</h1>
+      <div class="api-endpoint-path">
+        <span class={`method-badge method-${operation.method}`} style="margin-right: 1rem; font-size: 0.9rem;">{operation.method.toUpperCase()}</span>
+        {operation.endpointPath}
+      </div>
+      
+      {operation.details.description && (
+        <div class="api-description">
+          <p>{operation.details.description}</p>
+        </div>
+      )}
+
+      {/* Here you could add more Swagger rendering logic: Parameters, Responses, etc. */}
+      {operation.details.parameters && operation.details.parameters.length > 0 && (
+        <div class="api-section">
+          <h3>Parameters</h3>
+          <pre>{JSON.stringify(operation.details.parameters, null, 2)}</pre>
+        </div>
+      )}
+
+      <div class="api-section">
+        <h3>Responses</h3>
+        <pre>{JSON.stringify(operation.details.responses || {}, null, 2)}</pre>
+      </div>
+    </div>
+  ) : (
+    <div class="api-welcome">
+      <h1 class="api-endpoint-title" style="text-transform: capitalize;">{product} API Reference</h1>
+      <p style="font-size: 1.1rem; opacity: 0.8; margin-top: 1rem;">Select an endpoint from the sidebar to view its details.</p>
+    </div>
+  )}
+</ApiLayout>
+
+<style>
+  .api-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+  }
+
+  .api-section {
+    margin-top: 2rem;
+  }
+
+  .api-section h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .api-section pre {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1.25rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    font-family: ui-monospace, monospace;
+  }
+</style>

@@ -1,0 +1,241 @@
+---
+// Header component
+---
+
+<header class="site-header">
+  <div class="container header-content">
+    <div class="logo">
+      <a href="/">
+        <span class="logo-text">ONEDATA</span>
+      </a>
+    </div>
+
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item has-dropdown">
+          <span class="nav-link">Features <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          <ul class="dropdown">
+            <li><a href="/features/unified-virtual-filesystem">Unified Virtual Filesystem</a></li>
+            <li><a href="/features/hybrid-cloud-ready">Hybrid Cloud Ready</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/how-it-works">How it works</a>
+        </li>
+        <li class="nav-item has-dropdown">
+          <span class="nav-link">Use cases <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>
+          <ul class="dropdown">
+            <li><a href="/use-cases/ai-ml-research">AI / ML Research</a></li>
+            <li><a href="/use-cases/life-sciences">Life Sciences</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/quick-start">Quick Start</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/docs">Docs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/api">API</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="https://github.com/onedata" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+      </a>
+      
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+
+      <!-- Mobile menu toggle placeholder -->
+      <button class="menu-toggle" aria-label="Menu">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: var(--color-text);
+  }
+  .logo-text a:hover {
+    text-decoration: none;
+  }
+
+  .main-nav {
+    display: none;
+  }
+  
+  @media (min-width: 768px) {
+    .main-nav {
+      display: block;
+    }
+  }
+
+  .nav-list {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0;
+    transition: color 0.2s;
+  }
+  
+  .nav-link:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  
+  .chevron {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s;
+  }
+  
+  .has-dropdown:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .has-dropdown:hover .chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    min-width: 220px;
+    padding: 0.5rem 0;
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+  }
+  
+  .dropdown a {
+    display: block;
+    padding: 0.5rem 1.25rem;
+    color: var(--color-text);
+    font-size: 0.9rem;
+  }
+  
+  .dropdown a:hover {
+    background: var(--color-nav-hover);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .social-link {
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+  }
+  .social-link:hover {
+    color: var(--color-primary);
+  }
+
+  .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .theme-toggle:hover {
+    background-color: var(--color-nav-hover);
+    color: var(--color-primary);
+  }
+
+  /* Theme toggle SVG display logic */
+  html[data-theme='light'] .moon-icon { display: block; }
+  html[data-theme='light'] .sun-icon { display: none; }
+  html[data-theme='dark'] .moon-icon { display: none; }
+  html[data-theme='dark'] .sun-icon { display: block; }
+  
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  @media (min-width: 768px) {
+    .menu-toggle { display: none; }
+  }
+</style>
+
+<script>
+  // Theme toggle script
+  const themeToggleInfo = document.getElementById('theme-toggle');
+  
+  const handleToggleClick = () => {
+    const element = document.documentElement;
+    element.dataset.theme = element.dataset.theme === 'dark' ? 'light' : 'dark';
+    
+    const isDark = element.dataset.theme === 'dark';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  }
+
+  themeToggleInfo?.addEventListener('click', handleToggleClick);
+</script>
