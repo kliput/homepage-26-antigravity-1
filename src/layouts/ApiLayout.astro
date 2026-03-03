@@ -33,7 +33,7 @@ const currentPath = Astro.url.pathname;
           </p>
         </div>
         <div class="version-selector">
-          <label for="version-select" class="sr-only">Select version</label>
+          <label for="version-select" class="sr-only">Version:</label>
           <select
             id="version-select"
             class="version-select"
@@ -400,6 +400,28 @@ const currentPath = Astro.url.pathname;
     margin-top: 0.25rem !important;
     border-left: 1px solid var(--color-border);
     margin-left: 0.75rem;
+  }
+
+  /* FIXME: ujednolicić z DocsLayout.astro */
+
+  .version-select {
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+    background-color: var(--color-nav-hover);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px;
+  }
+
+  label + .version-select {
+    margin-left: 0.5em;
   }
 </style>
 

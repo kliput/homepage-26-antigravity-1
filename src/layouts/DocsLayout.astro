@@ -10,10 +10,11 @@ interface Props {
 }
 
 const chapters = [
-  { id: "Introduction", label: "Introduction", icon: "book" },
-  { id: "User Guide", label: "User Guide", icon: "users" },
+  { id: "intro", label: "Introduction", icon: "book" },
+  { id: "user-guide", label: "User Guide", icon: "users" },
   { id: "Admin Guide", label: "Admin Guide", icon: "server" },
-  { id: "Security", label: "Security", icon: "lock" },
+  // { id: "Security", label: "Security", icon: "lock" },
+  { id: "glossary", label: "Glossary", icon: "list" },
   { id: "Versions", label: "Versions", icon: "list" },
 ];
 
@@ -65,7 +66,7 @@ function renderSidebarNode(node: any, currentPath: string) {
           </p>
         </div>
         <div class="version-selector">
-          <label for="version-select" class="sr-only">Select version</label>
+          <label for="version-select" class="sr-only">Version:</label>
           <select
             id="version-select"
             class="version-select"
@@ -74,7 +75,7 @@ function renderSidebarNode(node: any, currentPath: string) {
             {
               availableVersions.map((v) => (
                 <option
-                  value={`/docs/${v}/Introduction/overview`}
+                  value={`/docs/${v}/intro/overview`}
                   selected={v === version}
                 >
                   {v}
@@ -254,6 +255,10 @@ function renderSidebarNode(node: any, currentPath: string) {
     background-repeat: no-repeat;
     background-position: right 0.75rem center;
     background-size: 16px;
+  }
+
+  label + .version-select {
+    margin-left: 0.5em;
   }
 
   html[data-theme="dark"] .version-select {

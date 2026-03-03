@@ -102,3 +102,15 @@ header {
   margin: 0 auto;
   padding: 0 1.5rem;
 }
+
+/* FIXME: przenieść style do plików docsów, jakoś lokalnie */
+
+.docs-content-area img[alt^="screen-"] {
+  border: 1px solid #ddd;
+}
+
+.docs-content-area img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
