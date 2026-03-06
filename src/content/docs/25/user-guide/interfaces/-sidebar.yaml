@@ -1,0 +1,11 @@
+title: 'Interfaces'
+order:
+  - overview
+  - web-file-browser
+  - oneclient
+  - onedata-fs
+  - onedata-rest-fs
+  - onedata-file-rest-client
+  # - s3
+  - data-access-rest-api
+  - cdmi

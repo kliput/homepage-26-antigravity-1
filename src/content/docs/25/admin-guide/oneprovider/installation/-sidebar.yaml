@@ -1,0 +1,6 @@
+title: 'Installation'
+order:
+  - overview
+  - onedatify-cli
+  - graphical-wizard
+  - docker-compose

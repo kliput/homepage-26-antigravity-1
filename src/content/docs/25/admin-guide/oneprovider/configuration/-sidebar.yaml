@@ -1,0 +1,16 @@
+title: 'Configuration'
+order:
+  - cluster-members
+  - network-and-firewall
+  - cluster-nodes
+  - dns-config
+  - web-certificate
+  - storage-backends
+  - space-support
+  - storage-import
+  - luma
+  - file-popularity
+  - auto-cleaning
+  - rule-based-replication-qos
+  - rest-api
+  - advanced-config

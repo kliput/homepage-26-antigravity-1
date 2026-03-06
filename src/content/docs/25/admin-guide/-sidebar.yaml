@@ -1,0 +1,8 @@
+title: 'Admin guide'
+order:
+  - overview
+  - architecture
+  - upgrades-and-compatibility
+  - demo-mode
+  - oneprovider
+  - onezone

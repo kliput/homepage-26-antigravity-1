@@ -1,0 +1,24 @@
+title: 'User guide'
+order:
+  - overview
+  - quickstart
+  - account-management
+  - groups
+  - spaces
+  - providers
+  - data
+  - interfaces
+  - data-distribution-and-metrics
+  - data-transfers
+  - rule-based-replication-qos
+  - shares
+  - public-data
+  - tokens
+  - metadata
+  - data-discovery
+  - datasets
+  - archives
+  - automation
+  - file-registration
+  - views
+  - rest-api

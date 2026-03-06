@@ -1,0 +1,16 @@
+title: 'Configuration'
+order:
+  - oidc-saml
+  - oidc-google-idp
+  - network-and-firewall
+  - cluster-nodes
+  - dns-config
+  - web-certificate
+  - user-management
+  - cluster-members
+  - gui-settings
+  - admin-privileges
+  - rest-api
+  - data-discovery
+  - handle-services
+  - advanced-config
