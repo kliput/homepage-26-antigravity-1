@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 import sitemap from "@astrojs/sitemap";
+import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,6 +10,9 @@ export default defineConfig({
   image: {
     responsiveStyles: true,
     layout: "constrained",
+  },
+  markdown: {
+    remarkPlugins: [remarkRewriteLinks],
   },
   integrations: [sitemap()]
 });

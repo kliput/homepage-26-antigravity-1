@@ -27,7 +27,7 @@ In order to install Oneprovider, follow the instructions in the [Oneprovider ins
 
 <!-- references -->
 
-[Introduction]: ../../intro.md
+[Introduction]: ../intro/overview.md
 
 [demo mode]: demo-mode.md
 
