@@ -183,7 +183,7 @@ The `auth.config` file is written in Erlang format, quite similar to JSON:
 
 The config file has the following sections:
 
-```Erlang
+```erlang
 #{
     version => 3,
 
@@ -237,7 +237,7 @@ that will be inherited by all OpenID IdPs.
 
 ::: details click to expand
 
-```Erlang
+```erlang
     openidConfig => #{
         % Enable OpenID login protocol — if disabled, all OpenID IdPs will be
         % hidden from the login page.
@@ -339,7 +339,7 @@ configuration and defaults that will be inherited by all SAML IdPs.
 
 ::: details click to expand
 
-```Erlang
+```erlang
     samlConfig => #{
         % Enable SAML login protocol — if disabled, all SAML IdPs will be hidden
         % from the login page and the endpoint serving SAML metadata will be
@@ -427,7 +427,7 @@ button order on the login page corresponds to the order of the entries:
 
 ::: details click to expand
 
-```Erlang
+```erlang
     supportedIdps => [
         % IdP identifier, must be a unique, arbitrary atom
         {myIdP, #{
@@ -490,7 +490,7 @@ identifier is reserved for internal purposes and cannot be used.
 
 ::: details click to expand
 
-```Erlang
+```erlang
         % basicAuth is a special IdP id reserved for signing in with username & password 
         % and the only valid config entry using the basicAuth protocol.
         {basicAuth, #{
@@ -520,7 +520,7 @@ identifier is reserved for internal purposes and cannot be used.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {google, #{
     % Configuration of the login page button
     displayName => "Google",
@@ -651,7 +651,7 @@ More details on `pluginConfig`:
   endpoint is a special case that allows you to specify multiple endpoints. Information
   gathered from them will be aggregated, like in this example:
 
-```Erlang
+```erlang
 endpoints => #{
     authorize => "https://github.com/login/oauth/authorize",
     accessToken => "https://github.com/login/oauth/access_token",
@@ -693,7 +693,7 @@ Note that some of them can be configurable on the IdP side too.
 
 ::: details click to expand
 
-```Erlang
+```erlang
         {elixir, #{
             % Configuration of the login page button
             displayName => "Elixir",
@@ -791,7 +791,7 @@ GitHub) to authorize operations in Onezone.
 To enable this feature for specific IdP, the `authorityDelegation` section has to be added
 to the IdP's protocol config, for instance:
 
-```Erlang
+```erlang
 authorityDelegation => #{
     % Enabled for this IdP
     enabled => true,
@@ -825,7 +825,7 @@ supported, and offline access must be supported by the given IdP.
 To enable this feature for specific IdP, the `offlineAccess` field has to be added to the
 IdP's protocol config, for instance:
 
-```Erlang
+```erlang
 offlineAccess => true,
 ```
 
@@ -869,7 +869,7 @@ Onezone collects information about users from SAML / OpenID, including:
 These attributes constitute a linked account object. It can be expressed in JSON
 format:
 
-```JSON
+```json
 {
 	"idp": "elixir",
 	"subjectId": "1234567890@elixir-europe.org",
@@ -915,7 +915,7 @@ possible to link the same account to two different users.
 Complete user data, after logging in with the above Elixir account, would look
 like the following:
 
-```JSON
+```json
 {
 	"userId": "fa81af19783e3eea7d7e80c1d89f5370",
 	"fullName": "John Doe",
@@ -939,7 +939,7 @@ like the following:
 Assume that the user links another account, e.g. from EGI, which yields the
 following linked account object:
 
-```JSON
+```json
 {
     "idp": "egi",
 	"subjectId": "12345678-1234-1234-1234-12345678",
@@ -958,7 +958,7 @@ following linked account object:
 
 After that operation, the complete user data would look like the following:
 
-```JSON
+```json
 {
 	"userId": "fa81af19783e3eea7d7e80c1d89f5370",
 	"fullName": "John Doe",
@@ -1004,7 +1004,7 @@ The user data can also be retrieved using the [REST API][get user API].
 Attribute mapping is performed based on the IdP configuration in `auth.config`.
 The section looks like the following:
 
-```Erlang
+```erlang
 attributeMapping => #{
   subjectId => {required, <rule>},
   fullName => {optional, <rule>},
@@ -1034,7 +1034,7 @@ Allowed mappings are:
   be placed in the [plugin directory][]. For more info, refer to
   [attribute mapper][]. Here is an example:
 
-```Erlang
+```erlang
 fullName => {plugin, my_attr_mapper}
 % would call my_attr_mapper:map_attribute(fullName, IdPAttributes)
 ```
@@ -1044,7 +1044,7 @@ fullName => {plugin, my_attr_mapper}
 * `"attrName"` — name of an attribute. If such a key is present in attributes
   received from IdP, the rule is expanded to its value. Here is an example:
 
-```Erlang
+```erlang
 id => {required, "id"}
 emails => {optional, "mail"}
 ```
@@ -1052,7 +1052,7 @@ emails => {optional, "mail"}
 * `{keyValue, "attrName"}` — similar to the `"attrName"` rule, but the result
   will contain both the attribute key and value as a JSON object. Here is an example:
 
-```Erlang
+```erlang
 custom => {optional, {keyValue, "schacHomeOrganization"}}
 % would set user's custom value to
 {"custom": {"schacHomeOrganization": "orgName"}}
@@ -1064,7 +1064,7 @@ custom => {optional, {keyValue, "schacHomeOrganization"}}
   `<rule>` can expand to any value, and the key in the result JSON can be specified
   explicitly. Here is an example:
 
-```Erlang
+```erlang
 custom => {optional, {keyValue, "organization", "schacHomeOrganization"}}
 % would set user's custom value to:
 {"custom": {"organization": "orgName"}}
@@ -1072,7 +1072,7 @@ custom => {optional, {keyValue, "organization", "schacHomeOrganization"}}
 
 * `{str, "literal"}` — the rule will be expanded to the literal string. Here is an example:
 
-```Erlang
+```erlang
 fullName => {required, {str, "John Doe"}}
 % would make all users have the same fullName; `"John Doe"
 ```
@@ -1080,7 +1080,7 @@ fullName => {required, {str, "John Doe"}}
 * `{str_list, ["str1", "str2"]}` — the rule will be expanded to a list of
   literal strings. Here is an example:
 
-```Erlang
+```erlang
 entitlements => {required, {str_list, ["group1", "group2, "group3"]}}
 % would make all users have the same three entitlements
 ```
@@ -1089,7 +1089,7 @@ entitlements => {required, {str_list, ["group1", "group2, "group3"]}}
   value nested in a JSON. The special expression `{list, key}` can be used to parse a
   list of JSON objects, where each object has a specific key. Here is an example:
 
-```Erlang
+```erlang
 emails => {nested, ["emails", {list, "email"}]}
 % would parse the following JSON:
 {"emails": [
@@ -1108,7 +1108,7 @@ emails => {nested, ["emails", {list, "email"}]}
   Erlang's regex format, which differs slightly from other formats. Here is an
   example:
 
-```Erlang
+```erlang
 fullName => {replace, "(.*) (.*) (.*)", "\\1 \\3", "fullName"}
 % would change all 3-part names to 2-part, leaving out the middle one 
 % (e.g. John II Doe -> John Doe). Unmatched strings are not modified.
@@ -1122,7 +1122,7 @@ fullName => {replace, "(.*) (.*) (.*)", "\\1 \\3", "fullName"}
   a new list. If any of the lists is shorter, it is padded with empty strings.
   Examine possible combinations:
 
-```Erlang
+```erlang
 {concat, []} ->
     undefined
 {concat, [{str, "a"}]} ->
@@ -1141,7 +1141,7 @@ fullName => {replace, "(.*) (.*) (.*)", "\\1 \\3", "fullName"}
 
 Example:
 
-```Erlang
+```erlang
 {entitlements => {concat, [{str, "group:"}, "groups"]}
 % would prefix every user's entitlement with "group:"
 ```
@@ -1150,7 +1150,7 @@ Example:
   `<rule>` must expand to a list of strings, or a single string (in which case
   the join just returns the unchanged string). Here is an example:
 
-```Erlang
+```erlang
 {join, " ", "nameTokens"}
 % would parse the following JSON:
 {"nameTokens": ["John", "Doe", "Junior"]}
@@ -1163,7 +1163,7 @@ Example:
   in which case the results of splitting every string will be appended in one
   result list. Here is an example:
 
-```Erlang
+```erlang
 {entitlements => {optional, {split, ",", "groups"}}
 % would parse the following JSON:
 {"groups": "group1,team2,role3"}
@@ -1179,7 +1179,7 @@ Example:
   Every `<rule>` must expand to a string, list, or JSON. Examine possible
   combinations:
 
-```Erlang
+```erlang
 {append, []} ->
    []
 {append, [{str, "a"}]} ->
@@ -1194,7 +1194,7 @@ Example:
 
 Example:
 
-```Erlang
+```erlang
 {custom => {append, [{keyValue, "organization"}, "customAttrs"]}
 % provided that "customAttrs" is a nested JSON, would give something like:
 {"organization": "my-org", "cusAttr1": "val1", "cusAttr2": "val2"}
@@ -1204,7 +1204,7 @@ Example:
   match the `<regex>`. `<rule>` must expand to a list of strings, or a string,
   in which case it will be treated as a list with one element. Here is an example:
 
-```Erlang
+```erlang
 {emails => {filter, ".*@gmail.com", "emails"}
 % would leave only the emails from gmail.com
 ```
@@ -1213,7 +1213,7 @@ Example:
   them gives a valid result. In case all of them fail, returns the `undefined` value.
   Here is an example:
 
-```Erlang
+```erlang
 {fullName => {optional, {any, [{concat, [{str, "John "}, "surName"]}, "userName"]}}
 % would set all users' names to:
 %   a) "John <surName>" if the attribute "surName" was found
@@ -1226,7 +1226,7 @@ The following example, which uses all possible rules:
 
 ::: details click to expand
 
-```Erlang
+```erlang
 attributeMapping => #{
     subjectId => {required, {replace, "c", "x", "id"}},
     fullName => {optional, {any, ["fullName", {join, " ", "nameTokens"}]}},
@@ -1253,7 +1253,7 @@ would parse the following JSON:
 
 ::: details click to expand
 
-```JSON
+```json
 {
 	"id": "abcdef1c2c3c4c",
 	"nameTokens": ["John", "Doe", "Jr"],
@@ -1288,7 +1288,7 @@ into the following Onedata user attributes:
 
 ::: details click to expand
 
-```JSON
+```json
 {
 	"idp": "my-idp",
 	"subjectId": "abxdef1x2x3x4x",
@@ -1318,7 +1318,7 @@ by all IdPs using that protocol (`openid` or `saml`) — just like all other
 attributes. It is possible to override each key in the IdP config. For example,
 the following config (default and IdP specific):
 
-```Erlang
+```erlang
 defaultProtocolConfig => #{
     attributeMapping => #{
         subjectId => {required, "eduPersonUniqueID"},
@@ -1343,7 +1343,7 @@ defaultProtocolConfig => #{
 
 is equivalent to the following config for the given IdP:
 
-```Erlang
+```erlang
 {my_idp, #{
     protocolConfig => #{
         attributeMapping => #{
@@ -1366,7 +1366,7 @@ universally used attributes. The below examples use fairly common attributes:
 
 OpenID attributes example (EGI Check-In)
 
-```JSON
+```json
 {
 	"sub": "12345678-1234-1234-1234-12345678",
 	"preferred_username": "johndoe",
@@ -1385,7 +1385,7 @@ OpenID attributes example (EGI Check-In)
 
 SAML attributes example (Elixir Europe)
 
-```JSON
+```json
 {
 	"eduPersonUniqueId": "1234567890@elixir-europe.org",
 	"displayName": "John Doe",
@@ -1440,7 +1440,7 @@ in the above example for Elixir) — refer to the IdP's documentation.
 
 Exemplary attribute mapping using known and custom SAML attributes:
 
-```Erlang
+```erlang
  attributeMapping => #{
     subjectId => {required, "eduPersonTargetedID"},
     fullName => {optional, {any, ["displayName", {concat, ["givenName", {str, " "}, "surName"]}]}},
@@ -1476,7 +1476,7 @@ as other resources in Onedata. Users can be added manually to the IdP-related gr
 The section in auth.config concerning the Entitlement Mapping has the following
 structure (example):
 
-```Erlang
+```erlang
  entitlementMapping => #{
      enabled => true,
      voGroupName => "my-organization",
@@ -1538,7 +1538,7 @@ in Onedata. Two predefined parsers can handle the majority of common use cases:
 
 Consider the following `entitlementMapping` config:
 
-```Erlang
+```erlang
 entitlementMapping => #{
      enabled => true,
      voGroupName => "my-organization",
@@ -1554,7 +1554,7 @@ entitlementMapping => #{
 
 Suppose that the following JSON is received from the IdP:
 
-```JSON
+```json
 {
      "groups": ["developers", "admins"],
      ...
@@ -1563,7 +1563,7 @@ Suppose that the following JSON is received from the IdP:
 
 The [attribute mapping rules][] are:
 
-```Erlang
+```erlang
 attributeMapping => #{
      entitlements => {optional, "groups"},
      ...
@@ -1600,7 +1600,7 @@ Then, the following group structure would be created after the user logs in:
 
 Consider the following `entitlementMapping` config:
 
-```Erlang
+```erlang
 entitlementMapping => #{
      enabled => true,
      % Don't create a VO group, unlike in above
@@ -1620,7 +1620,7 @@ entitlementMapping => #{
 
 Suppose that the following JSON is received from the IdP:
 
-```JSON
+```json
 {
      "groups": [
          "all_users:admins",
@@ -1632,7 +1632,7 @@ Suppose that the following JSON is received from the IdP:
 
 The [attribute mapping rules][] are:
 
-```Erlang
+```erlang
 attributeMapping => #{
      entitlements => {optional, "groups"},
      ...
@@ -1733,7 +1733,7 @@ Entitlement parsers are Erlang modules that implement
 coming from an IdP into Onedata's internal, unified format, which looks like
 this:
 
-```Erlang
+```erlang
 #idp_entitlement{
      idp = myIdP,
      path = [
@@ -2030,7 +2030,7 @@ on your Onezone node under `/etc/oz_worker/template.auth.config`.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 #{
     version => 3,
 
@@ -2371,7 +2371,7 @@ on your Onezone node under `/etc/oz_worker/template.auth.config`.
 Minimal config that enables only basic auth (username & password login) —
 included by default in Onezone installation.
 
-```Erlang
+```erlang
 #{
     version => 3,
 
@@ -2408,7 +2408,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {basicAuth, #{
     displayName => "username & password",
     iconPath => "/assets/images/auth-providers/basicauth.svg",
@@ -2423,7 +2423,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {keycloakIdP, #{
     displayName => "RHEA KeyCloak",
     iconPath => "/assets/images/auth-providers/rhea.svg",
@@ -2485,7 +2485,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {github, #{
     displayName => "Github",
     iconPath => "/assets/images/auth-providers/github.svg",
@@ -2544,7 +2544,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {google, #{
     displayName => "Google",
     iconPath => "/assets/images/auth-providers/google.svg",
@@ -2595,7 +2595,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {facebook, #{
     displayName => "Facebook",
     iconPath => "/assets/images/auth-providers/facebook.svg",
@@ -2651,7 +2651,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {egi, #{
     displayName => "EGI",
     iconPath => "/assets/images/auth-providers/egi.svg",
@@ -2704,7 +2704,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {plgrid, #{
     displayName => "PLGrid OpenID",
     iconPath => "/assets/images/auth-providers/plgrid.svg",
@@ -2748,7 +2748,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {cern, #{
     displayName => <<"CERN (eduGAIN)">>,
     iconBackgroundColor => <<"#0053A1">>,
@@ -2786,7 +2786,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {cnrs, #{
     displayName => <<"CNRS (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -2824,7 +2824,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {desy, #{
     displayName => <<"DESY (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -2862,7 +2862,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {elixir, #{
     displayName => <<"Elixir">>,
     iconBackgroundColor => <<"#FF7A04">>,
@@ -2900,7 +2900,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {embl, #{
     displayName => <<"EMBL (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -2938,7 +2938,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {esrf, #{
     displayName => <<"ESRF (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -2976,7 +2976,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {ifae, #{
     displayName => <<"IFAE (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -3014,7 +3014,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {infn, #{
     displayName => <<"INFN (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -3052,7 +3052,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {kit, #{
     displayName => <<"KIT (eduGAIN)">>,
     iconBackgroundColor => <<"#FFF">>,
@@ -3090,7 +3090,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {stfc, #{
     displayName => <<"STFC (eduGAIN)">>,
     iconBackgroundColor => <<"#1C3764">>,
@@ -3128,7 +3128,7 @@ required to insert the Client ID and Secret in the config.
 
 ::: details click to expand
 
-```Erlang
+```erlang
 {unitedid, #{
     displayName => <<"UnitedID">>,
     iconBackgroundColor => <<"#ABDFF1">>,

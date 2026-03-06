@@ -113,7 +113,7 @@ This record is used to represent the user on the specific storage backend and co
 * `displayUid` is a field used to present the corresponding user as the owner of a file
   (UID) in Oneclient or GUI
 
-```JSON
+```json
 {
     "storageCredentials": JSON, // Map storing credentials relevant for given storage backend
     "displayUid": Integer
@@ -124,7 +124,7 @@ This record is used to represent the user on the specific storage backend and co
 
 This record stores standard POSIX-like user ID and group ID.
 
-```JSON
+```json
 {
     "uid": Integer,
     "gid": Integer
@@ -140,7 +140,7 @@ The record has one of the two schemes:
 * `"idpUser"` — the record stores the ID of an external identity provider (IdP) and the ID
   of the user understood by the IdP.
 
-```JSON
+```json
 {
     "mappingScheme": "onedataUser" | "idpUser",
     // fields for "onedataUser" scheme
@@ -163,7 +163,7 @@ The record has one of the two schemes:
 * `"idpEntitlement"` — the record stores the ID of an external identity provider (IdP) and
   the ID of the group understood by the IdP.
 
-```JSON
+```json
 {
     "mappingScheme": "onedataGroup" | "idpEntitlement",
     // fields for "onedataGroup" scheme
@@ -486,7 +486,7 @@ For more information on mapping users from an external IdP to Onedata users, see
 
 * response body: [`OnedataUser`][15]
 
-```JSON
+```json
 {
     "mappingScheme": "onedataUser" | "idpUser", // required
     // fields for "onedataUser" scheme
@@ -512,7 +512,7 @@ For more information on mapping users from an external IdP to Onedata users, see
 
 * response body: [`OnedataUser`][15]
 
-```JSON
+```json
 {
     "mappingScheme": "onedataUser" | "idpUser", // required
     // fields for "onedataUser" scheme
@@ -538,7 +538,7 @@ For more information on mapping users from an external IdP to Onedata users, see
 
 * response body: [`OnedataGroup`][16]
 
-```JSON
+```json
 {
     "mappingScheme": "onedataGroup" | "idpEntitlement", // required
     // fields for "onedataGroup" scheme
