@@ -1,9 +1,8 @@
 ---
+import Redirect from "../components/Redirect.astro";
+
 // FIXME: use versions.json
 const defaultVersion = "25";
 ---
 
-<meta
-  http-equiv="refresh"
-  content={`0;url=/docs/${defaultVersion}/intro/overview`}
-/>
+<Redirect path={`/docs/${defaultVersion}/intro/overview`} />
