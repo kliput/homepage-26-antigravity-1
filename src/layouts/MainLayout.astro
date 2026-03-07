@@ -47,6 +47,45 @@ const {
 			}
 			window.localStorage.setItem("theme", theme);
 		</script>
+
+		<script>
+			// Handle external links globally (especially for API reference and custom content)
+			document.addEventListener("DOMContentLoaded", () => {
+				const isExternal = (url: string) => {
+					try {
+						// Only treat as external if it has a different origin or is an absolute URL
+						const urlObj = new URL(url, window.location.origin);
+						return urlObj.origin !== window.location.origin;
+					} catch (e) {
+						return false;
+					}
+				};
+
+				const applyTargetBlank = () => {
+					document.querySelectorAll("a").forEach((a) => {
+						if (a.href && isExternal(a.href) && !a.hasAttribute("target")) {
+							a.setAttribute("target", "_blank");
+							a.setAttribute("rel", "noopener noreferrer");
+						}
+					});
+				};
+
+				applyTargetBlank();
+				
+				// Handle dynamically added content
+				const observer = new MutationObserver((mutations) => {
+					let shouldUpdate = false;
+					for (const mutation of mutations) {
+						if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+							shouldUpdate = true;
+							break;
+						}
+					}
+					if (shouldUpdate) applyTargetBlank();
+				});
+				observer.observe(document.body, { childList: true, subtree: true });
+			});
+		</script>
 	</head>
 	<body class="site-wrapper">
 		<Header />

@@ -96,8 +96,8 @@ export async function getStaticPaths() {
         try {
           const config = yaml.load(fs.readFileSync(configPath, "utf8")) as any;
 
-          // Apply order and titles
           if (config && typeof config === "object") {
+            // Apply order and titles
             if (config.order && Array.isArray(config.order)) {
               tree.sort((a, b) => {
                 const indexA = config.order.indexOf(a.id);
@@ -111,6 +111,15 @@ export async function getStaticPaths() {
             } else {
               // Default sort
               tree.sort((a, b) => a.label.localeCompare(b.label));
+            }
+
+            // Apply hidden items
+            if (config.hidden && Array.isArray(config.hidden)) {
+              const hiddenSet = new Set(config.hidden);
+              const filteredTree = tree.filter((node) => !hiddenSet.has(node.id));
+              // Modify tree in-place
+              tree.length = 0;
+              tree.push(...filteredTree);
             }
           }
         } catch (e) {

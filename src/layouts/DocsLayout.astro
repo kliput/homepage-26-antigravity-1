@@ -10,11 +10,21 @@ interface Props {
 }
 
 const chapters = [
-  { id: "intro", label: "Introduction", icon: "book" },
-  { id: "user-guide", label: "User Guide", icon: "users" },
-  { id: "admin-guide", label: "Admin Guide", icon: "server" },
-  { id: "glossary", label: "Glossary", icon: "list" },
-  { id: "versions", label: "Versions", icon: "list" },
+  { id: "intro", label: "Introduction", icon: "book", index: "overview" },
+  {
+    id: "user-guide",
+    label: "User Guide",
+    icon: "users",
+    index: "quickstart",
+  },
+  {
+    id: "admin-guide",
+    label: "Admin Guide",
+    icon: "server",
+    index: "overview",
+  },
+  { id: "glossary", label: "Glossary", icon: "list", index: "overview" },
+  { id: "versions", label: "Versions", icon: "list", index: "overview" },
 ];
 
 const { title, version, availableVersions, activeChapter, sidebarNodes } =
@@ -89,7 +99,7 @@ function renderSidebarNode(node: any, currentPath: string) {
         {
           chapters.map((chapter) => (
             <a
-              href={`/docs/${version}/${chapter.id}/overview`}
+              href={`/docs/${version}/${chapter.id}/${chapter.index}`}
               class={`chapter-tab ${activeChapter === chapter.id ? "active" : ""}`}
             >
               {chapter.icon === "book" && (

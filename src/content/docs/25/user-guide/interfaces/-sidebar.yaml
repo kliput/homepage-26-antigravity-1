@@ -1,4 +1,6 @@
-title: 'Interfaces'
+title: 'Data access interfaces'
+hidden:
+  - s3
 order:
   - overview
   - web-file-browser

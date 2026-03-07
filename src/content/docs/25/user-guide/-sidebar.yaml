@@ -1,7 +1,9 @@
 title: 'User guide'
-order:
+hidden:
   - overview
+order:
   - quickstart
+  # - overview
   - account-management
   - groups
   - spaces
