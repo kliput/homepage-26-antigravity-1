@@ -96,7 +96,8 @@ a[target="_blank"]:hover::after {
 }
 
 /* Hide icon for images or specifically marked links */
-a[target="_blank"]:has(img)::after,
+a[target="_blank"]:not(.no-external-icon):has(img)::after,
+a[target="_blank"]:not(.no-external-icon):has(svg)::after,
 a[target="_blank"].no-external-icon::after {
   display: none;
 }
