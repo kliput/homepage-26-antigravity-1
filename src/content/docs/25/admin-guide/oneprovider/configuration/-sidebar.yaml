@@ -1,4 +1,5 @@
 title: 'Configuration'
+redirect: oneprovider/configuration/cluster-members
 order:
   - cluster-members
   - network-and-firewall

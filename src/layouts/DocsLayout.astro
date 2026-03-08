@@ -15,16 +15,14 @@ const chapters = [
     id: "user-guide",
     label: "User Guide",
     icon: "users",
-    index: "quickstart",
   },
   {
     id: "admin-guide",
     label: "Admin Guide",
     icon: "server",
-    index: "overview",
   },
-  { id: "glossary", label: "Glossary", icon: "list", index: "overview" },
-  { id: "versions", label: "Versions", icon: "list", index: "overview" },
+  { id: "glossary", label: "Glossary", icon: "list" },
+  { id: "versions", label: "Versions", icon: "list" },
 ];
 
 const { title, version, availableVersions, activeChapter, sidebarNodes } =
@@ -99,7 +97,7 @@ function renderSidebarNode(node: any, currentPath: string) {
         {
           chapters.map((chapter) => (
             <a
-              href={`/docs/${version}/${chapter.id}/${chapter.index}`}
+              href={`/docs/${version}/${chapter.id}`}
               class={`chapter-tab ${activeChapter === chapter.id ? "active" : ""}`}
             >
               {chapter.icon === "book" && (

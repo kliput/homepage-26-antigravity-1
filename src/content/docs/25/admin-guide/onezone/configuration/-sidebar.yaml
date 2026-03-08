@@ -1,4 +1,5 @@
 title: 'Configuration'
+redirect: onezone/configuration/oidc-saml
 order:
   - oidc-saml
   - oidc-google-idp

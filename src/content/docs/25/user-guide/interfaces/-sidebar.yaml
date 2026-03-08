@@ -1,4 +1,5 @@
 title: 'Data access interfaces'
+redirect: interfaces/overview
 hidden:
   - s3
 order:

@@ -14,7 +14,7 @@ export async function getStaticPaths() {
   ].sort((a, b) => b.localeCompare(a)); // Descending versions
 
   // Build paths for each entry
-  return docsEntries.map((entry) => {
+  const paths = docsEntries.map((entry) => {
     // entry.id is like '25.0/Introduction/overview.md'
     const idWithoutExt = entry.id.replace(/\.md$/, "");
     const parts = idWithoutExt.split("/");
@@ -23,7 +23,7 @@ export async function getStaticPaths() {
     const innerSlug = parts.slice(2).join("/");
 
     // Create nested tree for sidebar for this version + chapter
-    // Filter out non-content files (like sidebar.yaml)
+    // Filter out non-content files (like -sidebar.yaml)
     const relevantDocs = docsEntries.filter(
       (e) =>
         e.id.startsWith(`${version}/${chapter}/`) &&
@@ -82,7 +82,7 @@ export async function getStaticPaths() {
         });
       });
 
-      // Apply sidebar.yaml configuration
+      // Apply -sidebar.yaml configuration
       const configPath = path.join(
         process.cwd(),
         "src/content/docs",
@@ -123,7 +123,7 @@ export async function getStaticPaths() {
             }
           }
         } catch (e) {
-          console.error(`Error parsing sidebar.yaml at ${configPath}:`, e);
+          console.error(`Error parsing -sidebar.yaml at ${configPath}:`, e);
         }
       } else {
         // Default sort if no config
@@ -171,23 +171,105 @@ export async function getStaticPaths() {
         chapter,
         availableVersions: versions,
         sidebarTree,
+        isRedirect: false,
       },
     };
   });
+
+  // Now, find all -sidebar.yaml files that have a 'redirect' property
+  // and add paths for those directories.
+  const docsRoot = path.join(process.cwd(), "src/content/docs");
+  
+  function findRedirects(dirPath: string): any[] {
+    const results: any[] = [];
+    const list = fs.readdirSync(dirPath);
+    
+    // Check for -sidebar.yaml in current dir
+    if (list.includes("-sidebar.yaml")) {
+      const configPath = path.join(dirPath, "-sidebar.yaml");
+      try {
+        const config = yaml.load(fs.readFileSync(configPath, "utf8")) as any;
+        if (config && config.redirect) {
+          const relPath = path.relative(docsRoot, dirPath);
+          const parts = relPath.split("/");
+          if (parts.length >= 2) {
+            const version = parts[0];
+            const chapter = parts[1];
+            const innerSlug = parts.slice(2).join("/");
+
+            results.push({
+              params: {
+                version,
+                chapter,
+                slug: innerSlug || undefined
+              },
+              props: {
+                version,
+                chapter,
+                availableVersions: versions,
+                redirectTarget: config.redirect,
+                isRedirect: true,
+                sidebarTree: [], // Sidebar won't be seen anyway, but keeps props consistent
+                // We don't have an 'entry' for directory, but template needs it to avoid crash
+                entry: { data: { title: "Redirecting..." } }
+              }
+            });
+          }
+        }
+      } catch (e) {}
+    }
+    
+    // Recurse subdirs
+    list.forEach(file => {
+      const fullPath = path.join(dirPath, file);
+      if (fs.statSync(fullPath).isDirectory()) {
+        results.push(...findRedirects(fullPath));
+      }
+    });
+    
+    return results;
+  }
+
+  const redirectPaths = findRedirects(docsRoot);
+  
+  // Combine normal paths and redirect paths, filtering duplicates 
+  // (prefer normal paths if an index.md exists, though find shows we don't have them)
+  return [...paths, ...redirectPaths];
 }
 
-const { entry, version, chapter, availableVersions, sidebarTree } = Astro.props;
-const { Content } = await entry.render();
+const { entry, version, chapter, availableVersions, sidebarTree, isRedirect, redirectTarget } = Astro.props;
+let Content;
+if (!isRedirect) {
+  const result = await (entry as any).render();
+  Content = result.Content;
+}
+
+// Construct absolute redirect URL
+const redirectUrl = isRedirect ? (redirectTarget!.startsWith('/') ? redirectTarget : `/docs/${version}/${chapter}/${redirectTarget}`) : null;
 ---
 
-<DocsLayout
-  title={`${entry.data.title} | Onedata Docs`}
-  version={version}
-  availableVersions={availableVersions}
-  activeChapter={chapter}
-  sidebarNodes={sidebarTree}
->
-  <div class="prose">
-    <Content />
-  </div>
-</DocsLayout>
+{isRedirect ? (
+  <html>
+    <head>
+      <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />
+      <script is:inline define:vars={{ redirectUrl }}>
+        window.location.href = redirectUrl;
+      </script>
+    </head>
+    <body>
+      <p>Redirecting to <a href={redirectUrl}>{redirectUrl}</a>...</p>
+    </body>
+  </html>
+) : (
+  <DocsLayout
+    title={`${entry.data.title} | Onedata Docs`}
+    version={version}
+    availableVersions={availableVersions}
+    activeChapter={chapter}
+    sidebarNodes={sidebarTree}
+  >
+    <div class="prose">
+      <Content />
+    </div>
+  </DocsLayout>
+)}
