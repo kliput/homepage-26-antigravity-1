@@ -1,57 +1,193 @@
-:root {
-  --color-bg: var(--od-bg);
-  --color-text: var(--od-text);
-  /* --color-primary: #EF3F3F; */
-  /* original Onedata red */
-  --color-primary: var(--od-accent);
-  --color-header-bg: var(--od-bg-card);
-  --color-header-border: #eaeaea;
-  --color-border: #eaeaea;
-  --color-nav-hover: #f0f0f0;
-  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
 
-  /* experimental from b44 */
-  --od-bg: #faf9f7;
-  --od-bg-2: #f0ede8;
-  --od-bg-card: #ffffff;
-  --od-bg-input: #f7f5f2;
-  --od-border: rgba(0, 0, 0, 0.1);
-  --od-border-hover: rgba(0, 0, 0, 0.25);
-  --od-text: #111111;
-  --od-text-muted: #555555;
-  --od-text-faint: #999999;
-  --od-accent: #e6341a;
-  /* --od-accent: #EF3F3F; */
-  /* original Onedata red */
-  --od-accent-2: #cc2a12;
-  --od-accent-3: #ff5533;
-  --od-glow: rgba(230, 52, 26, 0.08);
-  --od-glow-strong: rgba(230, 52, 26, 0.18);
+/* 
+  Merge tailwind.config theme into v4 CSS @theme
+  We use `tw-` prefix for some of our existing conflicts, but shadcn standard uses standard tailwind classes.
+  We will map shadcn variables.
+*/
+@theme {
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+
+    to {
+      height: 0;
+    }
+  }
 }
 
-[data-theme='dark'] {
-  --color-header-bg: rgba(18, 18, 18, 0.9);
-  --color-header-border: #333333;
-  --color-border: #333333;
-  --color-nav-hover: #2a2a2a;
+@layer base {
+  :root {
+    /* Existing Onedata Variables */
+    --color-bg: var(--od-bg);
+    --color-text: var(--od-text);
+    --color-primary-legacy: var(--od-accent);
+    --color-header-bg: var(--od-bg-card);
+    --color-header-border: #eaeaea;
+    --color-border-legacy: #eaeaea;
+    --color-nav-hover: #f0f0f0;
+    --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-  /* experimental from b44 */
-  --od-bg: #050A14;
-  --od-bg-2: #070D1A;
-  --od-bg-card: #0A1628;
-  --od-bg-input: #0D1E35;
-  --od-border: rgba(100, 116, 139, 0.3);
-  --od-border-hover: rgba(100, 116, 139, 0.6);
-  --od-text: #ffffff;
-  --od-text-muted: #94a3b8;
-  --od-text-faint: #475569;
-  --od-accent: #e6341a;
-  /* --od-accent: hsl(0, 90%, 65%); */
-  /* original Onedata red (dark version) */
-  --od-accent-2: #ff6b4a;
-  --od-accent-3: #ff9070;
-  --od-glow: rgba(230, 52, 26, 0.15);
-  --od-glow-strong: rgba(230, 52, 26, 0.25);
+    /* experimental from b44 */
+    --od-bg: #faf9f7;
+    --od-bg-2: #f0ede8;
+    --od-bg-card: #ffffff;
+    --od-bg-input: #f7f5f2;
+    --od-border: rgba(0, 0, 0, 0.1);
+    --od-border-hover: rgba(0, 0, 0, 0.25);
+    --od-text: #111111;
+    --od-text-muted: #555555;
+    --od-text-faint: #999999;
+    --od-accent: #e6341a;
+    --od-accent-2: #cc2a12;
+    --od-accent-3: #ff5533;
+    --od-glow: rgba(230, 52, 26, 0.08);
+    --od-glow-strong: rgba(230, 52, 26, 0.18);
+
+    /* Shadcn/UI React Prototype Variables */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  [data-theme='dark'] {
+    /* Existing Onedata Variables - Dark Mode */
+    --color-header-bg: rgba(18, 18, 18, 0.9);
+    --color-header-border: #333333;
+    --color-border-legacy: #333333;
+    --color-nav-hover: #2a2a2a;
+
+    --od-bg: #050A14;
+    --od-bg-2: #070D1A;
+    --od-bg-card: #0A1628;
+    --od-bg-input: #0D1E35;
+    --od-border: rgba(100, 116, 139, 0.3);
+    --od-border-hover: rgba(100, 116, 139, 0.6);
+    --od-text: #ffffff;
+    --od-text-muted: #94a3b8;
+    --od-text-faint: #475569;
+    --od-accent: #e6341a;
+    --od-accent-2: #ff6b4a;
+    --od-accent-3: #ff9070;
+    --od-glow: rgba(230, 52, 26, 0.15);
+    --od-glow-strong: rgba(230, 52, 26, 0.25);
+
+    /* Shadcn/UI React Prototype Variables - Dark Mode */
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
 }
 
 * {
@@ -69,7 +205,7 @@ body {
 }
 
 a {
-  color: var(--color-primary);
+  color: var(--od-accent);
   text-decoration: none;
 }
 
@@ -115,10 +251,11 @@ h6 {
 header {
   position: sticky;
   top: 0;
-  z-index: 100;
-  background-color: var(--color-header-bg);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--color-header-border);
+  z-index: 50;
+  background: color-mix(in srgb, var(--od-bg-card) 90%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--od-border);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 

@@ -35,7 +35,7 @@ import MainLayout from "../layouts/MainLayout.astro";
     text-align: center;
     background: linear-gradient(
       180deg,
-      rgba(var(--color-primary), 0.05) 0%,
+      var(--od-glow) 0%,
       transparent 100%
     );
   }
@@ -60,7 +60,7 @@ import MainLayout from "../layouts/MainLayout.astro";
   }
 
   .highlight {
-    color: var(--color-primary);
+    color: var(--od-accent);
   }
 
   .hero-subtitle {
@@ -93,14 +93,14 @@ import MainLayout from "../layouts/MainLayout.astro";
   }
 
   .btn-primary {
-    background-color: var(--color-primary);
+    background-color: var(--od-accent);
     color: #ffffff;
-    border: 2px solid var(--color-primary);
+    border: 2px solid var(--od-accent);
   }
 
   .btn-primary:hover {
     background-color: transparent;
-    color: var(--color-primary);
+    color: var(--od-accent);
     text-decoration: none;
   }
 
@@ -111,8 +111,8 @@ import MainLayout from "../layouts/MainLayout.astro";
   }
 
   .btn-outline:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: var(--od-accent);
+    color: var(--od-accent);
     text-decoration: none;
   }
 </style>
