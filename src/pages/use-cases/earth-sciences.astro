@@ -1,8 +1,10 @@
 ---
 import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+import { Satellite } from "@lucide/astro";
 
 const useCase = {
   label: "Earth & Space Sciences",
+  icon: Satellite,
   title: "Manage petabytes of satellite and sensor data",
   tagline: "Onedata provides a unified access layer for continuous data streams from global sensor networks and satellite imagery repositories.",
   description: "Earth and space science generates some of the world's most voluminous datasets — continuous satellite imagery, climate sensor grids, and ocean monitoring networks produce petabytes of data daily. Onedata helps geoscience teams at agencies and universities organize, access, and share these datasets efficiently, without duplicating data across sites or breaking existing workflows.",
@@ -30,4 +32,4 @@ const useCase = {
   ],
 };
 ---
-<UseCasePageLayout useCase={useCase} />
+<UseCasePageLayout {...useCase} />

@@ -1,8 +1,10 @@
 ---
 import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+import { BrainCircuit } from "@lucide/astro";
 
 const useCase = {
   label: "AI / ML Research",
+  icon: BrainCircuit,
   title: "Train models on federated datasets — without moving data",
   tagline: "Onedata gives AI teams a unified, high-throughput data layer across institutional repositories, cloud storage, and HPC clusters.",
   description: "Modern AI research increasingly demands access to datasets that span multiple institutions, countries, and storage systems. Moving petabytes of data to a central location is costly, slow, and often not permitted by data governance policies. Onedata solves this by providing a virtual, unified filesystem over existing storage — enabling distributed training pipelines to access data in-place from anywhere.",
@@ -30,4 +32,4 @@ const useCase = {
   ],
 };
 ---
-<UseCasePageLayout useCase={useCase} />
+<UseCasePageLayout {...useCase} />

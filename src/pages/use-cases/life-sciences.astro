@@ -1,8 +1,10 @@
 ---
 import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+import { Microscope } from "@lucide/astro";
 
 const useCase = {
   label: "Life Sciences",
+  icon: Microscope,
   title: "Share genomics and proteomics data across institutions",
   tagline: "Onedata enables large-scale biological data sharing across research consortia while maintaining strict data governance and GDPR compliance.",
   description: "Life sciences research increasingly depends on cross-institutional collaboration. Multi-center studies in genomics, proteomics, and clinical research require researchers to share large datasets while complying with data protection regulations and institutional policies. Onedata provides the infrastructure for FAIR data sharing — findable, accessible, interoperable, and reusable — without compromising security or sovereignty.",
@@ -30,4 +32,4 @@ const useCase = {
   ],
 };
 ---
-<UseCasePageLayout useCase={useCase} />
+<UseCasePageLayout {...useCase} />

@@ -2,7 +2,7 @@
 import MainLayout from "../layouts/MainLayout.astro";
 import LandingContact from "../components/LandingContact.astro";
 
-export interface UseCase {
+interface Props {
   label: string;
   icon: any;
   title: string;
@@ -15,12 +15,18 @@ export interface UseCase {
   relatedCases: { href: string; label: string; title: string }[];
 }
 
-interface Props {
-  useCase: UseCase;
-}
-
-const { useCase } = Astro.props;
-const { label, icon: Icon, title, tagline, description, image, tags, challenges, capabilities, relatedCases } = useCase;
+const { 
+  label, 
+  icon: Icon, 
+  title, 
+  tagline, 
+  description, 
+  image, 
+  tags, 
+  challenges, 
+  capabilities, 
+  relatedCases 
+} = Astro.props;
 ---
 
 <MainLayout title={`${label} — Onedata`} description={tagline}>

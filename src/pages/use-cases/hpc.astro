@@ -1,8 +1,10 @@
 ---
 import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+import { FlaskConical } from "@lucide/astro";
 
 const useCase = {
   label: "Computational Science",
+  icon: FlaskConical,
   title: "Accelerate HPC workflows with intelligent data staging",
   tagline: "Onedata eliminates I/O bottlenecks in large-scale simulations by intelligently pre-staging data and managing checkpoints across distributed storage.",
   description: "High-performance computing simulations in physics, chemistry, climate modeling, and engineering demand extreme I/O throughput. Data bottlenecks — not compute — are often the limiting factor in large-scale simulations. Onedata integrates directly with HPC schedulers and parallel filesystems, providing transparent data staging, prefetching, and checkpoint management that keeps your compute cores busy.",
@@ -30,4 +32,4 @@ const useCase = {
   ],
 };
 ---
-<UseCasePageLayout useCase={useCase} />
+<UseCasePageLayout {...useCase} />
