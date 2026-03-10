@@ -1,0 +1,336 @@
+---
+import { ArrowRight, ChevronDown } from "@lucide/astro";
+
+---
+
+<section class="hero-section">
+  <!-- Animated background grid -->
+  <div class="hero-grid-bg"></div>
+
+  <!-- Glow orbs -->
+  <div class="hero-glow-orb orb-1"></div>
+  <div class="hero-glow-orb orb-2"></div>
+
+  <div class="hero-content-wrapper text-center z-10 relative">
+    <div class="hero-pill mb-6">
+      <span class="pulse-dot"></span>
+      Open-source &middot; Trusted by 100+ research institutions worldwide
+    </div>
+
+    <h1 class="hero-title mb-6">
+      Data Management Platform for <br class="hidden-mobile" />
+      <span class="gradient-text">Distributed AI Pipelines</span>
+      <br class="hidden-mobile" />and Hybrid Clouds
+    </h1>
+
+    <p class="hero-subtitle mb-10 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+      Onedata unifies your storage resources across HPC clusters, cloud
+      providers, and institutional repositories — giving researchers a single,
+      high-performance data layer for any AI pipeline.
+    </p>
+
+    <div class="hero-actions flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+      <a href="/request-demo" class="btn-primary shadow-glow">
+        Request a Demo
+        <ArrowRight class="w-4 h-4 ml-2" />
+      </a>
+      <a
+        href="https://github.com/onedata"
+        target="_blank"
+        rel="noreferrer"
+        class="btn-outline-social"
+      >
+        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+          <path
+            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+          ></path>
+        </svg>
+        View on GitHub
+      </a>
+    </div>
+
+    <div class="flex justify-center mt-5">
+      <a href="/docs#ver-25-0" class="release-pill">
+        <span class="pulse-dot"></span>
+        Latest release — v25.0
+        <svg
+          class="w-3.5 h-3.5 opacity-70 ml-1"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <ChevronDown class="w-6 h-6 animate-bounce text-muted" />
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    min-height: calc(100vh - 72px); /* Subtract header height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2rem 1rem;
+    background-color: var(--color-bg);
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+
+  html[data-theme="dark"] .hero-grid-bg {
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  .hero-glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(120px);
+    opacity: 0.15;
+  }
+
+  .hero-glow-orb.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--color-primary, #e11d48), transparent 70%);
+    top: 20%;
+    left: 10%;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+
+  .hero-glow-orb.orb-2 {
+    width: 800px;
+    height: 800px;
+    background: var(--color-primary, #e11d48);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.08;
+    filter: blur(150px);
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(100px, 50px); }
+  }
+
+  .hero-content-wrapper {
+    max-width: 64rem; /* max-w-5xl */
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-nav-hover);
+    color: var(--color-text);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .pulse-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-primary, #e11d48);
+    position: relative;
+  }
+  
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    border-radius: 50%;
+    background-color: var(--color-primary, #e11d48);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    z-index: -1;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(1.5); }
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+  }
+
+  @media (min-width: 768px) {
+    .hero-title { font-size: 3.75rem; }
+  }
+  
+  @media (min-width: 1024px) {
+    .hero-title { font-size: 4.5rem; }
+  }
+
+  .gradient-text {
+    background: linear-gradient(to right, var(--color-primary, #e11d48), #f43f5e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  html[data-theme="dark"] .gradient-text {
+    background: linear-gradient(to right, #fb7185, #fda4af);
+    -webkit-background-clip: text;
+  }
+
+  .hero-subtitle {
+    color: var(--color-text);
+    opacity: 0.75;
+  }
+
+  .hidden-mobile {
+    display: none;
+  }
+  @media (min-width: 640px) {
+    .hidden-mobile { display: block; }
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, var(--color-primary, #e11d48), #be123c);
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+    border: none;
+    box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.4);
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .btn-outline-social {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    color: var(--color-text);
+    opacity: 0.8;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    border: 1px solid var(--color-border);
+    transition: all 0.2s;
+  }
+
+  .btn-outline-social:hover {
+    opacity: 1;
+    border-color: var(--color-text);
+    text-decoration: none;
+    background-color: var(--color-nav-hover);
+  }
+
+  .release-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-primary, #e11d48);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary, #e11d48);
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 0 16px rgba(225, 29, 72, 0.15);
+  }
+  
+  html[data-theme="dark"] .release-pill {
+    color: #fb7185;
+    border-color: #fb7185;
+    box-shadow: 0 0 16px rgba(251, 113, 133, 0.2);
+  }
+  
+  html[data-theme="dark"] .release-pill .pulse-dot {
+    background-color: #fb7185;
+  }
+  html[data-theme="dark"] .release-pill .pulse-dot::after {
+    background-color: #fb7185;
+  }
+
+  .release-pill:hover {
+    background-color: rgba(225, 29, 72, 0.05);
+    text-decoration: none;
+  }
+  
+  html[data-theme="dark"] .release-pill:hover {
+    background-color: rgba(251, 113, 133, 0.1);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  .text-muted {
+    color: var(--color-text);
+    opacity: 0.5;
+  }
+
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(-25%);
+      animation-timing-function: cubic-bezier(0.8,0,1,1);
+    }
+    50% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0,0,0.2,1);
+    }
+  }
+</style>

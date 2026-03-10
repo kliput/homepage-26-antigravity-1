@@ -1,0 +1,390 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection("blog");
+  const publicationPosts = allPosts.filter((post) =>
+    post.data.tags?.includes("Publication"),
+  );
+
+  return publicationPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+<MainLayout title={post.data.title} description={post.data.description}>
+  <div class="container article-container">
+    <a href="/publications" class="back-link">&larr; All publications</a>
+
+    <div class="pub-header">
+      <div class="pub-tags text-sm mb-4">
+        {post.data.journalAbbreviation && <span class="tag-abbr">{post.data.journalAbbreviation}</span>}
+        {post.data.impactFactor && <span class="tag-if">IF {post.data.impactFactor}</span>}
+        {post.data.year && <span class="tag-year">{post.data.year}</span>}
+        {post.data.externalDoiLink && (
+          <a href={post.data.externalDoiLink} target="_blank" rel="noopener noreferrer" class="tag-doi">
+            {post.data.externalDoiLink}
+          </a>
+        )}
+      </div>
+
+      <h1 class="article-title">{post.data.title}</h1>
+      
+      <div class="article-authors">
+        {post.data.authors?.join(", ") || ""}
+      </div>
+      
+      <div class="article-journal">
+        {post.data.journalFullName}{post.data.issueDetails ? `, ${post.data.issueDetails}` : ""}
+      </div>
+      
+      <div class="action-buttons">
+        {post.data.pdfUrl && (
+          <a href={post.data.pdfUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
+            Read PDF
+          </a>
+        )}
+        {post.data.pdfUrl && (
+          <a href={post.data.pdfUrl} download class="btn-outline">
+            Download PDF
+          </a>
+        )}
+        {post.data.externalDoiLink && (
+          <a href={post.data.externalDoiLink} target="_blank" rel="noopener noreferrer" class="btn-outline">
+            View DOI
+          </a>
+        )}
+      </div>
+    </div>
+
+    {post.data.abstract && (
+      <div class="abstract-block">
+        <h3 class="abstract-heading">ABSTRACT</h3>
+        <p class="abstract-text">{post.data.abstract}</p>
+      </div>
+    )}
+
+    {(post.data.citationBibtex || post.data.citationPlain) && (
+      <div class="citation-section">
+        <h2 class="citation-heading">CITE THIS ARTICLE</h2>
+        <div class="citation-block">
+          <div class="citation-tabs">
+            <button class="tab-btn active" data-tab="bibtex">BibTeX</button>
+            <button class="tab-btn" data-tab="plaintext">Plain text</button>
+            <div class="spacer"></div>
+            <button class="copy-btn" id="copy-btn" aria-label="Copy citation">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              Copy
+            </button>
+          </div>
+          <div class="citation-content">
+            <pre id="bibtex-content" class="tab-content active">{post.data.citationBibtex}</pre>
+            <pre id="plaintext-content" class="tab-content">{post.data.citationPlain}</pre>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <div class="article-content">
+      <Content />
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .article-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text);
+    opacity: 0.7;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    transition: opacity 0.2s;
+  }
+  
+  .back-link:hover {
+    opacity: 1;
+    color: var(--color-primary, #e11d48);
+  }
+
+  .pub-header {
+    margin-bottom: 3rem;
+  }
+
+  .pub-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .tag-abbr {
+    font-weight: 700;
+    background: var(--color-nav-hover);
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+  }
+  
+  .tag-if { color: #ea580c; font-weight: 600; }
+  .tag-year { color: var(--color-text); opacity: 0.7; font-weight: 500;}
+  .tag-doi { color: var(--color-primary, #e11d48); text-decoration: none; font-weight: 500;}
+  .tag-doi:hover { text-decoration: underline; }
+
+  .article-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+    color: var(--color-text);
+  }
+
+  .article-authors {
+    font-size: 1.15rem;
+    color: var(--color-text);
+    opacity: 0.9;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .article-journal {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    opacity: 0.7;
+    font-style: italic;
+    margin-bottom: 2.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.75rem;
+    background-color: var(--color-primary, #e11d48);
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.1s;
+    border: none;
+    font-size: 1rem;
+  }
+  .btn-primary:hover {
+    background-color: #be123c;
+    text-decoration: none;
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1.75rem;
+    background-color: transparent;
+    color: var(--color-text);
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 2px solid var(--color-border);
+    transition: background-color 0.2s, border-color 0.2s;
+    font-size: 1rem;
+  }
+  .btn-outline:hover {
+    background-color: var(--color-nav-hover);
+    border-color: var(--color-text);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .abstract-block {
+    background-color: var(--color-nav-hover);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 4rem;
+    border: 1px solid var(--color-border);
+  }
+
+  .abstract-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+    opacity: 0.6;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+  }
+
+  .abstract-text {
+    line-height: 1.8;
+    color: var(--color-text);
+    opacity: 0.9;
+    font-size: 1.05rem;
+  }
+
+  .citation-section {
+    margin-bottom: 4rem;
+  }
+
+  .citation-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .citation-block {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--color-bg);
+  }
+
+  .citation-tabs {
+    display: flex;
+    background-color: var(--color-nav-hover);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0;
+  }
+
+  .tab-btn {
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    opacity: 0.6;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+  }
+
+  .tab-btn:hover {
+    opacity: 1;
+    background-color: rgba(0,0,0,0.03);
+  }
+  
+  html[data-theme="dark"] .tab-btn:hover {
+    background-color: rgba(255,255,255,0.03);
+  }
+
+  .tab-btn.active {
+    opacity: 1;
+    color: var(--color-primary, #e11d48);
+    border-bottom-color: var(--color-primary, #e11d48);
+    background-color: var(--color-bg);
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
+
+  .copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 1.25rem;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    opacity: 0.7;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: opacity 0.2s, color 0.2s;
+  }
+
+  .copy-btn:hover {
+    opacity: 1;
+    color: var(--color-primary, #e11d48);
+  }
+
+  .citation-content {
+    background-color: var(--color-bg);
+  }
+
+  .tab-content {
+    display: none;
+    padding: 2rem;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .article-content {
+    margin-top: 3rem;
+    line-height: 1.8;
+    font-size: 1.1rem;
+    color: var(--color-text);
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabBtns = document.querySelectorAll(".tab-btn");
+    const tabContents = document.querySelectorAll(".tab-content");
+    const copyBtn = document.getElementById("copy-btn");
+    let activeTabId = "bibtex-content";
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabBtns.forEach(b => b.classList.remove("active"));
+        tabContents.forEach(c => c.classList.remove("active"));
+
+        btn.classList.add("active");
+        const targetId = btn.getAttribute("data-tab") + "-content";
+        activeTabId = targetId;
+        const targetContent = document.getElementById(targetId);
+        if (targetContent) targetContent.classList.add("active");
+      });
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async () => {
+        const contentEl = document.getElementById(activeTabId);
+        if (contentEl) {
+          try {
+            await navigator.clipboard.writeText(contentEl.textContent || "");
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #22c55e;"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+            
+            setTimeout(() => {
+              copyBtn.innerHTML = originalText;
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy text: ', err);
+          }
+        }
+      });
+    }
+  });
+</script>

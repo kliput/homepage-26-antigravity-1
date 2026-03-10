@@ -8,6 +8,8 @@ import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languag
 
 import tailwindcss from '@tailwindcss/vite';
 
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://onedata.org',
@@ -24,7 +26,7 @@ export default defineConfig({
     ],
   },
 
-  integrations: [sitemap()],
+  integrations: [sitemap(), react()],
 
   vite: {
     plugins: [tailwindcss()]

@@ -1,32 +1,16 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
+import LandingHero from "../components/LandingHero.astro";
+import LandingNumbers from "../components/LandingNumbers.astro";
+import LandingFeatures from "../components/LandingFeatures.astro";
+import LandingHowItWorks from "../components/LandingHowItWorks.astro";
 ---
 
-<MainLayout title="Onedata - Data Management Platform">
-  <section class="hero-section">
-    <div class="container hero-content">
-      <h1 class="hero-title">
-        <span class="highlight">Data Management Platform</span><br />
-        for Distributed API Pipelines<br />
-        and Hybrid Clouds
-      </h1>
-      <p class="hero-subtitle">
-        Onedata is a high-performance, unified virtual filesystem for
-        data-intensive applications, bringing data globally across multiple
-        providers and infrastructures.
-      </p>
-      <div class="hero-actions">
-        <a href="/quick-start" class="btn btn-primary">Get Started</a>
-        <a href="/how-it-works" class="btn btn-outline">How it works</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="features-preview">
-    <div class="container">
-      <!-- Future blocks can go here -->
-    </div>
-  </section>
+<MainLayout title="Onedata - Data Management Platform for Distributed AI Pipelines and Hybrid Clouds">
+  <LandingHero />
+  <LandingNumbers />
+  <LandingFeatures />
+  <LandingHowItWorks />
 </MainLayout>
 
 <style>
