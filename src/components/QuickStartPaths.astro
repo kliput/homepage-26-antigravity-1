@@ -1,0 +1,607 @@
+---
+import { Globe, Server, Box, User, Terminal, AlertTriangle, Info, CheckCircle, MousePointerClick } from "lucide-astro";
+
+const paths = [
+  {
+    id: "online",
+    icon: Globe,
+    label: "Try It Online",
+    sublabel: "No setup required",
+    steps: [
+      {
+        number: "01",
+        title: "Open the demo environment",
+        description: "Go to demo.onedata.org — a fully functional, publicly hosted Onedata instance maintained by the core team. No account registration is needed to start exploring.",
+        options: [
+          { icon: User, label: "Institutional user", text: "Your institution may already operate a Onezone. Ask your IT department for the URL and log in with your institutional identity." },
+          { icon: User, label: "EGI / Check-In user", text: "Use EGI DataHub at datahub.egi.eu — you'll automatically get access to the PLAYGROUND Space." },
+          { icon: Globe, label: "New user / Demo", text: "Log in at demo.onedata.org using your Google, GitHub or ORCID account. The Sandbox space is immediately available." }
+        ]
+      },
+      {
+        number: "02",
+        title: "Log in with your identity",
+        description: "Click Log In on the Onezone homepage and pick an Identity Provider. Onedata supports institutional IdPs, EGI Check-In, Google, GitHub and more.",
+        note: "The green key icon on the login page is for local administrator accounts only — regular users should always use social or institutional login."
+      },
+      {
+        number: "03",
+        title: "Explore the Sandbox Space",
+        description: "After logging in, open the DATA tab. You will see a shared Sandbox Space pre-provisioned for testing. Browse files, upload data, and try the metadata editor.",
+        warning: "The Sandbox is a shared environment visible to all demo users. Do not store private, sensitive or production data there."
+      },
+      {
+        number: "04",
+        title: "Create your own private directory",
+        description: "Inside the Sandbox, navigate to Files → New Directory. Then open the directory's context menu → Edit permissions → ACL and restrict access to your user only. You now have an isolated workspace."
+      },
+      {
+        number: "05",
+        title: "Mount with Oneclient (optional)",
+        description: "For POSIX access, install the Oneclient package on any Linux machine and run:",
+        code: "oneclient --host demo.onedata.org --token <your-access-token> ~/onedata",
+        note: "Generate an access token in the Onezone web interface under Tokens → Create new token → Access token."
+      }
+    ]
+  },
+  {
+    id: "vms",
+    icon: Server,
+    label: "Deploy on VMs",
+    sublabel: "Full control on your own servers",
+    steps: [
+      {
+        number: "01",
+        title: "Check system requirements",
+        description: "Ensure your virtual machines meet the minimum requirements before proceeding.",
+        options: [
+          { icon: Server, label: "Onezone VM", text: "2 vCPU, 4 GB RAM, 20 GB disk. Requires a publicly reachable IP and a valid DNS name." },
+          { icon: Server, label: "Oneprovider VM", text: "4 vCPU, 8 GB RAM, plus the storage volume you want to expose (local, NFS, Ceph, S3 …)." },
+          { icon: CheckCircle, label: "OS", text: "Ubuntu 20.04 / 22.04 or CentOS 7/8. Docker Engine ≥ 20.10 and Docker Compose ≥ 2 must be installed." }
+        ]
+      },
+      {
+        number: "02",
+        title: "Deploy Onezone",
+        description: "Onezone is the identity and coordination service. Pull and start it using the official Docker Compose recipe:",
+        code: "git clone https://github.com/onedata/onezone-docker-compose\ncd onezone-docker-compose\n# Edit docker-compose.yml to set your hostname and TLS cert paths\ndocker compose up -d",
+        note: "Set ONEZONE_DOMAIN to your fully-qualified domain name. TLS is required — use Let's Encrypt or supply your own certificate."
+      },
+      {
+        number: "03",
+        title: "Deploy Oneprovider",
+        description: "Oneprovider manages the actual storage and data access. Run it on a separate VM (or the same one for small setups):",
+        code: "git clone https://github.com/onedata/oneprovider-docker-compose\ncd oneprovider-docker-compose\n# Edit docker-compose.yml: set ONEZONE_URL and storage backend\ndocker compose up -d"
+      },
+      {
+        number: "04",
+        title: "Register Oneprovider with Onezone",
+        description: "Open the Onezone web panel at https://your-onezone-domain. Create an admin account, then use the Oneprovider panel at https://your-oneprovider-domain to register it — paste the Onezone URL and follow the wizard."
+      },
+      {
+        number: "05",
+        title: "Create a Space and support it",
+        description: "In Onezone, go to DATA → Spaces → Create Space. Then in the Oneprovider panel, choose that Space and click Support — allocate the desired storage quota. Your space is now live and accessible to invited users.",
+        note: "You can support the same Space from multiple Oneproviders for redundancy and geographic distribution."
+      }
+    ]
+  },
+  {
+    id: "k8s",
+    icon: Box,
+    label: "Deploy on Kubernetes",
+    sublabel: "Cloud-native, scalable setup",
+    steps: [
+      {
+        number: "01",
+        title: "Prepare your cluster",
+        description: "Make sure your Kubernetes cluster meets the prerequisites before installing Onedata Helm charts.",
+        options: [
+          { icon: CheckCircle, label: "Kubernetes", text: "Version ≥ 1.24. Tested with GKE, EKS, AKS and bare-metal kubeadm clusters." },
+          { icon: CheckCircle, label: "Helm", text: "Helm 3.x must be installed and configured to reach your cluster." },
+          { icon: CheckCircle, label: "Ingress & TLS", text: "An Ingress controller (e.g. nginx-ingress) and a cert-manager ClusterIssuer for automatic TLS are required." }
+        ]
+      },
+      {
+        number: "02",
+        title: "Add the Onedata Helm repository",
+        description: "Add the official chart repository and update it:",
+        code: "helm repo add onedata https://onedata.github.io/charts\nhelm repo update"
+      },
+      {
+        number: "03",
+        title: "Install Onezone",
+        description: "Create a values file for Onezone and deploy it to your cluster:",
+        code: "# onezone-values.yaml\nonezone:\n  domain: onezone.example.com\n  tls:\n    issuer: letsencrypt-prod\n\nhelm install onezone onedata/onezone \\\n  -f onezone-values.yaml \\\n  --namespace onedata --create-namespace",
+        note: "The domain must resolve to your Ingress controller's external IP before installation."
+      },
+      {
+        number: "04",
+        title: "Install Oneprovider",
+        description: "Deploy one or more Oneprovider instances, pointing them at your Onezone:",
+        code: "# oneprovider-values.yaml\noneprovider:\n  onezoneUrl: https://onezone.example.com\n  domain: oneprovider.example.com\n  storage:\n    type: posix          # or s3, ceph, nfs …\n    path: /mnt/data\n\nhelm install oneprovider onedata/oneprovider \\\n  -f oneprovider-values.yaml \\\n  --namespace onedata"
+      },
+      {
+        number: "05",
+        title: "Register, create a Space and go",
+        description: "Open https://onezone.example.com, create an admin account, and follow the Oneprovider registration wizard. Then create a Space, support it from the Oneprovider panel, and invite your users.",
+        note: "For production workloads, configure a persistent StorageClass and resource requests/limits in your values files. See the Helm chart README for all available options."
+      }
+    ]
+  }
+];
+---
+
+<div class="quick-start-paths">
+  <!-- Tab bar -->
+  <div class="tab-bar">
+    {paths.map((path, idx) => {
+      const Icon = path.icon;
+      return (
+        <button
+          class="tab-btn"
+          data-path={path.id}
+          data-idx={idx}
+        >
+          <div class="tab-icon-wrap">
+            <Icon class="tab-icon" />
+          </div>
+          <div class="tab-text">
+            <p class="tab-label">{path.label}</p>
+            <p class="tab-sublabel">{path.sublabel}</p>
+          </div>
+          <div class="tab-shimmer"></div>
+        </button>
+      );
+    })}
+  </div>
+
+  <!-- Content Areas -->
+  <div class="paths-content">
+    <!-- Idle State -->
+    <div id="path-idle" class="path-view active">
+      <div class="idle-visual">
+         <div class="mouse-icon-wrap">
+           <MousePointerClick class="mouse-icon" />
+         </div>
+         <div class="pulse-arrows">
+           <div class="pulse-dot" style="--d: 0"></div>
+           <div class="pulse-dot" style="--d: 1"></div>
+           <div class="pulse-dot" style="--d: 2"></div>
+         </div>
+      </div>
+      <div class="idle-text">
+        <p class="idle-title">Choose your quick start path</p>
+        <p class="idle-sub">Select one of the options above to see the step-by-step guide.</p>
+      </div>
+    </div>
+
+    <!-- Step Views -->
+    {paths.map((path) => (
+      <div id={`path-${path.id}`} class="path-view">
+        <div class="steps-list">
+          {path.steps.map((step) => (
+            <div class="step-card">
+              <div class="step-number-wrap">
+                <span class="step-number">{step.number}</span>
+              </div>
+              <div class="step-content">
+                <h3 class="step-title">{step.title}</h3>
+                <p class="step-desc">{step.description}</p>
+
+                {step.options && (
+                  <div class="step-options">
+                    {step.options.map((opt) => {
+                      const OptIcon = opt.icon;
+                      return (
+                        <div class="opt-item">
+                           <OptIcon class="opt-icon" />
+                           <div class="opt-text">
+                             <span class="opt-label">{opt.label}:</span>
+                             <span class="opt-desc">{opt.text}</span>
+                           </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {step.code && (
+                  <pre class="step-code"><code>{step.code}</code></pre>
+                )}
+
+                {step.note && (
+                  <div class="step-alert step-note">
+                    <Info class="alert-icon" />
+                    <p><strong>Note:</strong> {step.note}</p>
+                  </div>
+                )}
+
+                {step.warning && (
+                  <div class="step-alert step-warning">
+                    <AlertTriangle class="alert-icon" />
+                    <p><strong>Warning:</strong> {step.warning}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const views = document.querySelectorAll('.path-view');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const pathId = tab.getAttribute('data-path');
+      
+      // Update tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      // Update views
+      views.forEach(v => v.classList.remove('active'));
+      const activeView = document.getElementById(`path-${pathId}`);
+      if (activeView) activeView.classList.add('active');
+      
+      // Disable idle state globally once interacted
+      document.querySelector('.quick-start-paths').classList.add('interacted');
+    });
+  });
+</script>
+
+<style>
+  .quick-start-paths {
+    --tab-border: var(--od-border, rgba(0,0,0,0.1));
+    --tab-bg: var(--od-bg-card, #ffffff);
+    --tab-active-bg: var(--od-glow, rgba(230, 52, 26, 0.08));
+    --tab-active-border: var(--od-accent, #e6341a);
+    --accent: var(--od-accent, #e6341a);
+    --text: var(--od-text, #111111);
+    --text-muted: var(--od-text-muted, #555555);
+    --text-faint: var(--od-text-faint, #999999);
+    --bg-input: var(--od-bg-input, #f7f5f2);
+  }
+
+  .tab-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .tab-bar { flex-direction: row; }
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    border: 1px solid var(--tab-border);
+    background: var(--tab-bg);
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .tab-btn:hover {
+    border-color: var(--accent);
+  }
+
+  .tab-btn.active {
+    background: var(--tab-active-bg);
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--od-glow);
+  }
+
+  /* Idle animation for tabs */
+  .quick-start-paths:not(.interacted) .tab-btn {
+    animation: tab-idle 5.4s infinite ease-in-out;
+  }
+  .quick-start-paths:not(.interacted) .tab-btn[data-idx="0"] { animation-delay: 0s; }
+  .quick-start-paths:not(.interacted) .tab-btn[data-idx="1"] { animation-delay: 0.6s; }
+  .quick-start-paths:not(.interacted) .tab-btn[data-idx="2"] { animation-delay: 1.2s; }
+
+  @keyframes tab-idle {
+    0%, 33%, 100% { border-color: var(--tab-border); box-shadow: none; }
+    11% { border-color: var(--accent); box-shadow: 0 0 18px var(--od-glow-strong); }
+  }
+
+  .tab-icon-wrap {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-input);
+    flex-shrink: 0;
+    z-index: 2;
+    transition: background 0.3s;
+  }
+
+  .tab-btn.active .tab-icon-wrap {
+    background: var(--accent);
+  }
+
+  .tab-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--text-muted);
+    transition: color 0.3s;
+  }
+
+  .tab-btn.active .tab-icon {
+    color: #fff;
+  }
+
+  .tab-text {
+    z-index: 2;
+  }
+
+  .tab-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .tab-btn.active .tab-label {
+    color: var(--accent);
+  }
+
+  .tab-sublabel {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+
+  /* Shimmer effect when idle */
+  .tab-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, var(--od-glow-strong) 50%, transparent 100%);
+    width: 60%;
+    transform: translateX(-100%);
+    pointer-events: none;
+    z-index: 1;
+    display: none;
+  }
+
+  .quick-start-paths:not(.interacted) .tab-shimmer {
+    display: block;
+    animation: shimmer 5.4s infinite ease-in-out;
+  }
+  .tab-btn[data-idx="0"] .tab-shimmer { animation-delay: 0s; }
+  .tab-btn[data-idx="1"] .tab-shimmer { animation-delay: 0.6s; }
+  .tab-btn[data-idx="2"] .tab-shimmer { animation-delay: 1.2s; }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    22%, 100% { transform: translateX(260%); }
+  }
+
+  /* Content Views */
+  .path-view {
+    display: none;
+  }
+
+  .path-view.active {
+    display: block;
+    animation: view-in 0.4s ease-out;
+  }
+
+  @keyframes view-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Idle State View */
+  .idle-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 2.5rem 0 1.25rem;
+  }
+
+  .mouse-icon-wrap {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1.25rem;
+    background: var(--tab-active-bg);
+    border: 1.5px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: float 2s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .mouse-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--accent);
+  }
+
+  .pulse-arrows {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .pulse-dot {
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: calc(0.7 - (var(--d) * 0.15));
+    animation: pulse-dot 1.2s infinite ease-in-out;
+    animation-delay: calc(var(--d) * 0.2s);
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { transform: translateY(4px); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .idle-text {
+    text-align: center;
+    padding-bottom: 2.5rem;
+  }
+
+  .idle-title {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .idle-sub {
+    font-size: 0.875rem;
+    color: var(--text-faint);
+  }
+
+  /* Step Cards */
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .step-card {
+    background: var(--tab-bg);
+    border-radius: 1.25rem;
+    border: 1px solid var(--tab-border);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .step-card { padding: 2rem; }
+  }
+
+  .step-number-wrap {
+    flex-shrink: 0;
+  }
+
+  .step-number {
+    font-size: 2.25rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), #ff6b4a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .step-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .step-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .step-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .opt-item {
+    background: var(--bg-input);
+    border: 1px solid var(--tab-border);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .opt-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .opt-text {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .opt-label {
+    font-weight: 500;
+    color: var(--text);
+    margin-right: 0.25rem;
+  }
+
+  .opt-desc {
+    color: var(--text-muted);
+  }
+
+  .step-code {
+    background: var(--bg-input);
+    border: 1px solid var(--tab-border);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    color: var(--od-accent-3, #ff5533);
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  .step-alert {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .alert-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  .step-note {
+    background: var(--tab-active-bg);
+    border: 1px solid var(--od-glow-strong);
+    color: var(--od-accent-3);
+  }
+
+  .step-warning {
+    background: rgba(234, 179, 8, 0.08);
+    border: 1px solid rgba(234, 179, 8, 0.25);
+    color: #ca8a04;
+  }
+</style>
