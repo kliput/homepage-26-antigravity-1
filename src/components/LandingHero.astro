@@ -1,6 +1,5 @@
 ---
 import { ArrowRight, ChevronDown } from "@lucide/astro";
-
 ---
 
 <section class="hero-section">
@@ -8,39 +7,38 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
   <div class="hero-grid-bg"></div>
 
   <!-- Glow orbs -->
-  <div class="hero-glow-orb orb-1"></div>
-  <div class="hero-glow-orb orb-2"></div>
+  <div class="hero-glow-orb orb-center"></div>
 
-  <div class="hero-content-wrapper text-center z-10 relative">
-    <div class="hero-pill mb-6">
+  <!-- Hero content — centered -->
+  <div class="hero-content">
+    <div class="hero-pill">
       <span class="pulse-dot"></span>
       Open-source &middot; Trusted by 100+ research institutions worldwide
     </div>
 
-    <h1 class="hero-title mb-6">
-      Data Management Platform for <br class="hidden-mobile" />
+    <h1 class="hero-title">
+      Data Management Platform for
       <span class="gradient-text">Distributed AI Pipelines</span>
-      <br class="hidden-mobile" />and Hybrid Clouds
+      and Hybrid Clouds
     </h1>
 
-    <p class="hero-subtitle mb-10 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+    <p class="hero-subtitle">
       Onedata unifies your storage resources across HPC clusters, cloud
       providers, and institutional repositories — giving researchers a single,
       high-performance data layer for any AI pipeline.
     </p>
 
-    <div class="hero-actions flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
-      <a href="/request-demo" class="btn-primary shadow-glow">
-        Request a Demo
-        <ArrowRight class="w-4 h-4 ml-2" />
+    <div class="hero-actions">
+      <a href="/contact" class="btn-primary">
+        Request a Demo <ArrowRight class="btn-icon" />
       </a>
       <a
         href="https://github.com/onedata"
         target="_blank"
         rel="noreferrer"
-        class="btn-outline-social"
+        class="btn-secondary"
       >
-        <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
+        <svg viewBox="0 0 24 24" class="btn-icon-gh" fill="currentColor">
           <path
             d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
           ></path>
@@ -49,104 +47,109 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
       </a>
     </div>
 
-    <div class="flex justify-center mt-5">
-      <a href="/docs#ver-25-0" class="release-pill">
-        <span class="pulse-dot"></span>
-        Latest release — v25.0
-        <svg
-          class="w-3.5 h-3.5 opacity-70 ml-1"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    </div>
+    <a href="/docs#ver-25-0" class="release-pill">
+      <span class="pulse-dot"></span>
+      Latest release — v25.0
+      <svg
+        class="release-arrow"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"
+        ></path>
+      </svg>
+    </a>
   </div>
 
+  <!-- Scroll indicator -->
   <div class="scroll-indicator">
-    <ChevronDown class="w-6 h-6 animate-bounce text-muted" />
+    <ChevronDown class="scroll-icon" />
   </div>
 </section>
 
 <style>
   .hero-section {
     position: relative;
-    min-height: calc(100vh - 72px); /* Subtract header height */
+    min-height: calc(100vh - 72px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 2rem 1rem;
+    padding: 4rem 1.5rem;
     background-color: var(--color-bg);
+    text-align: center;
   }
 
+  /* === Background grid === */
   .hero-grid-bg {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 1;
-    background-size: 40px 40px;
-    background-image: 
-      linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    mask-image: radial-gradient(circle at center, black, transparent 80%);
-    -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--od-glow) 1px, transparent 1px),
+      linear-gradient(90deg, var(--od-glow) 1px, transparent 1px);
+    background-size: 60px 60px;
+    -webkit-mask-image: radial-gradient(
+      ellipse 80% 80% at 50% 50%,
+      black 30%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 80% 80% at 50% 50%,
+      black 30%,
+      transparent 100%
+    );
   }
 
   html[data-theme="dark"] .hero-grid-bg {
-    background-image: 
-      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
 
+  /* === Glow orb — perfectly centered === */
   .hero-glow-orb {
     position: absolute;
     border-radius: 50%;
     pointer-events: none;
     z-index: 0;
-    filter: blur(120px);
-    opacity: 0.15;
   }
 
-  .hero-glow-orb.orb-1 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, var(--color-primary, #e11d48), transparent 70%);
-    top: 20%;
-    left: 10%;
-    animation: drift 20s ease-in-out infinite alternate;
-  }
-
-  .hero-glow-orb.orb-2 {
-    width: 800px;
-    height: 800px;
-    background: var(--color-primary, #e11d48);
+  .orb-center {
+    width: 1000px;
+    height: 1000px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0.08;
-    filter: blur(150px);
+    background: radial-gradient(
+      circle,
+      var(--color-primary, #e11d48),
+      transparent
+    );
+    opacity: 0.1;
+    filter: blur(60px);
   }
 
-  @keyframes drift {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(100px, 50px); }
+  html[data-theme="dark"] .orb-center {
+    opacity: 0.12;
   }
 
-  .hero-content-wrapper {
-    max-width: 64rem; /* max-w-5xl */
-    margin: 0 auto;
+  /* === Content === */
+  .hero-content {
     position: relative;
     z-index: 10;
+    max-width: 56rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
   }
 
+  /* === Pill === */
   .hero-pill {
     display: inline-flex;
     align-items: center;
@@ -154,11 +157,11 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     border: 1px solid var(--color-border);
     background-color: var(--color-nav-hover);
     color: var(--color-text);
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.25rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    opacity: 0.9;
   }
 
   .pulse-dot {
@@ -166,13 +169,14 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     height: 0.5rem;
     border-radius: 50%;
     background-color: var(--color-primary, #e11d48);
+    flex-shrink: 0;
     position: relative;
   }
-  
+
   .pulse-dot::after {
-    content: '';
+    content: "";
     position: absolute;
-    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    inset: -3px;
     border-radius: 50%;
     background-color: var(--color-primary, #e11d48);
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -180,157 +184,187 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
   }
 
   @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .5; transform: scale(1.5); }
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
   }
 
+  /* === Title === */
   .hero-title {
-    font-size: 2.5rem;
-    line-height: 1.1;
+    font-size: clamp(2.25rem, 6vw, 4.25rem);
     font-weight: 800;
+    line-height: 1.1;
     letter-spacing: -0.025em;
     color: var(--color-text);
-  }
-
-  @media (min-width: 768px) {
-    .hero-title { font-size: 3.75rem; }
-  }
-  
-  @media (min-width: 1024px) {
-    .hero-title { font-size: 4.5rem; }
+    margin: 0;
   }
 
   .gradient-text {
-    background: linear-gradient(to right, var(--color-primary, #e11d48), #f43f5e);
+    background: linear-gradient(
+      to right,
+      var(--color-primary, #e11d48),
+      #f43f5e
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   html[data-theme="dark"] .gradient-text {
     background: linear-gradient(to right, #fb7185, #fda4af);
     -webkit-background-clip: text;
+    background-clip: text;
   }
 
+  /* === Subtitle === */
   .hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     color: var(--color-text);
-    opacity: 0.75;
+    opacity: 0.7;
+    max-width: 38rem;
+    line-height: 1.7;
+    margin: 0;
   }
 
-  .hidden-mobile {
-    display: none;
+  /* === Action buttons === */
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
   }
-  @media (min-width: 640px) {
-    .hidden-mobile { display: block; }
+
+  @media (min-width: 480px) {
+    .hero-actions {
+      flex-direction: row;
+      justify-content: center;
+    }
   }
 
   .btn-primary {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.5rem;
     padding: 0.75rem 2rem;
     background: linear-gradient(135deg, var(--color-primary, #e11d48), #be123c);
-    color: white;
+    color: #fff;
     font-weight: 600;
     font-size: 1rem;
     border-radius: 0.75rem;
     text-decoration: none;
-    transition: opacity 0.2s, transform 0.2s;
-    border: none;
-    box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.4);
+    box-shadow: 0 10px 30px -6px rgba(225, 29, 72, 0.4);
+    transition:
+      opacity 0.2s,
+      transform 0.2s,
+      box-shadow 0.2s;
+    white-space: nowrap;
   }
 
   .btn-primary:hover {
-    opacity: 0.9;
+    opacity: 0.92;
     transform: translateY(-2px);
+    box-shadow: 0 14px 36px -6px rgba(225, 29, 72, 0.5);
     text-decoration: none;
   }
 
-  .btn-outline-social {
+  .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1.75rem;
     color: var(--color-text);
-    opacity: 0.8;
-    background-color: transparent;
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     border-radius: 0.75rem;
     text-decoration: none;
     border: 1px solid var(--color-border);
-    transition: all 0.2s;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      color 0.2s;
+    white-space: nowrap;
   }
 
-  .btn-outline-social:hover {
-    opacity: 1;
+  .btn-secondary:hover {
     border-color: var(--color-text);
-    text-decoration: none;
     background-color: var(--color-nav-hover);
+    text-decoration: none;
   }
 
+  .btn-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .btn-icon-gh {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* === Release pill === */
   .release-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.625rem;
-    padding: 0.5rem 1.25rem;
+    gap: 0.5rem;
+    padding: 0.4375rem 1.125rem;
     border-radius: 9999px;
-    border: 1px solid var(--color-primary, #e11d48);
+    border: 1px solid
+      color-mix(in srgb, var(--color-primary, #e11d48) 40%, transparent);
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-primary, #e11d48);
     text-decoration: none;
-    transition: all 0.2s;
-    box-shadow: 0 0 16px rgba(225, 29, 72, 0.15);
-  }
-  
-  html[data-theme="dark"] .release-pill {
-    color: #fb7185;
-    border-color: #fb7185;
-    box-shadow: 0 0 16px rgba(251, 113, 133, 0.2);
-  }
-  
-  html[data-theme="dark"] .release-pill .pulse-dot {
-    background-color: #fb7185;
-  }
-  html[data-theme="dark"] .release-pill .pulse-dot::after {
-    background-color: #fb7185;
+    transition: background-color 0.2s;
   }
 
   .release-pill:hover {
-    background-color: rgba(225, 29, 72, 0.05);
+    background-color: color-mix(
+      in srgb,
+      var(--color-primary, #e11d48) 8%,
+      transparent
+    );
     text-decoration: none;
   }
-  
-  html[data-theme="dark"] .release-pill:hover {
-    background-color: rgba(251, 113, 133, 0.1);
+
+  .release-arrow {
+    width: 0.875rem;
+    height: 0.875rem;
+    opacity: 0.7;
   }
 
+  /* === Scroll indicator === */
   .scroll-indicator {
     position: absolute;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
+    animation: bounce 2s ease-in-out infinite;
   }
 
-  .text-muted {
+  .scroll-icon {
+    width: 1.5rem;
+    height: 1.5rem;
     color: var(--color-text);
-    opacity: 0.5;
-  }
-
-  .animate-bounce {
-    animation: bounce 2s infinite;
+    opacity: 0.4;
   }
 
   @keyframes bounce {
-    0%, 100% {
-      transform: translateY(-25%);
-      animation-timing-function: cubic-bezier(0.8,0,1,1);
+    0%,
+    100% {
+      transform: translateX(-50%) translateY(0);
     }
     50% {
-      transform: none;
-      animation-timing-function: cubic-bezier(0,0,0.2,1);
+      transform: translateX(-50%) translateY(8px);
     }
   }
 </style>

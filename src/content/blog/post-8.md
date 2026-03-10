@@ -3,6 +3,7 @@ title: 'Onedata 25.0 is here!'
 date: 2026-01-30
 description: 'We are proud to announce the release of Onedata 25.0 — Faster workflows, richer metadata, stronger foundations.'
 tags: ['announcement']
+image: '/images/blog/blog-default.jpg'
 ---
 
 ## Onedata 25.0 — Faster workflows, richer metadata, stronger foundations
