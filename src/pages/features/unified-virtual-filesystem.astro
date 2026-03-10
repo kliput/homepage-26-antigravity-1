@@ -1,0 +1,17 @@
+---
+import FeaturePageLayout from "../../components/FeaturePageLayout.astro";
+import { Database } from "@lucide/astro";
+---
+<FeaturePageLayout
+  title="Unified Virtual Filesystem"
+  description="Mount any storage backend — S3, POSIX, Ceph, NFS — as a single global namespace. No data migration needed."
+  icon={Database}
+  gradient="from-red-500-to-orange-500"
+  image="https://images.unsplash.com/photo-1605597788044-efd8b0a41b74?w=800&q=80"
+  benefits={[
+    "Seamless integration across multiple storage systems without data migration",
+    "Transparent access regardless of underlying storage location",
+    "Unified namespace simplifies data governance and access patterns",
+    "Support for legacy systems alongside modern cloud storage",
+  ]}
+/>

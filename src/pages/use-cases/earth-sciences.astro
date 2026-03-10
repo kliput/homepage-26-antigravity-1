@@ -1,0 +1,33 @@
+---
+import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+
+const useCase = {
+  label: "Earth & Space Sciences",
+  title: "Manage petabytes of satellite and sensor data",
+  tagline: "Onedata provides a unified access layer for continuous data streams from global sensor networks and satellite imagery repositories.",
+  description: "Earth and space science generates some of the world's most voluminous datasets — continuous satellite imagery, climate sensor grids, and ocean monitoring networks produce petabytes of data daily. Onedata helps geoscience teams at agencies and universities organize, access, and share these datasets efficiently, without duplicating data across sites or breaking existing workflows.",
+  image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1200&q=80",
+  tags: ["NetCDF", "HDF5", "FITS", "Zarr", "GeoTIFF"],
+  challenges: [
+    "Managing continuous high-volume ingestion from distributed sensor networks",
+    "Providing low-latency access to both real-time and archival datasets",
+    "Coordinating data access across international research agencies",
+    "Maintaining data integrity and provenance for regulatory compliance",
+    "Supporting diverse file formats like NetCDF, HDF5, FITS, and Zarr",
+  ],
+  capabilities: [
+    { emoji: "🛰️", title: "Streaming Ingestion", detail: "Ingest and catalog continuous data streams from satellite downlinks and sensor networks in real time." },
+    { emoji: "🗃️", title: "Format-Agnostic Storage", detail: "Store and serve NetCDF, HDF5, FITS, Zarr, and GeoTIFF natively — no format conversion needed." },
+    { emoji: "🌍", title: "Global Federation", detail: "Connect data archives at ESA, NASA, EUDAT, and partner universities into a single access point." },
+    { emoji: "📊", title: "Metadata Catalogs", detail: "Attach rich scientific metadata and enable full-text search across petabyte-scale archives." },
+    { emoji: "⏱️", title: "Temporal Versioning", detail: "Access any historical snapshot of your data archive for reanalysis and reproducible science." },
+    { emoji: "🔐", title: "Open & Restricted Datasets", detail: "Mix public and restricted data in the same namespace with per-dataset access policies." },
+  ],
+  relatedCases: [
+    { href: "/use-cases/ai-ml-research", label: "AI / ML Research", title: "Train on federated datasets" },
+    { href: "/use-cases/hpc", label: "Computational Science", title: "Accelerate HPC workflows" },
+    { href: "/use-cases/life-sciences", label: "Life Sciences", title: "Share genomics data" },
+  ],
+};
+---
+<UseCasePageLayout useCase={useCase} />

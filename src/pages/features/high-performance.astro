@@ -1,0 +1,17 @@
+---
+import FeaturePageLayout from "../../components/FeaturePageLayout.astro";
+import { Zap } from "@lucide/astro";
+---
+<FeaturePageLayout
+  title="High-Performance Data Access"
+  description="Optimized for AI training workloads. Stream petabytes across WAN with minimal latency using our intelligent caching layer."
+  icon={Zap}
+  gradient="from-rose-500-to-red-500"
+  image="https://images.unsplash.com/photo-1560707303-4e980ce876ad?w=800&q=80"
+  benefits={[
+    "Minimal latency for petabyte-scale data operations",
+    "Intelligent multi-level caching optimized for ML training patterns",
+    "WAN-optimized transfer with compression and deduplication",
+    "Reduced network bandwidth and improved training throughput",
+  ]}
+/>

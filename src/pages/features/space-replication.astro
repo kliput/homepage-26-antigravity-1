@@ -1,0 +1,17 @@
+---
+import FeaturePageLayout from "../../components/FeaturePageLayout.astro";
+import { Layers } from "@lucide/astro";
+---
+<FeaturePageLayout
+  title="Space & Replication Policies"
+  description="Define exactly where and how many replicas of your data exist. Auto-balance storage across federated providers."
+  icon={Layers}
+  gradient="from-red-500-to-rose-600"
+  image="https://images.unsplash.com/photo-1544942120-b3142f8b8c51?w=800&q=80"
+  benefits={[
+    "Full control over data placement and replication strategy",
+    "Automatic load balancing across federated providers",
+    "Optimize for compliance, performance, or cost as needed",
+    "Transparent data lifecycle and redundancy management",
+  ]}
+/>

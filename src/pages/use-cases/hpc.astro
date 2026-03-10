@@ -1,0 +1,33 @@
+---
+import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+
+const useCase = {
+  label: "Computational Science",
+  title: "Accelerate HPC workflows with intelligent data staging",
+  tagline: "Onedata eliminates I/O bottlenecks in large-scale simulations by intelligently pre-staging data and managing checkpoints across distributed storage.",
+  description: "High-performance computing simulations in physics, chemistry, climate modeling, and engineering demand extreme I/O throughput. Data bottlenecks — not compute — are often the limiting factor in large-scale simulations. Onedata integrates directly with HPC schedulers and parallel filesystems, providing transparent data staging, prefetching, and checkpoint management that keeps your compute cores busy.",
+  image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&q=80",
+  tags: ["MPI", "SLURM", "OpenMP", "Lustre", "GPFS"],
+  challenges: [
+    "Eliminating I/O bottlenecks that stall large-scale parallel simulations",
+    "Staging input datasets from archival storage to fast scratch space automatically",
+    "Managing checkpoint data reliably across compute and storage nodes",
+    "Coordinating data access between job schedulers and storage systems",
+    "Archiving simulation outputs with provenance metadata for reproducibility",
+  ],
+  capabilities: [
+    { emoji: "🚀", title: "Intelligent Data Staging", detail: "Automatically pre-stage simulation inputs from archival storage to fast local or parallel filesystems before job start." },
+    { emoji: "💾", title: "Checkpoint Management", detail: "Automatically capture and replicate simulation checkpoints to durable storage — survive node failures without losing progress." },
+    { emoji: "📦", title: "SLURM & PBS Integration", detail: "Hooks for popular job schedulers allow data to be staged and archived as part of the job lifecycle." },
+    { emoji: "⚡", title: "Parallel I/O", detail: "POSIX-compliant interface compatible with MPI-IO, HDF5, and NetCDF parallel I/O libraries." },
+    { emoji: "🗄️", title: "Tiered Storage", detail: "Transparently move data between NVMe scratch, Lustre/GPFS, and tape archive based on access patterns." },
+    { emoji: "🔍", title: "Provenance Tracking", detail: "Record the complete data lineage of simulation runs — link outputs to input parameters, code versions, and environments." },
+  ],
+  relatedCases: [
+    { href: "/use-cases/ai-ml-research", label: "AI / ML Research", title: "Train on federated datasets" },
+    { href: "/use-cases/earth-sciences", label: "Earth & Space Sciences", title: "Manage satellite data" },
+    { href: "/use-cases/life-sciences", label: "Life Sciences", title: "Share genomics data" },
+  ],
+};
+---
+<UseCasePageLayout useCase={useCase} />

@@ -1,0 +1,17 @@
+---
+import FeaturePageLayout from "../../components/FeaturePageLayout.astro";
+import { Globe } from "@lucide/astro";
+---
+<FeaturePageLayout
+  title="Hybrid Cloud Ready"
+  description="Seamlessly span on-premises HPC clusters, AWS, GCP, Azure, and institutional storage in one unified environment."
+  icon={Globe}
+  gradient="from-orange-500-to-amber-500"
+  image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80"
+  benefits={[
+    "True multi-cloud flexibility without vendor lock-in",
+    "Federate on-premises HPC with public cloud resources",
+    "Burst to cloud when on-premises capacity reaches limits",
+    "Keep sensitive data on-premises while leveraging cloud compute",
+  ]}
+/>

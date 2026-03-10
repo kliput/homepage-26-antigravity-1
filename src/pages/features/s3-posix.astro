@@ -1,0 +1,17 @@
+---
+import FeaturePageLayout from "../../components/FeaturePageLayout.astro";
+import { HardDrive } from "@lucide/astro";
+---
+<FeaturePageLayout
+  title="S3 & POSIX Hybrid Access"
+  description="Access the same dataset via a fully S3-compatible API or mount it as a native POSIX filesystem — no duplication, no trade-offs."
+  icon={HardDrive}
+  gradient="from-red-600-to-rose-400"
+  image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+  benefits={[
+    "Single dataset accessible via both S3 API and POSIX filesystem",
+    "No data duplication or sync complexity",
+    "Ideal for cloud-native pipelines and HPC workloads simultaneously",
+    "Leverage existing tools and workflows without migration",
+  ]}
+/>

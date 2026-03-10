@@ -1,0 +1,33 @@
+---
+import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+
+const useCase = {
+  label: "AI / ML Research",
+  title: "Train models on federated datasets — without moving data",
+  tagline: "Onedata gives AI teams a unified, high-throughput data layer across institutional repositories, cloud storage, and HPC clusters.",
+  description: "Modern AI research increasingly demands access to datasets that span multiple institutions, countries, and storage systems. Moving petabytes of data to a central location is costly, slow, and often not permitted by data governance policies. Onedata solves this by providing a virtual, unified filesystem over existing storage — enabling distributed training pipelines to access data in-place from anywhere.",
+  image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=80",
+  tags: ["PyTorch", "TensorFlow", "Hugging Face", "POSIX", "S3-compatible"],
+  challenges: [
+    "Aggregating training data from multiple institutions without data transfers",
+    "Meeting data governance and sovereignty requirements across borders",
+    "Providing fast, low-latency access to datasets during model training",
+    "Maintaining reproducibility with full data lineage and versioning",
+    "Scaling data access with distributed GPU clusters across sites",
+  ],
+  capabilities: [
+    { emoji: "🗂️", title: "Unified Virtual Filesystem", detail: "Mount all your storage backends under one namespace — no data migration needed." },
+    { emoji: "⚡", title: "WAN-Optimized Caching", detail: "Intelligent prefetching and caching minimizes latency for distributed training workloads." },
+    { emoji: "🔗", title: "S3 & POSIX APIs", detail: "Works natively with PyTorch DataLoader, TensorFlow I/O, and any S3-compatible tooling." },
+    { emoji: "📋", title: "Data Lineage", detail: "Track every transformation and experiment for full reproducibility and audit compliance." },
+    { emoji: "🔒", title: "Access Control", detail: "Attribute-based access per dataset — share only what's needed, with fine-grained permissions." },
+    { emoji: "🌐", title: "Multi-site Federation", detail: "Span on-prem HPC, AWS, GCP, and Azure transparently in a single data space." },
+  ],
+  relatedCases: [
+    { href: "/use-cases/hpc", label: "Computational Science", title: "Accelerate HPC workflows" },
+    { href: "/use-cases/life-sciences", label: "Life Sciences", title: "Share genomics data" },
+    { href: "/use-cases/earth-sciences", label: "Earth & Space Sciences", title: "Manage satellite data" },
+  ],
+};
+---
+<UseCasePageLayout useCase={useCase} />

@@ -1,0 +1,33 @@
+---
+import UseCasePageLayout from "../../components/UseCasePageLayout.astro";
+
+const useCase = {
+  label: "Life Sciences",
+  title: "Share genomics and proteomics data across institutions",
+  tagline: "Onedata enables large-scale biological data sharing across research consortia while maintaining strict data governance and GDPR compliance.",
+  description: "Life sciences research increasingly depends on cross-institutional collaboration. Multi-center studies in genomics, proteomics, and clinical research require researchers to share large datasets while complying with data protection regulations and institutional policies. Onedata provides the infrastructure for FAIR data sharing — findable, accessible, interoperable, and reusable — without compromising security or sovereignty.",
+  image: "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=1200&q=80",
+  tags: ["FAIR Data", "GDPR", "Open Science", "ELIXIR", "GA4GH"],
+  challenges: [
+    "Complying with GDPR and institutional data governance policies",
+    "Enabling data sharing without transferring sensitive patient-derived data",
+    "Supporting FAIR data principles across heterogeneous research systems",
+    "Managing access permissions for multi-tier collaborations",
+    "Integrating with bioinformatics pipelines and existing compute infrastructure",
+  ],
+  capabilities: [
+    { emoji: "🧬", title: "FAIR-Compliant Metadata", detail: "Attach standardized metadata schemas (Dublin Core, Schema.org) for discoverability across open science portals." },
+    { emoji: "🔒", title: "Controlled Access Datasets", detail: "Define per-file and per-directory access policies. Support tiered access for open, registered, and restricted data." },
+    { emoji: "🇪🇺", title: "Data Sovereignty", detail: "Keep patient-derived data on-premises while enabling compliant, controlled access for external collaborators." },
+    { emoji: "🔬", title: "Pipeline Integration", detail: "Works with Nextflow, Snakemake, Galaxy, and standard bioinformatics toolchains via POSIX and REST APIs." },
+    { emoji: "📜", title: "Audit Logs", detail: "Complete access audit trails for every file access — essential for regulatory and ethics committee requirements." },
+    { emoji: "🤝", title: "Multi-org Collaboration", detail: "Federate data across ELIXIR nodes, hospital networks, and academic partners with fine-grained trust policies." },
+  ],
+  relatedCases: [
+    { href: "/use-cases/ai-ml-research", label: "AI / ML Research", title: "Train on federated datasets" },
+    { href: "/use-cases/hpc", label: "Computational Science", title: "Accelerate HPC workflows" },
+    { href: "/use-cases/earth-sciences", label: "Earth & Space Sciences", title: "Manage satellite data" },
+  ],
+};
+---
+<UseCasePageLayout useCase={useCase} />

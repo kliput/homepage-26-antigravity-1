@@ -1,0 +1,17 @@
+---
+import FeaturePageLayout from "../../components/FeaturePageLayout.astro";
+import { Lock } from "@lucide/astro";
+---
+<FeaturePageLayout
+  title="Fine-Grained Access Control"
+  description="Attribute-based access control per dataset, file, or directory. Built for multi-organization research collaborations."
+  icon={Lock}
+  gradient="from-rose-600-to-pink-500"
+  image="https://images.unsplash.com/photo-1563526788-6d9f2e89b3f6?w=800&q=80"
+  benefits={[
+    "Granular permissions at dataset, directory, or file level",
+    "Attribute-based policies enable complex access scenarios",
+    "Support for cross-organization data sharing and collaboration",
+    "Compliance and audit trails for sensitive research data",
+  ]}
+/>
