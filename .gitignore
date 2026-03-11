@@ -24,4 +24,4 @@ pnpm-debug.log*
 .idea/
 
 # base44 generated app
-one-data-hub
+one-data-hub*

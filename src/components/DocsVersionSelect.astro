@@ -1,0 +1,24 @@
+---
+const { availableVersions, version, pathPrefix, pathSuffix, selectorId } =
+  Astro.props;
+---
+
+<div class="version-select-wrap">
+  <label for={selectorId} class="version-label">Version:</label>
+  <select
+    id={selectorId}
+    class="version-select"
+    onchange="window.location.href=this.value"
+  >
+    {
+      availableVersions.map((v) => (
+        <option
+          value={`${pathPrefix}/${v}/${pathSuffix}`}
+          selected={v === version}
+        >
+          {v}
+        </option>
+      ))
+    }
+  </select>
+</div>
