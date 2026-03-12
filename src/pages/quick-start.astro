@@ -1,16 +1,41 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import QuickStartPaths from "../components/QuickStartPaths.astro";
-import { ArrowRight, BookOpen, Database, Server, Globe, Key } from "lucide-astro";
+import {
+  ArrowRight,
+  BookOpen,
+  Database,
+  Server,
+  Globe,
+  Key,
+} from "lucide-astro";
 
 const concepts = [
-  { icon: Database, title: "Spaces", description: "Virtual directories distributed across multiple storage providers. Every file lives in a Space." },
-  { icon: Server, title: "Providers", description: "Institutions or individuals who contribute storage resources to the network via Oneprovider services." },
-  { icon: Globe, title: "Zones", description: "Independent Onedata ecosystems federating multiple providers, coordinated by a Onezone service." },
+  {
+    icon: Database,
+    title: "Spaces",
+    description:
+      "Virtual directories distributed across multiple storage providers. Every file lives in a Space.",
+  },
+  {
+    icon: Server,
+    title: "Providers",
+    description:
+      "Institutions or individuals who contribute storage resources to the network via Oneprovider services.",
+  },
+  {
+    icon: Globe,
+    title: "Zones",
+    description:
+      "Independent Onedata ecosystems federating multiple providers, coordinated by a Onezone service.",
+  },
 ];
 ---
 
-<MainLayout title="Quick Start — Onedata" description="Get up and running with Onedata in minutes.">
+<MainLayout
+  title="Quick Start — Onedata"
+  description="Get up and running with Onedata in minutes."
+>
   <div class="quick-start-page">
     <!-- Hero -->
     <section class="hero-section">
@@ -21,7 +46,8 @@ const concepts = [
         </div>
         <h1 class="hero-title">Quick Start</h1>
         <p class="hero-desc">
-          Get up and running with Onedata in minutes — from logging in to accessing and managing your research data.
+          Get up and running with Onedata in minutes — from logging in to
+          accessing and managing your research data.
         </p>
       </div>
     </section>
@@ -31,18 +57,22 @@ const concepts = [
       <div class="container max-w-5xl">
         <div class="section-header">
           <h2 class="section-title">Core concepts</h2>
-          <p class="section-sub">Three building blocks you need to understand before you start.</p>
+          <p class="section-sub">
+            Three building blocks you need to understand before you start.
+          </p>
         </div>
         <div class="concepts-grid">
-          {concepts.map((c) => (
-            <div class="concept-card">
-              <div class="concept-icon-wrap">
-                <c.icon class="concept-icon" />
+          {
+            concepts.map((c) => (
+              <div class="concept-card">
+                <div class="concept-icon-wrap">
+                  <c.icon class="concept-icon" />
+                </div>
+                <h3 class="concept-title">{c.title}</h3>
+                <p class="concept-desc">{c.description}</p>
               </div>
-              <h3 class="concept-title">{c.title}</h3>
-              <p class="concept-desc">{c.description}</p>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </div>
     </section>
@@ -52,7 +82,10 @@ const concepts = [
       <div class="container max-w-4xl">
         <div class="section-header">
           <h2 class="section-title">Step-by-step guide</h2>
-          <p class="section-sub">Choose your path and follow the steps to get Onedata running your way.</p>
+          <p class="section-sub">
+            Choose your path and follow the steps to get Onedata running your
+            way.
+          </p>
         </div>
         <QuickStartPaths />
       </div>
@@ -68,7 +101,12 @@ const concepts = [
           <div class="token-content">
             <h3 class="token-title">Can't see the Sandbox Space?</h3>
             <p class="token-desc">
-              If you've logged in to <a href="https://demo.onedata.org" target="_blank" rel="noreferrer">demo.onedata.org</a> but don't see the Sandbox in the DATA tab, consume this invite token to join the <strong>All users</strong> group:
+              If you've logged in to <a
+                href="https://demo.onedata.org"
+                target="_blank"
+                rel="noreferrer">demo.onedata.org</a
+              > but don't see the Sandbox in the DATA tab, consume this invite token
+              to join the <strong>All users</strong> group:
             </p>
             <div class="token-code" id="sandbox-token">
               MDAxZWxvY2F00aW9uIGRlbW8ub25lZGF00YS5vcmcKMDA3NmlkZW500aWZpZXIgMi9ubWQvdXNyLWMwNWU3M2EwZmE4NzQzOTI1NDE3ZGRjMDMzZTEwZWExY2g4NzQzL3VqZzphbGxfdXNlcnM6LzAyZDRmYTA3NGEwYTNlYTIzNTYwZDc00Yzg00YTA1Mjk1Y2gyYzE5CjAwMmZzaWduYXR1cmUgzFtuZQ5JPZ1KH1d8FhoNNy4bA1ToeILElN1F3FDwt0000K
@@ -85,7 +123,9 @@ const concepts = [
         <div class="cta-card">
           <h2 class="cta-title">Ready for a full deployment?</h2>
           <p class="cta-desc">
-            Tested Onedata and ready to set it up for your institution or research group? Get in touch — we'll help you build a fully-fledged ecosystem for your use cases.
+            Tested Onedata and ready to set it up for your institution or
+            research group? Get in touch — we'll help you build a fully-fledged
+            ecosystem for your use cases.
           </p>
           <a href="/contact" class="cta-button">
             Request a Demo <ArrowRight class="button-arrow" />
@@ -98,9 +138,9 @@ const concepts = [
 
 <script>
   // Select-all logic for the token
-  const tokenBlock = document.getElementById('sandbox-token');
+  const tokenBlock = document.getElementById("sandbox-token");
   if (tokenBlock) {
-    tokenBlock.addEventListener('click', () => {
+    tokenBlock.addEventListener("click", () => {
       const range = document.createRange();
       range.selectNodeContents(tokenBlock);
       const selection = window.getSelection();
@@ -115,7 +155,7 @@ const concepts = [
     --accent: var(--od-accent, #e6341a);
     --bg-card: var(--od-bg-card, #ffffff);
     --bg-2: var(--od-bg-2, #f0ede8);
-    --border: var(--od-border, rgba(0,0,0,0.1));
+    --border: var(--od-border, rgba(0, 0, 0, 0.1));
     --text: var(--od-text, #111111);
     --text-muted: var(--od-text-muted, #555555);
     background-color: var(--color-bg);
@@ -127,26 +167,38 @@ const concepts = [
     padding: 0 1.5rem;
   }
 
-  .max-w-3xl { max-width: 48rem; }
-  .max-w-4xl { max-width: 56rem; }
-  .max-w-5xl { max-width: 64rem; }
-  .max-w-2xl { max-width: 42rem; }
+  .max-w-3xl {
+    max-width: 48rem;
+  }
+  .max-w-4xl {
+    max-width: 56rem;
+  }
+  .max-w-5xl {
+    max-width: 64rem;
+  }
+  .max-w-2xl {
+    max-width: 42rem;
+  }
 
   /* Hero */
   .hero-section {
     position: relative;
     padding: 8rem 0 5rem;
     overflow: hidden;
-    background-image: 
-      linear-gradient(var(--od-glow, rgba(0,0,0,0.02)) 1px, transparent 1px),
-      linear-gradient(90deg, var(--od-glow, rgba(0,0,0,0.02)) 1px, transparent 1px);
+    background-image:
+      linear-gradient(var(--od-glow, rgba(0, 0, 0, 0.02)) 1px, transparent 1px),
+      linear-gradient(
+        90deg,
+        var(--od-glow, rgba(0, 0, 0, 0.02)) 1px,
+        transparent 1px
+      );
     background-size: 60px 60px;
   }
 
   html[data-theme="dark"] .hero-section {
     background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   }
 
   .hero-glow {
@@ -290,7 +342,11 @@ const concepts = [
   }
 
   @media (max-width: 640px) {
-    .token-card { flex-direction: column; align-items: center; text-align: center; }
+    .token-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
   }
 
   .token-icon-wrap {
@@ -330,7 +386,7 @@ const concepts = [
     border: 1px solid var(--border);
     border-radius: 0.75rem;
     padding: 1rem;
-    font-family: ui-monospace, monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.75rem;
     color: var(--od-accent-3);
     word-break: break-all;
@@ -357,7 +413,9 @@ const concepts = [
   }
 
   @media (min-width: 768px) {
-    .cta-card { padding: 4rem; }
+    .cta-card {
+      padding: 4rem;
+    }
   }
 
   .cta-title {
@@ -383,7 +441,9 @@ const concepts = [
     font-weight: 600;
     border-radius: 0.75rem;
     box-shadow: 0 8px 24px var(--od-glow-strong);
-    transition: transform 0.2s, opacity 0.2s;
+    transition:
+      transform 0.2s,
+      opacity 0.2s;
   }
 
   .cta-button:hover {

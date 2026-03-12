@@ -17,78 +17,140 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await post.render();
 ---
+
 <MainLayout title={post.data.title} description={post.data.description}>
   <div class="container article-container">
     <a href="/publications" class="back-link">&larr; All publications</a>
 
     <div class="pub-header">
       <div class="pub-tags text-sm mb-4">
-        {post.data.journalAbbreviation && <span class="tag-abbr">{post.data.journalAbbreviation}</span>}
-        {post.data.impactFactor && <span class="tag-if">IF {post.data.impactFactor}</span>}
+        {
+          post.data.journalAbbreviation && (
+            <span class="tag-abbr">{post.data.journalAbbreviation}</span>
+          )
+        }
+        {
+          post.data.impactFactor && (
+            <span class="tag-if">IF {post.data.impactFactor}</span>
+          )
+        }
         {post.data.year && <span class="tag-year">{post.data.year}</span>}
-        {post.data.externalDoiLink && (
-          <a href={post.data.externalDoiLink} target="_blank" rel="noopener noreferrer" class="tag-doi">
-            {post.data.externalDoiLink}
-          </a>
-        )}
+        {
+          post.data.externalDoiLink && (
+            <a
+              href={post.data.externalDoiLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="tag-doi"
+            >
+              {post.data.externalDoiLink}
+            </a>
+          )
+        }
       </div>
 
       <h1 class="article-title">{post.data.title}</h1>
-      
+
       <div class="article-authors">
         {post.data.authors?.join(", ") || ""}
       </div>
-      
+
       <div class="article-journal">
-        {post.data.journalFullName}{post.data.issueDetails ? `, ${post.data.issueDetails}` : ""}
+        {post.data.journalFullName}{
+          post.data.issueDetails ? `, ${post.data.issueDetails}` : ""
+        }
       </div>
-      
+
       <div class="action-buttons">
-        {post.data.pdfUrl && (
-          <a href={post.data.pdfUrl} target="_blank" rel="noopener noreferrer" class="btn-primary">
-            Read PDF
-          </a>
-        )}
-        {post.data.pdfUrl && (
-          <a href={post.data.pdfUrl} download class="btn-outline">
-            Download PDF
-          </a>
-        )}
-        {post.data.externalDoiLink && (
-          <a href={post.data.externalDoiLink} target="_blank" rel="noopener noreferrer" class="btn-outline">
-            View DOI
-          </a>
-        )}
+        {
+          post.data.pdfUrl && (
+            <a
+              href={post.data.pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-primary"
+            >
+              Read PDF
+            </a>
+          )
+        }
+        {
+          post.data.pdfUrl && (
+            <a href={post.data.pdfUrl} download class="btn-outline">
+              Download PDF
+            </a>
+          )
+        }
+        {
+          post.data.externalDoiLink && (
+            <a
+              href={post.data.externalDoiLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-outline"
+            >
+              View DOI
+            </a>
+          )
+        }
       </div>
     </div>
 
-    {post.data.abstract && (
-      <div class="abstract-block">
-        <h3 class="abstract-heading">ABSTRACT</h3>
-        <p class="abstract-text">{post.data.abstract}</p>
-      </div>
-    )}
+    {
+      post.data.abstract && (
+        <div class="abstract-block">
+          <h3 class="abstract-heading">ABSTRACT</h3>
+          <p class="abstract-text">{post.data.abstract}</p>
+        </div>
+      )
+    }
 
-    {(post.data.citationBibtex || post.data.citationPlain) && (
-      <div class="citation-section">
-        <h2 class="citation-heading">CITE THIS ARTICLE</h2>
-        <div class="citation-block">
-          <div class="citation-tabs">
-            <button class="tab-btn active" data-tab="bibtex">BibTeX</button>
-            <button class="tab-btn" data-tab="plaintext">Plain text</button>
-            <div class="spacer"></div>
-            <button class="copy-btn" id="copy-btn" aria-label="Copy citation">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-icon"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              Copy
-            </button>
-          </div>
-          <div class="citation-content">
-            <pre id="bibtex-content" class="tab-content active">{post.data.citationBibtex}</pre>
-            <pre id="plaintext-content" class="tab-content">{post.data.citationPlain}</pre>
+    {
+      (post.data.citationBibtex || post.data.citationPlain) && (
+        <div class="citation-section">
+          <h2 class="citation-heading">CITE THIS ARTICLE</h2>
+          <div class="citation-block">
+            <div class="citation-tabs">
+              <button class="tab-btn active" data-tab="bibtex">
+                BibTeX
+              </button>
+              <button class="tab-btn" data-tab="plaintext">
+                Plain text
+              </button>
+              <div class="spacer" />
+              <button class="copy-btn" id="copy-btn" aria-label="Copy citation">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="copy-icon"
+                >
+                  <>
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </>
+                </svg>
+                Copy
+              </button>
+            </div>
+            <div class="citation-content">
+              <pre id="bibtex-content" class="tab-content active">
+                {post.data.citationBibtex}
+              </pre>
+              <pre id="plaintext-content" class="tab-content">
+                {post.data.citationPlain}
+              </pre>
+            </div>
           </div>
         </div>
-      </div>
-    )}
+      )
+    }
 
     <div class="article-content">
       <Content />
@@ -113,7 +175,7 @@ const { Content } = await post.render();
     margin-bottom: 2rem;
     transition: opacity 0.2s;
   }
-  
+
   .back-link:hover {
     opacity: 1;
     color: var(--color-primary, #e11d48);
@@ -131,7 +193,7 @@ const { Content } = await post.render();
     font-size: 0.875rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .tag-abbr {
     font-weight: 700;
     background: var(--color-nav-hover);
@@ -139,11 +201,24 @@ const { Content } = await post.render();
     border-radius: 6px;
     border: 1px solid var(--color-border);
   }
-  
-  .tag-if { color: #ea580c; font-weight: 600; }
-  .tag-year { color: var(--color-text); opacity: 0.7; font-weight: 500;}
-  .tag-doi { color: var(--color-primary, #e11d48); text-decoration: none; font-weight: 500;}
-  .tag-doi:hover { text-decoration: underline; }
+
+  .tag-if {
+    color: #ea580c;
+    font-weight: 600;
+  }
+  .tag-year {
+    color: var(--color-text);
+    opacity: 0.7;
+    font-weight: 500;
+  }
+  .tag-doi {
+    color: var(--color-primary, #e11d48);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .tag-doi:hover {
+    text-decoration: underline;
+  }
 
   .article-title {
     font-size: 2.75rem;
@@ -185,7 +260,9 @@ const { Content } = await post.render();
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
-    transition: background-color 0.2s, transform 0.1s;
+    transition:
+      background-color 0.2s,
+      transform 0.1s;
     border: none;
     font-size: 1rem;
   }
@@ -205,7 +282,9 @@ const { Content } = await post.render();
     border-radius: 8px;
     text-decoration: none;
     border: 2px solid var(--color-border);
-    transition: background-color 0.2s, border-color 0.2s;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s;
     font-size: 1rem;
   }
   .btn-outline:hover {
@@ -281,11 +360,11 @@ const { Content } = await post.render();
 
   .tab-btn:hover {
     opacity: 1;
-    background-color: rgba(0,0,0,0.03);
+    background-color: rgba(0, 0, 0, 0.03);
   }
-  
+
   html[data-theme="dark"] .tab-btn:hover {
-    background-color: rgba(255,255,255,0.03);
+    background-color: rgba(255, 255, 255, 0.03);
   }
 
   .tab-btn.active {
@@ -311,7 +390,9 @@ const { Content } = await post.render();
     cursor: pointer;
     font-weight: 600;
     font-size: 0.9rem;
-    transition: opacity 0.2s, color 0.2s;
+    transition:
+      opacity 0.2s,
+      color 0.2s;
   }
 
   .copy-btn:hover {
@@ -329,7 +410,7 @@ const { Content } = await post.render();
     margin: 0;
     white-space: pre-wrap;
     word-break: break-all;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.9rem;
     color: var(--color-text);
     opacity: 0.9;
@@ -355,10 +436,10 @@ const { Content } = await post.render();
     const copyBtn = document.getElementById("copy-btn");
     let activeTabId = "bibtex-content";
 
-    tabBtns.forEach(btn => {
+    tabBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
-        tabBtns.forEach(b => b.classList.remove("active"));
-        tabContents.forEach(c => c.classList.remove("active"));
+        tabBtns.forEach((b) => b.classList.remove("active"));
+        tabContents.forEach((c) => c.classList.remove("active"));
 
         btn.classList.add("active");
         const targetId = btn.getAttribute("data-tab") + "-content";
@@ -375,13 +456,14 @@ const { Content } = await post.render();
           try {
             await navigator.clipboard.writeText(contentEl.textContent || "");
             const originalText = copyBtn.innerHTML;
-            copyBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #22c55e;"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
-            
+            copyBtn.innerHTML =
+              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #22c55e;"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+
             setTimeout(() => {
               copyBtn.innerHTML = originalText;
             }, 2000);
           } catch (err) {
-            console.error('Failed to copy text: ', err);
+            console.error("Failed to copy text: ", err);
           }
         }
       });

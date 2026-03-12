@@ -1,6 +1,7 @@
 ---
 import MainLayout from "../../layouts/MainLayout.astro";
 import { getCollection } from "astro:content";
+import { ArrowLeft } from "@lucide/astro";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
@@ -20,34 +21,53 @@ const { Content } = await entry.render();
 >
   <article class="blog-post">
     <div class="container post-container">
-      <header class="post-header">
-        <a href="/blog" class="back-link">&larr; Back to Blog</a>
-        <div class="post-meta">
-          <time datetime={entry.data.date.toISOString()}>
-            {
-              entry.data.date.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            }
-          </time>
-          {
-            entry.data.tags && (
-              <div class="tags">
-                {entry.data.tags.map((tag) => (
-                  <span class="tag">{tag}</span>
-                ))}
-              </div>
-            )
-          }
-        </div>
-        <h1 class="post-title">{entry.data.title}</h1>
-      </header>
+      <!-- TODO: obrazek -->
+      <div class="post-content od-card">
+        {entry.data.image && (
+          <div class="post-image card-image">
+            <img src={entry.data.image} alt={entry.data.title} />
+          </div>
+        )}
 
-      <div class="post-content">
+        <header class="post-header">
+          <div class="post-meta">
+            {
+              entry.data.tags && (
+                <div class="tags">
+                  {entry.data.tags.map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )
+            }
+            <time datetime={entry.data.date.toISOString()}>
+              {
+                entry.data.date.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })
+              }
+            </time>
+          </div>
+          <h1 class="post-title">{entry.data.title}</h1>
+          <div class="text-muted">{entry.data.description}</div>
+        </header>
+
         <Content />
+
+        {
+          entry.data.citationBibtex && (
+            <h2>Citation</h2>
+            <pre class="citation">{entry.data.citationBibtex}</pre>
+          )
+        }
       </div>
+
+      <hr />
+      <a href="/blog" class="back-link">
+        <ArrowLeft class="w-4 h-4" /> Back to All Posts
+      </a>
     </div>
   </article>
 </MainLayout>
@@ -60,8 +80,15 @@ const { Content } = await entry.render();
     padding-bottom: 5rem;
   }
 
+  .post-image {
+    border-radius: var(--small-card-border-radius);
+    height: 24rem;
+  }
+
   .back-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     margin-bottom: 2rem;
     color: var(--color-text);
     opacity: 0.7;
@@ -82,21 +109,6 @@ const { Content } = await entry.render();
     margin-bottom: 1.5rem;
     color: var(--color-text);
     opacity: 0.8;
-  }
-
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .tag {
-    background-color: var(--color-nav-hover);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    font-weight: 500;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   .post-title {
@@ -159,15 +171,14 @@ const { Content } = await entry.render();
     background-color: #1e1e1e;
     color: #d4d4d4;
     padding: 1.25rem;
-    border-radius: 8px;
+    border-radius: var(--small-card-border-radius);
     overflow-x: auto;
     margin-bottom: 1.5rem;
     font-size: 0.95rem;
   }
 
   .post-content code {
-    font-family:
-      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family: var(--font-family-mono);
     background-color: var(--color-nav-hover);
     padding: 0.2em 0.4em;
     border-radius: 3px;
@@ -186,5 +197,19 @@ const { Content } = await entry.render();
     margin-right: 0;
     font-style: italic;
     opacity: 0.9;
+  }
+
+  pre.citation {
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    background-color: var(--od-bg-2);
+    border-width: 1px;
+    border-color: var(--od-border);
+    color: var(--od-text-muted);
+    padding: 1.25rem;
+    border-radius: var(--small-card-border-radius);
+    font-family: var(--font-family-mono);
+    white-space: pre-wrap;
   }
 </style>

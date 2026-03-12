@@ -1,7 +1,7 @@
 ---
 title: "Onedata: A Global Data Management System for Science"
 date: 2024-09-15
-description: "Modern scientific workflows require access to massive datasets spread across geographically distributed storage resources."
+description: "Our latest peer-reviewed article published in Future Generation Computer Systems describes Onedata's architecture, federation model, and benchmark results across 40+ data providers."
 tags: ["Publication"]
 image: "/images/blog/publication-default.jpg"
 journalAbbreviation: "FGCS"
@@ -26,3 +26,19 @@ citationBibtex: |
   }
 citationPlain: "Dutka Ł., Wrzeszcz M., Lichoń T., Słota R., Zemek K., Liput J., Kryza B., Słota R., Kitowski J. (2024). Onedata: A Global Data Management System for Science. Future Generation Computer Systems, 160, 388–404. https://doi.org/10.1016/j.future.2024.05.001"
 ---
+
+# What the Paper Is About
+
+Modern scientific workflows require access to massive datasets spread across geographically distributed storage resources. This article presents Onedata — a global data management system that provides a uniform, virtual filesystem view over heterogeneous storage backends located at research computing centres, cloud providers and HPC clusters.
+
+## Key contributions
+
+- Architecture of the three main components: Onezone, Oneprovider, and Oneclient
+- Federated identity model supporting OpenID Connect and SAML
+- Data-access mechanisms including POSIX-compatible mounting and S3-compatible APIs
+- Benchmark results demonstrating near-native local I/O for sequential reads
+- Deployment experiences in EGI DataHub and PLGrid, covering 40+ providers in 15 countries
+
+## Why it matters
+
+This is the first comprehensive, peer-reviewed treatment of Onedata's full stack. It provides an authoritative reference for researchers evaluating federated storage solutions and for teams planning large-scale deployments.

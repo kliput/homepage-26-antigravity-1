@@ -43,6 +43,8 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
+  --small-card-border-radius: 0.75rem;
+
   @keyframes accordion-down {
     from {
       height: 0;
@@ -189,6 +191,10 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  ul {
+    list-style: disc;
+  }
 }
 
 * {
@@ -249,7 +255,8 @@ h6 {
   margin-bottom: 1rem;
 }
 
-header {
+/* TODO: ulokalnić? */
+.site-header {
   position: sticky;
   top: 0;
   z-index: 50;
@@ -334,10 +341,10 @@ header {
 }
 
 /* Content Card */
-.docs-main-content {
+.od-card {
   background-color: var(--od-bg-card);
   border: 1px solid var(--od-border);
-  padding: 2.5rem;
+  padding: 3rem;
   border-radius: 1rem;
   width: 100%;
   max-width: 100%;
@@ -644,4 +651,43 @@ header {
   border-radius: 0.75rem;
   border: 1px solid var(--od-border);
   margin: 2rem auto;
+}
+
+/* Blog */
+
+/* TODO: przenieść jakoś do lokalnych */
+
+.tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: var(--color-nav-hover);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* GENERAL STYLES */
+
+.text-muted {
+  color: var(--color-muted-foreground);
+  font-size: 1.25rem;
+}
+
+.card-image {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-border);
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
 }
