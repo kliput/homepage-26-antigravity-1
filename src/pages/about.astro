@@ -1,0 +1,399 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import TeamMemberCard from "../components/TeamMemberCard.astro";
+
+const team = [
+  {
+    name: "Łukasz Dutka",
+    role: "Lead Developer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Core architect of the Onedata platform, specializing in distributed storage systems and high-performance data access.",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Łukasz Opioła",
+    role: "System Architect",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Designing the distributed system foundations and protocols that enable Onedata's cross-site federation and reliability.",
+    avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Michał Wrzeszcz",
+    role: "Backend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Expert in distributed systems and metadata management, driving the development of Onedata's core services.",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Bartosz Kryza",
+    role: "Integration & APIs",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Leading the design of Onedata APIs and integration layers enabling seamless connection with external services and HPC systems.",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Bartosz Walkowicz",
+    role: "Backend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Developing core backend logic for data workflows, automation pipelines and orchestration within the Onedata ecosystem.",
+    avatar: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Michał Stanisz",
+    role: "Backend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Working on data consistency, replication protocols and internal storage engine reliability across Onedata clusters.",
+    avatar: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Darin Nikołow",
+    role: "Backend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Contributing to the development of Oneprovider and Onezone services, focusing on scalability and interoperability.",
+    avatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Jakub Liput",
+    role: "Frontend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Building the web interface and user-facing tools that make complex distributed data management accessible to researchers.",
+    avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Agnieszka Raczek",
+    role: "Frontend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Crafting responsive, accessible interfaces and improving the overall user experience across the Onedata web applications.",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Jakub Karczewski",
+    role: "Frontend Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Developing interactive UI components and workflows that help researchers navigate and manage their data spaces efficiently.",
+    avatar: "https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Tomasz Lichoń",
+    role: "QA & Performance",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Ensuring reliability and benchmarking performance across diverse infrastructure setups and research workflows.",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Wojciech Szemlich",
+    role: "QA Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Testing distributed system scenarios and edge cases to ensure Onedata performs reliably under real-world research conditions.",
+    avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Rafał Mikrut",
+    role: "DevOps & Infrastructure",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Managing deployment pipelines, container orchestration and cloud infrastructure that powers Onedata installations worldwide.",
+    avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=300&h=300&fit=crop&crop=face",
+  },
+  {
+    name: "Michał Orzechowski",
+    role: "DevOps Engineer",
+    affiliation: "AGH University of Science and Technology",
+    bio: "Automating build and release processes, maintaining CI/CD infrastructure and supporting smooth production deployments.",
+    avatar: "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=300&h=300&fit=crop&crop=face",
+  },
+];
+
+const institutions = [
+  {
+    name: "AGH University of Science and Technology",
+    location: "Kraków, Poland",
+    description: "The primary research and development home of Onedata, where most of the core team works.",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Agh_logo_text.svg/320px-Agh_logo_text.svg.png",
+  },
+  {
+    name: "EGI Foundation",
+    location: "Amsterdam, Netherlands",
+    description: "Key European partner providing e-infrastructure support and connecting Onedata to the broader research community.",
+    logo: "https://www.egi.eu/wp-content/uploads/2018/02/EGI_Logo_RGB-600x338.png",
+  },
+  {
+    name: "CYFRONET",
+    location: "Kraków, Poland",
+    description: "Supercomputing centre operating large-scale Onedata deployments and contributing to national data infrastructure.",
+    logo: "https://www.cyfronet.pl/common/img/cyfronet_logo_pl.png",
+  },
+];
+---
+
+<MainLayout title="About – Onedata" description="Meet the people and institutions behind the Onedata platform.">
+  <!-- Hero -->
+  <section class="about-hero">
+    <div class="about-grid-bg"></div>
+    <div class="about-hero-inner">
+      <span class="about-eyebrow">About Us</span>
+      <h1 class="about-hero-title">
+        The people behind <span class="about-gradient-text">Onedata</span>
+      </h1>
+      <p class="about-hero-desc">
+        Onedata is an open-source project born in academia and driven by a passion for making
+        research data accessible, shareable and future-proof. We are a team of scientists,
+        engineers and data enthusiasts from across Europe.
+      </p>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="about-section">
+    <div class="about-section-inner">
+      <div class="about-section-header">
+        <h2 class="about-section-title">Meet the team</h2>
+        <p class="about-section-subtitle">
+          A dedicated group of researchers and engineers committed to open science infrastructure.
+        </p>
+      </div>
+      <div class="team-grid">
+        {team.map((member) => (
+          <TeamMemberCard member={member} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Institutions -->
+  <section class="about-section about-section--alt">
+    <div class="about-section-inner">
+      <div class="about-section-header">
+        <h2 class="about-section-title">Our institutions</h2>
+        <p class="about-section-subtitle">
+          Onedata is developed and operated in collaboration with leading European research organisations.
+        </p>
+      </div>
+      <div class="institutions-grid">
+        {institutions.map((inst) => (
+          <div class="institution-card">
+            <div class="institution-logo-wrap">
+              <img src={inst.logo} alt={inst.name} class="institution-logo" />
+            </div>
+            <h3 class="institution-name">{inst.name}</h3>
+            <p class="institution-location">{inst.location}</p>
+            <p class="institution-desc">{inst.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section class="about-section about-mission">
+    <div class="about-mission-inner">
+      <h2 class="about-section-title">Our mission</h2>
+      <p class="about-mission-text">
+        We believe that research data should be as open and accessible as the science it supports.
+        Onedata exists to remove the barriers between researchers and their data — regardless of
+        where it lives, who manages it, or what infrastructure it runs on.
+      </p>
+      <p class="about-mission-text">
+        As an open-source project, we welcome contributions from the community. If you want to
+        get involved, check out our{" "}
+        <a href="https://github.com/onedata" target="_blank" rel="noreferrer">GitHub</a>{" "}
+        or reach out via our <a href="/contact">contact page</a>.
+      </p>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  /* Hero */
+  .about-hero {
+    padding: 6rem 1rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--od-bg);
+  }
+
+  .about-grid-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.25;
+    background-image:
+      linear-gradient(var(--od-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--od-border) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .about-hero-inner {
+    position: relative;
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .about-eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--od-accent);
+    margin-bottom: 1rem;
+  }
+
+  .about-hero-title {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    color: var(--od-text);
+    margin-bottom: 1.25rem;
+    line-height: 1.15;
+  }
+
+  .about-gradient-text {
+    background: linear-gradient(135deg, var(--od-accent), var(--od-accent-3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .about-hero-desc {
+    font-size: 1.125rem;
+    color: var(--od-text-muted);
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+
+  /* Shared section styles */
+  .about-section {
+    padding: 4rem 1rem;
+    background-color: var(--od-bg);
+  }
+
+  .about-section--alt {
+    background-color: var(--od-bg-2);
+  }
+
+  .about-section-inner {
+    max-width: 75rem;
+    margin: 0 auto;
+  }
+
+  .about-section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .about-section-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--od-text);
+    margin-bottom: 0.75rem;
+  }
+
+  .about-section-subtitle {
+    color: var(--od-text-muted);
+    max-width: 40rem;
+    margin: 0 auto;
+  }
+
+  /* Team grid */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .team-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .team-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Institutions */
+  .institutions-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .institutions-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .institution-card {
+    background: var(--od-bg-card);
+    border: 1px solid var(--od-border);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+
+  .institution-logo-wrap {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .institution-logo {
+    max-height: 2.5rem;
+    max-width: 100%;
+    object-fit: contain;
+    opacity: 0.8;
+  }
+
+  .institution-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--od-text);
+    margin-bottom: 0.25rem;
+  }
+
+  .institution-location {
+    font-size: 0.75rem;
+    color: var(--od-accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .institution-desc {
+    font-size: 0.875rem;
+    color: var(--od-text-muted);
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  /* Mission */
+  .about-mission {
+    text-align: center;
+    padding: 5rem 1rem;
+  }
+
+  .about-mission-inner {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .about-mission-text {
+    font-size: 1.125rem;
+    color: var(--od-text-muted);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-mission-text:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-mission a {
+    color: var(--od-accent);
+  }
+
+  .about-mission a:hover {
+    text-decoration: underline;
+  }
+</style>
