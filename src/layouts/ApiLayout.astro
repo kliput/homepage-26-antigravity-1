@@ -64,7 +64,7 @@ const currentPath = Astro.url.pathname;
               return (
                 <a
                   href={`/api/${version}/${product.id}/`}
-                  class={`product-tab ${isActive ? "active" : ""}`}
+                  class={`chapter-tab ${isActive ? "active" : ""}`}
                 >
                   <Icon class="tab-icon" />
                   {product.label}
@@ -80,7 +80,7 @@ const currentPath = Astro.url.pathname;
     <div class="docs-inner docs-body">
       <div class="docs-body-row">
         {/* Desktop sidebar */}
-        <aside class="docs-sidebar">
+        <aside class="docs-sidebar api-sidebar">
           <div class="sticky top-32">
             <nav class="sidebar-nav pt-4">
               <ul class="sidebar-root-list">
@@ -107,11 +107,9 @@ const currentPath = Astro.url.pathname;
                                 href={op.href}
                                 class={`api-method-link ${currentPath.endsWith(op.href) ? "active" : ""}`}
                               >
-                                <span
-                                  class={`method-badge method-${op.method}`}
-                                >
-                                  {op.method.toUpperCase()}
-                                </span>
+                                {/* must be without spaces to look good in Firefox */}
+                                {/* prettier-ignore */}
+                                <span class={`method-badge method-${op.method}`}>{op.method.toUpperCase()}</span>
                                 <span class="method-summary">
                                   {op.summary || op.method}
                                 </span>
@@ -145,59 +143,7 @@ const currentPath = Astro.url.pathname;
 </MainLayout>
 
 <style is:global>
-  .hero-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--od-text);
-    margin: 0;
-  }
-
-  .hero-subtitle {
-    font-size: 0.75rem;
-    color: var(--od-text-muted);
-    margin-top: 0.125rem;
-    margin-bottom: 0;
-  }
-
-  .product-tab {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--od-text-muted);
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: all 0.2s;
-  }
-
-  .product-tab:hover {
-    color: var(--od-text);
-    text-decoration: none;
-  }
-
-  .product-tab.active {
-    color: var(--od-accent);
-    border-bottom-color: var(--od-accent);
-    font-weight: 600;
-  }
-
-  .tab-icon {
-    width: 1rem;
-    height: 1rem;
-  }
-
   /* Sidebar */
-  .api-sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .sidebar-root-list > li {
-    margin-bottom: 0.125rem;
-  }
 
   .api-method-link {
     display: flex;
@@ -250,85 +196,6 @@ const currentPath = Astro.url.pathname;
   .method-patch {
     background-color: rgba(80, 227, 194, 0.15);
     color: #50e3c2;
-  }
-
-  .method-summary {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .folder-toggle {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    background: none;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--od-text-muted);
-    cursor: pointer;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
-  }
-
-  .sidebar-folder.expanded > .folder-toggle {
-    color: var(--od-text);
-  }
-
-  .folder-toggle:hover {
-    background-color: var(--od-bg-input);
-  }
-
-  .folder-toggle .chevron {
-    width: 0.875rem;
-    height: 0.875rem;
-    transition: transform 0.2s;
-    opacity: 0.5;
-  }
-
-  .sidebar-folder.expanded > .folder-toggle .chevron {
-    transform: rotate(180deg);
-    opacity: 1;
-  }
-
-  .folder-contents {
-    list-style: none;
-    padding: 0;
-    margin: 0.25rem 0 0.5rem 0.5rem;
-    border-left: 1px solid var(--od-border);
-  }
-
-  .mobile-nav-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    background: var(--od-bg-card);
-    border: 1px solid var(--od-border);
-    color: var(--od-text);
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  /* Content Card */
-  .api-main-content {
-    background-color: var(--od-bg-card);
-    border: 1px solid var(--od-border);
-    min-width: 0;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
   }
 
   /* API detail styles */
