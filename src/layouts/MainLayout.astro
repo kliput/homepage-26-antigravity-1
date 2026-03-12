@@ -22,6 +22,12 @@ const {
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="sitemap" href="/sitemap-index.xml" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+			rel="stylesheet"
+		/>
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 
@@ -71,12 +77,15 @@ const {
 				};
 
 				applyTargetBlank();
-				
+
 				// Handle dynamically added content
 				const observer = new MutationObserver((mutations) => {
 					let shouldUpdate = false;
 					for (const mutation of mutations) {
-						if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+						if (
+							mutation.type === "childList" &&
+							mutation.addedNodes.length > 0
+						) {
 							shouldUpdate = true;
 							break;
 						}

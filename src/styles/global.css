@@ -74,7 +74,8 @@
     --color-header-border: #eaeaea;
     --color-border-legacy: #eaeaea;
     --color-nav-hover: #f0f0f0;
-    --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-family-sans: 'Inter', system-ui, sans-serif;
+    --font-family-mono: 'JetBrains Mono', monospace;
 
     /* experimental from b44 */
     --od-bg: #faf9f7;
@@ -611,10 +612,12 @@ header {
   margin-bottom: 0.5rem;
 }
 
+/* TODO: uporządkować */
+
+
+
 .prose code {
-  font-family:
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  font-family: var(--font-family-mono);
   font-size: 0.9em;
   background: var(--od-bg-input);
   padding: 0.1em 0.3em;
