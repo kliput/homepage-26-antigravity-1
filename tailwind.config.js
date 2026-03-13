@@ -82,6 +82,18 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            a: {
+              color: "var(--od-accent)",
+              "&:hover": {
+                color: "var(--od-accent-2)",
+              },
+            },
+          },
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require("tailwindcss-animate")],
