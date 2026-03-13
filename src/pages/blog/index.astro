@@ -1,8 +1,8 @@
 ---
-import MainLayout from "../../layouts/MainLayout.astro";
-import { getCollection } from "astro:content";
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
 
-const allPosts = await getCollection("blog");
+const allPosts = await getCollection('blog');
 const sortedPosts = allPosts.sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
@@ -45,10 +45,10 @@ const INITIAL_POSTS_TO_SHOW = 6;
             <div class="card-content">
               <div class="post-meta">
                 <time datetime={featuredPost.data.date.toISOString()}>
-                  {featuredPost.data.date.toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
+                  {featuredPost.data.date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
                   })}
                 </time>
                 {featuredPost.data.tags && (
@@ -76,7 +76,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
             {recentPosts.map((post, index) => (
               <a
                 href={`/blog/${post.slug}`}
-                class={`post-card recent-card ${index >= INITIAL_POSTS_TO_SHOW ? "hidden-post" : ""}`}
+                class={`post-card recent-card ${index >= INITIAL_POSTS_TO_SHOW ? 'hidden-post' : ''}`}
               >
                 {post.data.image && (
                   <div class="card-image recent-image">
@@ -86,10 +86,10 @@ const INITIAL_POSTS_TO_SHOW = 6;
                 <div class="card-content">
                   <div class="post-meta">
                     <time datetime={post.data.date.toISOString()}>
-                      {post.data.date.toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
+                      {post.data.date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
                       })}
                     </time>
                     {post.data.tags && (
@@ -167,7 +167,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
     text-decoration: none;
   }
 
-  html[data-theme="dark"] .post-card:hover {
+  html[data-theme='dark'] .post-card:hover {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
   }
 
@@ -305,18 +305,18 @@ const INITIAL_POSTS_TO_SHOW = 6;
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const loadMoreBtn = document.getElementById("load-more-btn");
+  document.addEventListener('DOMContentLoaded', () => {
+    const loadMoreBtn = document.getElementById('load-more-btn');
     if (loadMoreBtn) {
-      loadMoreBtn.addEventListener("click", () => {
-        const hiddenPosts = document.querySelectorAll(".hidden-post");
+      loadMoreBtn.addEventListener('click', () => {
+        const hiddenPosts = document.querySelectorAll('.hidden-post');
         for (let i = 0; i < Math.min(6, hiddenPosts.length); i++) {
-          hiddenPosts[i].classList.remove("hidden-post");
+          hiddenPosts[i].classList.remove('hidden-post');
         }
 
         // Hide button if no more hidden posts
-        if (document.querySelectorAll(".hidden-post").length === 0) {
-          loadMoreBtn.style.display = "none";
+        if (document.querySelectorAll('.hidden-post').length === 0) {
+          loadMoreBtn.style.display = 'none';
         }
       });
     }

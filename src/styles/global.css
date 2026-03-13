@@ -197,12 +197,6 @@
   }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
   font-family: var(--font-family-sans);
   background-color: var(--color-bg);
@@ -665,18 +659,12 @@ h6 {
 .tag {
   background-color: var(--color-nav-hover);
   padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  font-weight: 500;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 /* GENERAL STYLES */
 
 .text-muted {
   color: var(--color-muted-foreground);
-  font-size: 1.25rem;
 }
 
 .card-image {
