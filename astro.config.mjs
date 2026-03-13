@@ -1,18 +1,17 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
 import sitemap from "@astrojs/sitemap";
-import rehypeExternalLinks from 'rehype-external-links';
+import rehypeExternalLinks from "rehype-external-links";
 import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languages.mjs";
 
-import tailwindcss from '@tailwindcss/vite';
-
-import react from '@astrojs/react';
+import tailwind from "@astrojs/tailwind";
+import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://onedata.org',
+  site: "https://onedata.org",
 
   image: {
     responsiveStyles: true,
@@ -22,13 +21,12 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkRewriteLinks, remarkNormalizeLanguages],
     rehypePlugins: [
-      [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer'] }]
+      [
+        rehypeExternalLinks,
+        { target: "_blank", rel: ["noopener", "noreferrer"] },
+      ],
     ],
   },
 
-  integrations: [sitemap(), react()],
-
-  vite: {
-    plugins: [tailwindcss()]
-  }
+  integrations: [sitemap(), react(), tailwind()],
 });

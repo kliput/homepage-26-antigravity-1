@@ -1,12 +1,13 @@
-@import "tailwindcss";
-@plugin "tailwindcss-animate";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* 
   Merge tailwind.config theme into v4 CSS @theme
   We use `tw-` prefix for some of our existing conflicts, but shadcn standard uses standard tailwind classes.
   We will map shadcn variables.
 */
-@theme {
+/* @theme {
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -64,7 +65,7 @@
       height: 0;
     }
   }
-}
+} */
 
 @layer base {
   :root {
@@ -76,8 +77,8 @@
     --color-header-border: #eaeaea;
     --color-border-legacy: #eaeaea;
     --color-nav-hover: #f0f0f0;
-    --font-family-sans: 'Inter', system-ui, sans-serif;
-    --font-family-mono: 'JetBrains Mono', monospace;
+    --font-family-sans: "Inter", system-ui, sans-serif;
+    --font-family-mono: "JetBrains Mono", monospace;
 
     /* experimental from b44 */
     --od-bg: #faf9f7;
@@ -131,17 +132,17 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  [data-theme='dark'] {
+  [data-theme="dark"] {
     /* Existing Onedata Variables - Dark Mode */
     --color-header-bg: rgba(18, 18, 18, 0.9);
     --color-header-border: #333333;
     --color-border-legacy: #333333;
     --color-nav-hover: #2a2a2a;
 
-    --od-bg: #050A14;
-    --od-bg-2: #070D1A;
-    --od-bg-card: #0A1628;
-    --od-bg-input: #0D1E35;
+    --od-bg: #050a14;
+    --od-bg-2: #070d1a;
+    --od-bg-card: #0a1628;
+    --od-bg-input: #0d1e35;
     --od-border: rgba(100, 116, 139, 0.3);
     --od-border-hover: rgba(100, 116, 139, 0.6);
     --od-text: #ffffff;
@@ -188,9 +189,10 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  * {
+  /* FIXME: */
+  /* * {
     @apply border-border outline-ring/50;
-  }
+  } */
 
   ul {
     list-style: disc;
@@ -202,7 +204,9 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 a {
@@ -258,7 +262,9 @@ h6 {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--od-border);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .container {
@@ -514,7 +520,7 @@ h6 {
   transition: all 0.2s;
 }
 
-.sidebar-folder.expanded>.folder-toggle {
+.sidebar-folder.expanded > .folder-toggle {
   color: var(--od-text);
 }
 
@@ -527,7 +533,7 @@ h6 {
   opacity: 0.5;
 }
 
-.sidebar-folder.expanded>.folder-toggle .chevron {
+.sidebar-folder.expanded > .folder-toggle .chevron {
   transform: rotate(180deg);
   opacity: 1;
 }
@@ -614,8 +620,6 @@ h6 {
 }
 
 /* TODO: uporządkować */
-
-
 
 .prose code {
   font-family: var(--font-family-mono);

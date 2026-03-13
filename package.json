@@ -6,28 +6,31 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "clean": "rm -rf node_modules dist"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@astrojs/sitemap": "^3.7.0",
+    "@astrojs/tailwind": "^6.0.2",
     "@lucide/astro": "^0.577.0",
-    "@tailwindcss/vite": "^4.2.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^5.17.1",
     "js-yaml": "^4.1.1",
     "lucide-astro": "^0.556.0",
-    "lucide-react": "^0.577.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "rehype-external-links": "^3.0.0",
-    "tailwindcss": "^4.2.1",
+    "tailwindcss": "^3.4.19",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.3.3",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.2"
   }
 }

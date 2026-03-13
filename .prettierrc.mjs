@@ -5,6 +5,15 @@
  * @type {import("prettier").Config}
  */
 const config = {
+  plugins: ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  overrides: [
+    {
+      files: "*.astro",
+      options: {
+        parser: "astro",
+      },
+    },
+  ],
   trailingComma: "all",
   tabWidth: 2,
   semi: true,
