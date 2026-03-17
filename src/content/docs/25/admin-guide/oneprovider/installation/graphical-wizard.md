@@ -137,30 +137,32 @@ Now you can start managing your cluster, e.g., support a space as described in [
 
 [Running Docker based installation using systemd]: docker-compose.md#running-docker-based-installation-using-systemd
 
-[screen-installation-gui-new-onepanel]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-new-onepanel.png
-
-[screen-installation-gui-passphrase]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-passphrase.png
-
-[screen-installation-gui-welcome]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-welcome.png
-
-[screen-installation-gui-cluster-deployment]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-cluster-deployment.png
-
-[screen-installation-gui-registration]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-registration.png
-
-[screen-installation-gui-registration-2]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-registration-2.png
-
-[screen-installation-gui-ip-address-setup]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-ip-address-setup.png
-
-[screen-installation-gui-dns-setup]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-dns-setup.png
-
-[screen-installation-gui-web-certificate]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-web-certificate.png
-
-[screen-installation-gui-storages]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-storages.png
-
-[screen-installation-gui-storages-2]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-storages-2.png
+[localhost-onepanel]: https://localhost:9443
 
 [space support]: ../../configuration/space-support.md
 
-[screen-installation-gui-cluster-configured-successfully]: /src/assets/images/admin-guide/oneprovider/installation/installation-gui-cluster-configured-successfully.png
+[screen-installation-gui-new-onepanel]: ../../../images/admin-guide/oneprovider/installation/installation-gui-new-onepanel.png
 
-[localhost-onepanel]: https://localhost:9443
+[screen-installation-gui-passphrase]: ../../../images/admin-guide/oneprovider/installation/installation-gui-passphrase.png
+
+[screen-installation-gui-welcome]: ../../../images/admin-guide/oneprovider/installation/installation-gui-welcome.png
+
+[screen-installation-gui-cluster-deployment]: ../../../images/admin-guide/oneprovider/installation/installation-gui-cluster-deployment.png
+
+[screen-installation-gui-registration]: ../../../images/admin-guide/oneprovider/installation/installation-gui-registration.png
+
+[screen-installation-gui-registration-2]: ../../../images/admin-guide/oneprovider/installation/installation-gui-registration-2.png
+
+[screen-installation-gui-ip-address-setup]: ../../../images/admin-guide/oneprovider/installation/installation-gui-ip-address-setup.png
+
+[screen-installation-gui-dns-setup]: ../../../images/admin-guide/oneprovider/installation/installation-gui-dns-setup.png
+
+[screen-installation-gui-web-certificate]: ../../../images/admin-guide/oneprovider/installation/installation-gui-web-certificate.png
+
+[screen-installation-gui-storages]: ../../../images/admin-guide/oneprovider/installation/installation-gui-storages.png
+
+[screen-installation-gui-storages-2]: ../../../images/admin-guide/oneprovider/installation/installation-gui-storages-2.png
+
+[screen-installation-gui-cluster-configured-successfully]: ../../../images/admin-guide/oneprovider/installation/installation-gui-cluster-configured-successfully.png
+
+

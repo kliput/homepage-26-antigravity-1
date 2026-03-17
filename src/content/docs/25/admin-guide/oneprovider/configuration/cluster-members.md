@@ -212,20 +212,20 @@ examples.
 
 [api-list-effective-group-cluster-privileges]: https://onedata.org/#/home/api/latest/onezone?anchor=operation/list_effective_group_cluster_privileges
 
-[screen-cluster-members]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/cluster-members.png
+[screen-cluster-members]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/cluster-members.png
 
-[screen-adding-cluster-user-options]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/adding-cluster-user-options.png
+[screen-adding-cluster-user-options]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/adding-cluster-user-options.png
 
-[screen-cluster-user-invite-token]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/cluster-user-invite-token.png
+[screen-cluster-user-invite-token]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/cluster-user-invite-token.png
 
-[screen-adding-cluster-group-options]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/adding-cluster-group-options.png
+[screen-adding-cluster-group-options]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/adding-cluster-group-options.png
 
-[screen-effective-cluster-members]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/effective-cluster-members.png
+[screen-effective-cluster-members]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/effective-cluster-members.png
 
-[screen-cluster-member-perms]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/cluster-member-perms.png
+[screen-cluster-member-perms]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/cluster-member-perms.png
 
-[screen-cluster-member-membership]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/cluster-member-membership.png
+[screen-cluster-member-membership]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/cluster-member-membership.png
 
-[screen-modifies-cluster-member-perms]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/modifies-cluster-member-perms.png
+[screen-modifies-cluster-member-perms]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/modifies-cluster-member-perms.png
 
-[screen-cluster-members-in-emergency]: /src/assets/images/admin-guide/oneprovider/configuration/cluster-members/cluster-members-in-emergency.png
+[screen-cluster-members-in-emergency]: ../../../images/admin-guide/oneprovider/configuration/cluster-members/cluster-members-in-emergency.png

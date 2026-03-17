@@ -96,6 +96,6 @@ curl -H "${AUTH_HEADER}" -H "${CT}" -X PATCH {$PANEL_API}/provider/storages/$STO
 
 [modify-qos-parameters]: https://onedata.org/#/home/api/stable/onepanel?anchor=operation/modify_storage
 
-[screen-create-storage]: /src/assets/images/admin-guide/oneprovider/configuration/qos/qos-params-create-storage.png
+[screen-create-storage]: ../../../images/admin-guide/oneprovider/configuration/qos/qos-params-create-storage.png
 
-[screen-modify-storage]: /src/assets/images/admin-guide/oneprovider/configuration/qos/qos-params-modify-storage.png
+[screen-modify-storage]: ../../../images/admin-guide/oneprovider/configuration/qos/qos-params-modify-storage.png

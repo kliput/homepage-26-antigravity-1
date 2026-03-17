@@ -3236,12 +3236,12 @@ required to insert the Client ID and Secret in the config.
 
 <!-- screenshots and images -->
 
-[screen-1-login-page]: /src/assets/images/admin-guide/onezone/configuration/oidc-saml/login-page.png
+[screen-1-login-page]: ../../../images/admin-guide/onezone/configuration/oidc-saml/login-page.png
 
-[screen-2-login-page-error]: /src/assets/images/admin-guide/onezone/configuration/oidc-saml/login-page-error.png
+[screen-2-login-page-error]: ../../../images/admin-guide/onezone/configuration/oidc-saml/login-page-error.png
 
-[screen-3-test-login-page]: /src/assets/images/admin-guide/onezone/configuration/oidc-saml/test-login-page.png
+[screen-3-test-login-page]: ../../../images/admin-guide/onezone/configuration/oidc-saml/test-login-page.png
 
-[screen-4-test-login-output]: /src/assets/images/admin-guide/onezone/configuration/oidc-saml/test-login-output.png
+[screen-4-test-login-output]: ../../../images/admin-guide/onezone/configuration/oidc-saml/test-login-output.png
 
-[image-custom-icon]: /src/assets/images/admin-guide/onezone/configuration/oidc-saml/custom-icon.png
+[image-custom-icon]: ../../../images/admin-guide/onezone/configuration/oidc-saml/custom-icon.png

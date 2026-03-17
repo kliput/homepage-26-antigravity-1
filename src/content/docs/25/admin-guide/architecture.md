@@ -193,7 +193,7 @@ will only handle metadata management.
 
 [0]: #oneclient
 
-[architecture]: /src/assets/images/admin-guide/architecture/onedata-architecture-overview.png
+[architecture]: ../images/admin-guide/architecture/onedata-architecture-overview.png
 
 [Couchbase]: https://www.couchbase.com
 

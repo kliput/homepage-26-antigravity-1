@@ -181,4 +181,4 @@ Refer to the linked API documentation for detailed information and examples.
 
 [9]: https://onedata.org/#/home/api/latest/onepanel?anchor=operation/configure_file_popularity
 
-[screen-file-popularity-tab]: /src/assets/images/admin-guide/oneprovider/configuration/file-popularity/file-popularity-tab.png
+[screen-file-popularity-tab]: ../../../images/admin-guide/oneprovider/configuration/file-popularity/file-popularity-tab.png

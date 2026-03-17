@@ -156,12 +156,12 @@ It is possible to change the time resolution of the charts in the upper right co
 
 [9]: luma.md#imported-storage-backends
 
-[screen-storage-import-config]: /src/assets/images/admin-guide/oneprovider/configuration/storage-import/storage-import-config.png
+[screen-storage-import-config]: ../../../images/admin-guide/oneprovider/configuration/storage-import/storage-import-config.png
 
-[screen-auto-storage-import-config]: /src/assets/images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-config.png
+[screen-auto-storage-import-config]: ../../../images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-config.png
 
-[screen-auto-storage-import-info]: /src/assets/images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-info.png
+[screen-auto-storage-import-info]: ../../../images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-info.png
 
-[screen-auto-storage-import-stop]: /src/assets/images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-stop.png
+[screen-auto-storage-import-stop]: ../../../images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-stop.png
 
-[screen-auto-storage-import-stats]: /src/assets/images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-stats.png
+[screen-auto-storage-import-stats]: ../../../images/admin-guide/oneprovider/configuration/storage-import/auto-storage-import-stats.png

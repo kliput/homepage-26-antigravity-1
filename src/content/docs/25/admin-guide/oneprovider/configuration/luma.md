@@ -710,4 +710,4 @@ are presented in the below table:
 
 [67]: https://onedata.org/#/home/api/stable/onepanel?anchor=operation/luma_remove_acl_group_to_onedata_group_mapping
 
-[screen-luma-config]: /src/assets/images/admin-guide/oneprovider/configuration/luma/luma-config.png
+[screen-luma-config]: ../../../images/admin-guide/oneprovider/configuration/luma/luma-config.png

@@ -156,16 +156,16 @@ examples.
 
 [api-modify-space]: https://onedata.org/#/home/api/latest/onepanel?anchor=operation/modify_space
 
-[screen-1-onepanel-gui]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/1-onepanel-gui.png
+[screen-1-onepanel-gui]: ../../../images/admin-guide/oneprovider/configuration/space-support/1-onepanel-gui.png
 
-[screen-2-support-form]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/2-support-form.png
+[screen-2-support-form]: ../../../images/admin-guide/oneprovider/configuration/space-support/2-support-form.png
 
-[screen-3-supports-list]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/3-supports-list.png
+[screen-3-supports-list]: ../../../images/admin-guide/oneprovider/configuration/space-support/3-supports-list.png
 
-[screen-4-overview]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/4-overview.png
+[screen-4-overview]: ../../../images/admin-guide/oneprovider/configuration/space-support/4-overview.png
 
-[screen-5-storage-import]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/5-storage-import.png
+[screen-5-storage-import]: ../../../images/admin-guide/oneprovider/configuration/space-support/5-storage-import.png
 
-[screen-6-file-popularity]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/6-file-popularity.png
+[screen-6-file-popularity]: ../../../images/admin-guide/oneprovider/configuration/space-support/6-file-popularity.png
 
-[screen-7-auto-cleaning]: /src/assets/images/admin-guide/oneprovider/configuration/space-support/7-auto-cleaning.png
+[screen-7-auto-cleaning]: ../../../images/admin-guide/oneprovider/configuration/space-support/7-auto-cleaning.png

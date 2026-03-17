@@ -395,44 +395,44 @@ your own configuration in JSON format.
 
 [35]: #public-access
 
-[screen-1-no-harvesters]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/1-no-harvesters.png
+[screen-1-no-harvesters]: ../../../images/admin-guide/onezone/configuration/data-discovery/1-no-harvesters.png
 
-[screen-2-get-started]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/2-get-started.png
+[screen-2-get-started]: ../../../images/admin-guide/onezone/configuration/data-discovery/2-get-started.png
 
-[screen-3-create-harvester]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/3-create-harvester.png
+[screen-3-create-harvester]: ../../../images/admin-guide/onezone/configuration/data-discovery/3-create-harvester.png
 
-[screen-4-spaces]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/4-spaces.png
+[screen-4-spaces]: ../../../images/admin-guide/onezone/configuration/data-discovery/4-spaces.png
 
-[screen-5-choose-space]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/5-choose-space.png
+[screen-5-choose-space]: ../../../images/admin-guide/onezone/configuration/data-discovery/5-choose-space.png
 
-[screen-6-spaces-list]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/6-spaces-list.png
+[screen-6-spaces-list]: ../../../images/admin-guide/onezone/configuration/data-discovery/6-spaces-list.png
 
-[screen-7-spaces-list-operations]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/7-spaces-list-operations.png
+[screen-7-spaces-list-operations]: ../../../images/admin-guide/onezone/configuration/data-discovery/7-spaces-list-operations.png
 
-[screen-8-spaces-invite-token]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/8-spaces-invite-token.png
+[screen-8-spaces-invite-token]: ../../../images/admin-guide/onezone/configuration/data-discovery/8-spaces-invite-token.png
 
-[screen-9-spaces-list-remove]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/9-spaces-list-remove.png
+[screen-9-spaces-list-remove]: ../../../images/admin-guide/onezone/configuration/data-discovery/9-spaces-list-remove.png
 
-[screen-10-spaces-list-remove-modal]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/10-spaces-list-remove-modal.png
+[screen-10-spaces-list-remove-modal]: ../../../images/admin-guide/onezone/configuration/data-discovery/10-spaces-list-remove-modal.png
 
-[screen-11-indices-list]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/11-indices-list.png
+[screen-11-indices-list]: ../../../images/admin-guide/onezone/configuration/data-discovery/11-indices-list.png
 
-[screen-12-indices-list-operations]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/12-indices-list-operations.png
+[screen-12-indices-list-operations]: ../../../images/admin-guide/onezone/configuration/data-discovery/12-indices-list-operations.png
 
-[screen-13-new-index-form]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/13-new-index-form.png
+[screen-13-new-index-form]: ../../../images/admin-guide/onezone/configuration/data-discovery/13-new-index-form.png
 
-[screen-14-indices-list-remove]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/14-indices-list-remove.png
+[screen-14-indices-list-remove]: ../../../images/admin-guide/onezone/configuration/data-discovery/14-indices-list-remove.png
 
-[screen-15-indices-list-remove-modal]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/15-indices-list-remove-modal.png
+[screen-15-indices-list-remove-modal]: ../../../images/admin-guide/onezone/configuration/data-discovery/15-indices-list-remove-modal.png
 
-[screen-16-index-progress]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/16-index-progress.png
+[screen-16-index-progress]: ../../../images/admin-guide/onezone/configuration/data-discovery/16-index-progress.png
 
-[screen-17-index-settings]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/17-index-settings.png
+[screen-17-index-settings]: ../../../images/admin-guide/onezone/configuration/data-discovery/17-index-settings.png
 
-[screen-18-configuration]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/18-configuration.png
+[screen-18-configuration]: ../../../images/admin-guide/onezone/configuration/data-discovery/18-configuration.png
 
-[screen-19-configuration-public]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/19-configuration-public.png
+[screen-19-configuration-public]: ../../../images/admin-guide/onezone/configuration/data-discovery/19-configuration-public.png
 
-[screen-20-configuration-gui-plugin]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/20-configuration-gui-plugin.png
+[screen-20-configuration-gui-plugin]: ../../../images/admin-guide/onezone/configuration/data-discovery/20-configuration-gui-plugin.png
 
-[screen-21-configuration-gui-plugin-indices]: /src/assets/images/admin-guide/onezone/configuration/data-discovery/21-configuration-gui-plugin-indices.png
+[screen-21-configuration-gui-plugin-indices]: ../../../images/admin-guide/onezone/configuration/data-discovery/21-configuration-gui-plugin-indices.png

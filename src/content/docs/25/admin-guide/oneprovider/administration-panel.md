@@ -96,8 +96,8 @@ cluster.
 
 [cluster-members]: ./configuration/cluster-members.md
 
-[screen-onepanel-hosted]: /src/assets/images/admin-guide/oneprovider/administration-panel/onepanel-hosted.png
+[screen-onepanel-hosted]: ../../images/admin-guide/oneprovider/administration-panel/onepanel-hosted.png
 
-- [ ] [screen-onepanel-emergency-login]: /src/assets/images/admin-guide/oneprovider/administration-panel/onepanel-emergency-login.png
+[screen-onepanel-emergency-login]: ../../images/admin-guide/oneprovider/administration-panel/onepanel-emergency-login.png
 
-[screen-change-emergency-passphrase]: /src/assets/images/admin-guide/oneprovider/administration-panel/change-emergency-passphrase.png
+[screen-change-emergency-passphrase]: ../../images/admin-guide/oneprovider/administration-panel/change-emergency-passphrase.png

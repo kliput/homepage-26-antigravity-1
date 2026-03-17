@@ -6,8 +6,6 @@ title: 'Quickstart'
 
 ## Table of Contents
 
-## Overview
-
 ## Introduction — Onezone service
 
 The Onedata software can be used to build different ecosystems. Each Onedata ecosystem
