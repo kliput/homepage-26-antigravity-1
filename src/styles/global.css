@@ -273,6 +273,7 @@ h6 {
   border-radius: 1rem;
   width: 100%;
   max-width: 100%;
+  overflow: hidden;
 }
 
 .docs-hero-row {
