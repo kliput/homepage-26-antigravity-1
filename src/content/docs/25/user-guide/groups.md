@@ -4,7 +4,9 @@ title: 'Groups'
 
 # Groups
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 A group is an abstract entity with a name and at least one user assigned to it,
 who has sufficient permissions to manage it. Groups help you to manage users' access and privileges

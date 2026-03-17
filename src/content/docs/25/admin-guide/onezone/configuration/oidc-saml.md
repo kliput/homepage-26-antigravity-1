@@ -30,8 +30,6 @@ the `auth.config` file in the volumes section.
 
 ## Table of contents
 
-[toc][]
-
 ## Quickstart
 
 By default, Onezone is packaged with a configuration that enables only [Basic authentication][],
@@ -3164,7 +3162,7 @@ required to insert the Client ID and Secret in the config.
 
 <!-- references -->
 
-[toc]: <>
+
 
 [minimal auth.config]: https://github.com/onedata/oz-worker/blob/develop/rel/files/auth.config
 

@@ -4,7 +4,9 @@ title: 'Views'
 
 # Views
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 Onedata supports creation of custom database views for indexing file metadata. They can be used for:
 

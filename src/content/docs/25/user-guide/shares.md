@@ -4,7 +4,9 @@ title: 'Shares'
 
 # Shares
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 Files in Onedata can be shared i.e. made available for unauthenticated users in
 **read-only mode**. It's achieved using **shares** — **semi-public links** that

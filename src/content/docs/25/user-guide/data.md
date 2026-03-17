@@ -4,7 +4,7 @@ title: 'Data'
 
 # Data
 
-[toc][]
+## Table of Contents
 
 ## Onedata virtual filesystem
 
@@ -442,7 +442,7 @@ You can manage the data distribution using:
 
 <!-- references -->
 
-[toc]: <>
+
 
 [file-path-and-id]: #file-path-and-id
 

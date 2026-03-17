@@ -4,7 +4,7 @@ title: 'Data transfers'
 
 # Data transfers
 
-[toc][]
+## Table of Contents
 
 ## Overview
 
@@ -127,7 +127,7 @@ function (id, type, meta, ctx) {
 
 <!-- references -->
 
-[toc]: <>
+
 
 [1]: data.md#file-distribution
 

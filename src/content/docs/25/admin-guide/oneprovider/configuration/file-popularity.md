@@ -4,7 +4,9 @@ title: 'File popularity'
 
 # File popularity
 
-[toc][]
+## Table of Contents
+
+## Overview
 
 As a prerequisite for understanding this chapter, we recommend that you familiarize
 yourself with the concept of [views][2].
@@ -164,8 +166,6 @@ Refer to the linked API documentation for detailed information and examples.
 | Update *file popularity* configuration | [API][9]    |
 
 <!-- references -->
-
-[toc]: <>
 
 [2]: ../../../../../../user-guide/views.md
 

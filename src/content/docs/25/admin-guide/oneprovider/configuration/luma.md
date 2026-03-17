@@ -4,7 +4,7 @@ title: 'Local User Mapping — LUMA'
 
 # Local User Mapping — LUMA
 
-[toc][1]
+## Table of Contents
 
 ## Overview
 

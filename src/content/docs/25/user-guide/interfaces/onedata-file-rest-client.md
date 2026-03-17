@@ -4,7 +4,7 @@ title: 'OnedataFileRestClient (Python)'
 
 # OnedataFileRestClient (Python)
 
-[toc][]
+## Table of Contents
 
 ## In a nutshell
 
@@ -33,7 +33,7 @@ For reference documentation and usage examples see the [GitHub][] page.
 
 <!-- references -->
 
-[toc]: <>
+
 
 [GitHub]: https://github.com/onedata/onedatafilerestclient
 

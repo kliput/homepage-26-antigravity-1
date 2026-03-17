@@ -4,12 +4,13 @@ title: 'Architecture'
 
 # Architecture
 
-[toc][1]
+## Table of Contents
+
+
+## Overview
 
 This section provides a high-level view of Onedata platform from the administrators'
 perspective, including a brief overview of each of the components.
-
-## Overview
 
 The following diagram shows an example Onedata deployment including all major
 functional components.

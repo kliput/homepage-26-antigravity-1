@@ -4,7 +4,7 @@ title: 'Metadata'
 
 # Metadata
 
-[toc][1]
+## Table of Contents
 
 ## Quickstart
 

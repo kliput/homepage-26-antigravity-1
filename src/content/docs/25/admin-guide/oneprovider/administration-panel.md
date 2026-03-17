@@ -4,7 +4,7 @@ title: 'Administration panel'
 
 # Administration panel
 
-[toc][]
+## Table of Contents
 
 ## Overview
 
@@ -88,7 +88,7 @@ cluster.
 
 <!-- references -->
 
-[toc]: <>
+
 
 [gui-wizard-deployment]: ./installation/graphical-wizard.md
 

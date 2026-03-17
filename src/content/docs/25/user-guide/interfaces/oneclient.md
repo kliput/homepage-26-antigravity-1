@@ -4,7 +4,9 @@ title: 'Oneclient (FUSE native mount)'
 
 # Oneclient (FUSE native mount)
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 The **Oneclient** application allows mounting your Onedata Spaces in a Linux filesystem,
 so that the data can be accessed as if it resided in the local filesystem. Oneclient is

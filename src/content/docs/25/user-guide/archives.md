@@ -4,11 +4,11 @@ title: 'Archives'
 
 # Archives
 
-[toc][]
-
-<!-- TODO VFS-11610 Add info about Datasets, Archive tab when new datasets "Tree" view will be finished -->
+## Table of Contents
 
 ## Overview
+
+<!-- TODO VFS-11610 Add info about Datasets, Archive tab when new datasets "Tree" view will be finished -->
 
 <!-- TODO VFS-11766 verify the OAIS introduction correctness -->
 
@@ -539,7 +539,7 @@ archives][] until it is not a top-most ancestor of the hierarchy.
 
 <!-- references -->
 
-[toc]: <>
+
 
 [archives list]: #browsing-archives
 

@@ -15,7 +15,9 @@ sidebar:
 
 # Spaces
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 Spaces are a fundamental concept of user data organization in Onedata. A **space**
 can be perceived as a logical container for data — a layer that hides the complexity

@@ -4,7 +4,7 @@ title: 'Web file browser'
 
 # Web file browser
 
-[toc][]
+## Table of Contents
 
 ## Introduction
 
@@ -340,7 +340,7 @@ directories, scheduling data transfers, etc.).
 
 <!-- references -->
 
-[toc]: <>
+
 
 [space]: ../../spaces.md
 

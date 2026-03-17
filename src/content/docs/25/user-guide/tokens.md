@@ -4,7 +4,9 @@ title: 'Tokens'
 
 # Tokens
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 ## Quickstart
 

@@ -4,7 +4,7 @@ title: 'Storage backends'
 
 # Storage backends
 
-[toc][1]
+## Table of Contents
 
 ## Configuration
 

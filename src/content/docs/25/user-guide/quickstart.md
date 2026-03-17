@@ -4,7 +4,9 @@ title: 'Quickstart'
 
 # Quickstart
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 ## Introduction — Onezone service
 

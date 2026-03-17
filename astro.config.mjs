@@ -6,6 +6,7 @@ import rehypeExternalLinks from "rehype-external-links";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import remarkFlexibleContainers from "remark-flexible-containers";
+import remarkToc from "remark-toc";
 import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languages.mjs";
 
@@ -26,6 +27,7 @@ export default defineConfig({
       remarkRewriteLinks,
       remarkNormalizeLanguages,
       remarkFlexibleContainers,
+      remarkToc,
     ],
     rehypePlugins: [
       rehypeSlug,

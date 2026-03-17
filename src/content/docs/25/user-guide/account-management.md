@@ -4,7 +4,9 @@ title: 'Account management'
 
 # Account management
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 To access your user profile page click on **Manage account**, while signed in.
 

@@ -4,7 +4,9 @@ title: 'OnedataFS (Python)'
 
 # OnedataFS (Python)
 
-[toc][]
+## Table of Contents
+
+## Overview
 
 OnedataFS is a Python library for accessing the Onedata virtual file system,
 an alternative to [Oneclient][] that offers a POSIX interface.
@@ -217,7 +219,7 @@ space.removexattr("file.txt", "license")
 
 <!-- references -->
 
-[toc]: <>
+
 
 [oneclient]: oneclient.md
 

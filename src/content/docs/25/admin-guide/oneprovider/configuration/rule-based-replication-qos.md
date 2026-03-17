@@ -4,7 +4,9 @@ title: 'Rule-based replication (QoS)'
 
 # Rule-based replication (QoS)
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 Quality of Service (QoS) is used to manage file [replica distribution][] and redundancy
 between [providers][] supporting a [space][].

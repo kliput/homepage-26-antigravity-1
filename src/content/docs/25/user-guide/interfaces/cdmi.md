@@ -4,7 +4,7 @@ title: 'CDMI API'
 
 # CDMI API
 
-[toc][]
+## Table of Contents
 
 ## Quickstart
 
@@ -543,7 +543,7 @@ refer to the [CDMI specification][].
 
 <!-- references -->
 
-[toc]: <>
+
 
 [usage examples]: #examples-of-usage
 

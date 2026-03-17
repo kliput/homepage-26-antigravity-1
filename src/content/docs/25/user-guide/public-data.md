@@ -4,7 +4,9 @@ title: 'Public Data'
 
 # Public Data
 
-[toc][1]
+## Table of Contents
+
+## Overview
 
 Public Data collections refer to data records that are available to the public
 without the need for authentication, yet may be associated with varying levels of licenses
