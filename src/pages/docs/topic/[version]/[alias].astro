@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import topics from "../../../../config/topics.mjs";
+import Redirect from "../../../../components/Redirect.astro";
+
+export async function getStaticPaths() {
+  const docsEntries = await getCollection("docs");
+
+  const versions = [
+    ...new Set(docsEntries.map((entry) => entry.id.split("/")[0])),
+  ].sort((a, b) => b.localeCompare(a)); // Descending versions
+
+  const paths = [];
+
+  for (const version of versions) {
+    for (const [alias, target] of Object.entries(topics)) {
+      paths.push({
+        params: { version, alias },
+        props: { targetPath: target },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { version } = Astro.params;
+const { targetPath } = Astro.props;
+
+const redirectUrl = `/docs/${version}/${targetPath}`;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <Redirect path={redirectUrl} />
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <h1>Redirecting...</h1>
+    <p>
+      <a href={redirectUrl}>Click here</a> if you are not redirected.
+    </p>
+  </body>
+</html>
