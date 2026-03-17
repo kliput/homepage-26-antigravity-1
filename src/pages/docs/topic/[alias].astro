@@ -1,4 +1,5 @@
 ---
+// FIXME: refactor, remove redundancy with topic/[version]/[alias].astro
 import { getCollection } from "astro:content";
 import topics from "../../../config/topics.mjs";
 import Redirect from "../../../components/Redirect.astro";
@@ -37,6 +38,7 @@ const redirectUrl = `/docs/topic/${latestVersion}/${alias}`;
     <meta name="robots" content="noindex" />
   </head>
   <body>
+    <!-- FIXME: make nicer redirect page -->
     <h1>Redirecting...</h1>
     <p>
       <a href={redirectUrl}>Click here</a> if you are not redirected.
