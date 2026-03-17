@@ -19,11 +19,11 @@ const { Content } = await post.render();
 ---
 
 <MainLayout title={post.data.title} description={post.data.description}>
-  <div class="container article-container">
+  <div class="article-container container">
     <a href="/publications" class="back-link">&larr; All publications</a>
 
     <div class="pub-header">
-      <div class="pub-tags text-sm mb-4">
+      <div class="pub-tags mb-4 text-sm">
         {
           post.data.journalAbbreviation && (
             <span class="tag-abbr">{post.data.journalAbbreviation}</span>
@@ -168,7 +168,7 @@ const { Content } = await post.render();
   .back-link {
     display: inline-flex;
     align-items: center;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     text-decoration: none;
     font-weight: 500;
@@ -178,7 +178,7 @@ const { Content } = await post.render();
 
   .back-link:hover {
     opacity: 1;
-    color: var(--color-primary, #e11d48);
+    color: var(--primary, #e11d48);
   }
 
   .pub-header {
@@ -196,10 +196,9 @@ const { Content } = await post.render();
 
   .tag-abbr {
     font-weight: 700;
-    background: var(--color-nav-hover);
     padding: 0.25rem 0.6rem;
     border-radius: 6px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
   }
 
   .tag-if {
@@ -207,12 +206,12 @@ const { Content } = await post.render();
     font-weight: 600;
   }
   .tag-year {
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     font-weight: 500;
   }
   .tag-doi {
-    color: var(--color-primary, #e11d48);
+    color: var(--primary, #e11d48);
     text-decoration: none;
     font-weight: 500;
   }
@@ -225,12 +224,12 @@ const { Content } = await post.render();
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 1.25rem;
-    color: var(--color-text);
+    color: var(--od-text);
   }
 
   .article-authors {
     font-size: 1.15rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.9;
     margin-bottom: 0.75rem;
     line-height: 1.5;
@@ -238,7 +237,7 @@ const { Content } = await post.render();
 
   .article-journal {
     font-size: 1.1rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     font-style: italic;
     margin-bottom: 2.5rem;
@@ -255,7 +254,7 @@ const { Content } = await post.render();
     align-items: center;
     justify-content: center;
     padding: 0.875rem 1.75rem;
-    background-color: var(--color-primary, #e11d48);
+    background-color: var(--primary, #e11d48);
     color: white;
     font-weight: 600;
     border-radius: 8px;
@@ -277,35 +276,33 @@ const { Content } = await post.render();
     justify-content: center;
     padding: 0.875rem 1.75rem;
     background-color: transparent;
-    color: var(--color-text);
+    color: var(--od-text);
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
-    border: 2px solid var(--color-border);
+    border: 2px solid var(--border);
     transition:
       background-color 0.2s,
       border-color 0.2s;
     font-size: 1rem;
   }
   .btn-outline:hover {
-    background-color: var(--color-nav-hover);
-    border-color: var(--color-text);
-    color: var(--color-text);
+    border-color: var(--od-text);
+    color: var(--od-text);
     text-decoration: none;
   }
 
   .abstract-block {
-    background-color: var(--color-nav-hover);
     border-radius: 12px;
     padding: 2.5rem;
     margin-bottom: 4rem;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
   }
 
   .abstract-heading {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.6;
     letter-spacing: 0.08em;
     margin-bottom: 1.25rem;
@@ -314,7 +311,7 @@ const { Content } = await post.render();
 
   .abstract-text {
     line-height: 1.8;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.9;
     font-size: 1.05rem;
   }
@@ -332,16 +329,15 @@ const { Content } = await post.render();
   }
 
   .citation-block {
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
-    background-color: var(--color-bg);
+    background-color: var(--od-bg);
   }
 
   .citation-tabs {
     display: flex;
-    background-color: var(--color-nav-hover);
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--border);
     padding: 0;
   }
 
@@ -349,7 +345,7 @@ const { Content } = await post.render();
     padding: 1rem 1.5rem;
     background: none;
     border: none;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.6;
     font-weight: 600;
     cursor: pointer;
@@ -369,9 +365,9 @@ const { Content } = await post.render();
 
   .tab-btn.active {
     opacity: 1;
-    color: var(--color-primary, #e11d48);
-    border-bottom-color: var(--color-primary, #e11d48);
-    background-color: var(--color-bg);
+    color: var(--primary, #e11d48);
+    border-bottom-color: var(--primary, #e11d48);
+    background-color: var(--od-bg);
   }
 
   .spacer {
@@ -385,7 +381,7 @@ const { Content } = await post.render();
     padding: 0 1.25rem;
     background: none;
     border: none;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     cursor: pointer;
     font-weight: 600;
@@ -397,11 +393,11 @@ const { Content } = await post.render();
 
   .copy-btn:hover {
     opacity: 1;
-    color: var(--color-primary, #e11d48);
+    color: var(--primary, #e11d48);
   }
 
   .citation-content {
-    background-color: var(--color-bg);
+    background-color: var(--od-bg);
   }
 
   .tab-content {
@@ -412,7 +408,7 @@ const { Content } = await post.render();
     word-break: break-all;
     font-family: var(--font-family-mono);
     font-size: 0.9rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.9;
     line-height: 1.6;
   }
@@ -425,7 +421,7 @@ const { Content } = await post.render();
     margin-top: 3rem;
     line-height: 1.8;
     font-size: 1.1rem;
-    color: var(--color-text);
+    color: var(--od-text);
   }
 </style>
 

@@ -81,7 +81,7 @@ const {
 
   .feature-hero {
     padding: 4rem 1rem 3rem;
-    background-color: var(--color-bg);
+    background-color: var(--od-bg);
   }
 
   .max-w-4xl {
@@ -93,7 +93,7 @@ const {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.5;
     font-size: 0.875rem;
     text-decoration: none;
@@ -142,13 +142,13 @@ const {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
     margin-bottom: 1.25rem;
-    color: var(--color-text);
+    color: var(--od-text);
     line-height: 1.2;
   }
 
   .feature-desc {
     font-size: 1.125rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     line-height: 1.7;
     max-width: 40rem;
@@ -157,12 +157,13 @@ const {
 
   .feature-content {
     padding: 3rem 1rem 6rem;
-    background-color: var(--color-bg);
+    background-color: var(--od-bg);
   }
 
   .content-card {
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
+    background-color: var(--od-bg);
+    /* FIXME: refaktor: 1px solid var(--border) do osobnej zmiennej? */
+    border: 1px solid var(--border);
     border-radius: 1rem;
     padding: 2rem;
     overflow: hidden;
@@ -180,7 +181,7 @@ const {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--color-text);
+    color: var(--od-text);
   }
 
   .benefits-list {
@@ -195,13 +196,13 @@ const {
   .benefit-item {
     display: flex;
     gap: 0.75rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.75;
     align-items: flex-start;
   }
 
   .benefit-dot {
-    color: var(--color-primary, #e11d48);
+    color: var(--primary, #e11d48);
     font-weight: 700;
     flex-shrink: 0;
   }

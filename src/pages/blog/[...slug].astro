@@ -25,7 +25,7 @@ const { Content } = await entry.render();
       <div class="post-content od-card">
         {
           entry.data.image && (
-            <div class="post-image card-image mb-8">
+            <div class="post-image card-image mb-8 rounded-xl">
               <img src={entry.data.image} alt={entry.data.title} />
             </div>
           )
@@ -49,7 +49,7 @@ const { Content } = await entry.render();
             <div class="time-meta flex items-center gap-2">
               <Calendar class="h-4 w-4" />
               <time
-                class="text-muted text-xs"
+                class="text-xs text-muted"
                 datetime={entry.data.date.toISOString()}
               >
                 {
@@ -72,7 +72,7 @@ const { Content } = await entry.render();
           entry.data.citationBibtex && (
             <>
               <h2>Citation</h2>
-              <pre class="citation">{entry.data.citationBibtex}</pre>
+              <pre class="citation rounded-xl">{entry.data.citationBibtex}</pre>
             </>
           )
         }
@@ -95,7 +95,7 @@ const { Content } = await entry.render();
   }
 
   .post-image {
-    border-radius: var(--small-card-border-radius);
+    /* border-radius: var(--radius-lg); */
     height: 24rem;
   }
 
@@ -104,14 +104,14 @@ const { Content } = await entry.render();
     align-items: center;
     gap: 0.4rem;
     margin-bottom: 2rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     font-weight: 500;
     font-size: 0.95rem;
   }
 
   .back-link:hover {
-    color: var(--color-primary);
+    color: var(--primary);
     opacity: 1;
     text-decoration: none;
   }
@@ -121,7 +121,7 @@ const { Content } = await entry.render();
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.8;
   } */
 
@@ -143,7 +143,7 @@ const { Content } = await entry.render();
   .post-content {
     font-size: 1.125rem;
     line-height: 1.7;
-    color: var(--color-text);
+    color: var(--od-text);
   }
 
   .post-content h1,
@@ -168,7 +168,7 @@ const { Content } = await entry.render();
   }
 
   .post-content a {
-    color: var(--color-primary);
+    color: var(--primary);
   }
 
   .post-content ul,
@@ -185,7 +185,6 @@ const { Content } = await entry.render();
     background-color: #1e1e1e;
     color: #d4d4d4;
     padding: 1.25rem;
-    border-radius: var(--small-card-border-radius);
     overflow-x: auto;
     margin-bottom: 1.5rem;
     font-size: 0.95rem;
@@ -193,7 +192,6 @@ const { Content } = await entry.render();
 
   .post-content code {
     font-family: var(--font-family-mono);
-    background-color: var(--color-nav-hover);
     padding: 0.2em 0.4em;
     border-radius: 3px;
     font-size: 0.9em;
@@ -205,7 +203,7 @@ const { Content } = await entry.render();
   }
 
   .post-content blockquote {
-    border-left: 4px solid var(--color-primary);
+    border-left: 4px solid var(--primary);
     padding-left: 1.5rem;
     margin-left: 0;
     margin-right: 0;
@@ -222,7 +220,6 @@ const { Content } = await entry.render();
     border-color: var(--od-border);
     color: var(--od-text-muted);
     padding: 1.25rem;
-    border-radius: var(--small-card-border-radius);
     font-family: var(--font-family-mono);
     white-space: pre-wrap;
   }

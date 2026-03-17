@@ -29,7 +29,7 @@ const steps = [
 
 <section id="how-it-works" class="how-it-works-section">
   <div class="container max-w-5xl">
-    <div class="text-center mb-16">
+    <div class="mb-16 text-center">
       <div class="how-pill">HOW IT WORKS</div>
       <h2 class="how-title">
         From setup to pipeline <span class="gradient-text">in minutes</span>
@@ -70,7 +70,7 @@ const steps = [
 <style>
   .how-it-works-section {
     padding: 6rem 1rem;
-    background-color: var(--color-bg-2);
+    background-color: var(--od-bg-2);
   }
 
   .max-w-5xl {
@@ -89,8 +89,8 @@ const steps = [
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
+    border: 1px solid var(--border);
+    color: var(--od-text);
     opacity: 0.7;
     font-size: 0.75rem;
     padding: 0.5rem 1rem;
@@ -104,7 +104,7 @@ const steps = [
     font-size: 2.25rem;
     font-weight: 800;
     margin-bottom: 1rem;
-    color: var(--color-text);
+    color: var(--od-text);
     line-height: 1.2;
   }
 
@@ -115,11 +115,7 @@ const steps = [
   }
 
   .gradient-text {
-    background: linear-gradient(
-      to right,
-      var(--color-primary, #e11d48),
-      #f43f5e
-    );
+    background: linear-gradient(to right, var(--primary, #e11d48), #f43f5e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -131,7 +127,7 @@ const steps = [
   }
 
   .how-subtitle {
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     max-width: 36rem;
     margin: 0 auto;
@@ -154,7 +150,7 @@ const steps = [
     transform: translateX(-50%);
     background: linear-gradient(
       to bottom,
-      var(--color-primary, #e11d48),
+      var(--primary, #e11d48),
       transparent
     );
     opacity: 0.3;
@@ -211,7 +207,7 @@ const steps = [
       width: 1rem;
       height: 1rem;
       border-radius: 50%;
-      background-color: var(--color-primary, #e11d48);
+      background-color: var(--primary, #e11d48);
       flex-shrink: 0;
       box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.2);
     }
@@ -231,7 +227,7 @@ const steps = [
     font-family: var(--font-family-mono);
     font-size: 0.875rem;
     font-weight: 700;
-    color: var(--color-primary, #e11d48);
+    color: var(--primary, #e11d48);
     margin-bottom: 0.5rem;
   }
 
@@ -240,14 +236,14 @@ const steps = [
   }
 
   .step-title {
-    color: var(--color-text);
+    color: var(--od-text);
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
   }
 
   .step-desc {
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     font-size: 0.875rem;
     line-height: 1.7;

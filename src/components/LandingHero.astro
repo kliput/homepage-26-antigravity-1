@@ -1,5 +1,6 @@
 ---
 import { ArrowRight, ChevronDown } from "@lucide/astro";
+import PulseDot from "./PulseDot.astro";
 ---
 
 <section class="hero-section">
@@ -11,8 +12,10 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
 
   <!-- Hero content — centered -->
   <div class="hero-content">
-    <div class="hero-pill">
-      <span class="pulse-dot"></span>
+    <div
+      class="hero-pill mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs"
+    >
+      <PulseDot />
       Open-source &middot; Trusted by 100+ research institutions worldwide
     </div>
 
@@ -48,7 +51,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     </div>
 
     <a href="/docs#ver-25-0" class="release-pill">
-      <span class="pulse-dot"></span>
+      <PulseDot />
       Latest release — v25.0
       <svg
         class="release-arrow"
@@ -79,7 +82,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     justify-content: center;
     overflow: hidden;
     padding: 4rem 1.5rem;
-    background-color: var(--color-bg);
+    background-color: var(--od-bg);
     text-align: center;
   }
 
@@ -125,11 +128,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(
-      circle,
-      var(--color-primary, #e11d48),
-      transparent
-    );
+    background: radial-gradient(circle, var(--primary, #e11d48), transparent);
     opacity: 0.1;
     filter: blur(60px);
   }
@@ -151,48 +150,9 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
 
   /* === Pill === */
   .hero-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid var(--color-border);
-    background-color: var(--color-nav-hover);
-    color: var(--color-text);
-    padding: 0.5rem 1.25rem;
-    border-radius: 9999px;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    opacity: 0.9;
-  }
-
-  .pulse-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    background-color: var(--color-primary, #e11d48);
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .pulse-dot::after {
-    content: "";
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    background-color: var(--color-primary, #e11d48);
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    z-index: -1;
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0;
-      transform: scale(1.8);
-    }
+    border: 1px solid var(--od-glow-strong);
+    color: var(--od-accent-3);
+    background: var(--od-glow);
   }
 
   /* === Title === */
@@ -201,16 +161,12 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: -0.025em;
-    color: var(--color-text);
+    color: var(--od-text);
     margin: 0;
   }
 
   .gradient-text {
-    background: linear-gradient(
-      to right,
-      var(--color-primary, #e11d48),
-      #f43f5e
-    );
+    background: linear-gradient(to right, var(--primary, #e11d48), #f43f5e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -225,7 +181,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
   /* === Subtitle === */
   .hero-subtitle {
     font-size: clamp(1rem, 2.5vw, 1.2rem);
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.7;
     max-width: 38rem;
     line-height: 1.7;
@@ -253,7 +209,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 2rem;
-    background: linear-gradient(135deg, var(--color-primary, #e11d48), #be123c);
+    background: linear-gradient(135deg, var(--primary, #e11d48), #be123c);
     color: #fff;
     font-weight: 600;
     font-size: 1rem;
@@ -279,12 +235,12 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.75rem;
-    color: var(--color-text);
+    color: var(--od-text);
     font-weight: 500;
     font-size: 0.9375rem;
     border-radius: 0.75rem;
     text-decoration: none;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--border);
     transition:
       border-color 0.2s,
       background-color 0.2s,
@@ -293,8 +249,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
   }
 
   .btn-secondary:hover {
-    border-color: var(--color-text);
-    background-color: var(--color-nav-hover);
+    border-color: var(--od-text);
     text-decoration: none;
   }
 
@@ -318,10 +273,10 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
     padding: 0.4375rem 1.125rem;
     border-radius: 9999px;
     border: 1px solid
-      color-mix(in srgb, var(--color-primary, #e11d48) 40%, transparent);
+      color-mix(in srgb, var(--primary, #e11d48) 40%, transparent);
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-primary, #e11d48);
+    color: var(--primary, #e11d48);
     text-decoration: none;
     transition: background-color 0.2s;
   }
@@ -329,7 +284,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
   .release-pill:hover {
     background-color: color-mix(
       in srgb,
-      var(--color-primary, #e11d48) 8%,
+      var(--primary, #e11d48) 8%,
       transparent
     );
     text-decoration: none;
@@ -354,7 +309,7 @@ import { ArrowRight, ChevronDown } from "@lucide/astro";
   .scroll-icon {
     width: 1.5rem;
     height: 1.5rem;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.4;
   }
 

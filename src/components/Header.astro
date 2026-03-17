@@ -11,7 +11,7 @@ import Logo from "./Logo.astro";
     <nav class="main-nav">
       <ul class="nav-list">
         <!-- TODO: Enable features, how it works, and use cases -->
-        <!-- <li class="nav-item has-dropdown">
+        <li class="nav-item has-dropdown">
           <span class="nav-link"
             >Features <svg
               class="chevron"
@@ -181,7 +181,7 @@ import Logo from "./Logo.astro";
         <li class="nav-item">
           <a class="nav-link" href="/how-it-works">How it works</a>
         </li>
-        <li class="nav-item has-dropdown use-cases-nav">
+        <!-- <li class="nav-item has-dropdown use-cases-nav">
           <span class="nav-link"
             >Use cases <svg
               class="chevron"
@@ -562,8 +562,8 @@ import Logo from "./Logo.astro";
   }
 
   .rich-item:hover {
-    background: var(--od-bg-2, var(--color-nav-hover));
-    color: var(--od-text, var(--color-text));
+    background: var(--od-bg-2);
+    color: var(--od-text);
     text-decoration: none;
   }
 
@@ -584,7 +584,7 @@ import Logo from "./Logo.astro";
   .rich-title {
     font-size: 0.8125rem;
     font-weight: 600;
-    color: var(--od-text, var(--color-text));
+    color: var(--od-text, var(--od-text));
     line-height: 1.3;
   }
 
@@ -660,8 +660,8 @@ import Logo from "./Logo.astro";
   }
 
   .theme-toggle:hover {
-    background-color: var(--color-nav-hover);
-    color: var(--color-primary);
+    background-color: var(--od-bg-2);
+    color: var(--primary);
   }
 
   /* Theme toggle SVG display logic */

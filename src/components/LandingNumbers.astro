@@ -8,23 +8,25 @@ const stats = [
 ---
 
 <section class="stats-section border-y border-opacity-10 py-16">
-  <div class="container border-color">
+  <div class="border-color container">
     <div class="stats-grid">
-      {stats.map((stat) => (
-        <div class="stat-card">
-          <div class="stat-value">{stat.value}</div>
-          <div class="stat-label">{stat.label}</div>
-        </div>
-      ))}
+      {
+        stats.map((stat) => (
+          <div class="stat-card">
+            <div class="stat-value">{stat.value}</div>
+            <div class="stat-label">{stat.label}</div>
+          </div>
+        ))
+      }
     </div>
   </div>
 </section>
 
 <style>
   .stats-section {
-    background-color: var(--color-bg);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
+    background-color: var(--od-bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
     padding: 4rem 0;
   }
 
@@ -34,7 +36,7 @@ const stats = [
     gap: 2rem;
     text-align: center;
   }
-  
+
   @media (min-width: 768px) {
     .stats-grid {
       grid-template-columns: repeat(4, 1fr);
@@ -52,14 +54,14 @@ const stats = [
   .stat-value {
     font-size: 3rem;
     font-weight: 800;
-    background: linear-gradient(to right, var(--color-primary, #e11d48), #ea580c);
+    background: linear-gradient(to right, var(--primary, #e11d48), #ea580c);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1;
     margin-bottom: 0.5rem;
   }
-  
+
   html[data-theme="dark"] .stat-value {
     background: linear-gradient(to right, #fb7185, #fb923c);
     -webkit-background-clip: text;
@@ -68,7 +70,7 @@ const stats = [
   .stat-label {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.8;
   }
 </style>

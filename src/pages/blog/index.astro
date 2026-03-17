@@ -1,8 +1,8 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';
-import { getCollection } from 'astro:content';
+import MainLayout from "../../layouts/MainLayout.astro";
+import { getCollection } from "astro:content";
 
-const allPosts = await getCollection('blog');
+const allPosts = await getCollection("blog");
 const sortedPosts = allPosts.sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
@@ -26,13 +26,13 @@ const INITIAL_POSTS_TO_SHOW = 6;
     </div>
   </div>
 
-  <div class="container blog-content">
+  <div class="blog-content container">
     {
       featuredPost && (
         <section class="featured-post">
           <a
             href={`/blog/${featuredPost.slug}`}
-            class="post-card featured-card"
+            class="post-card featured-card rounded-xl"
           >
             {featuredPost.data.image && (
               <div class="card-image featured-image">
@@ -45,10 +45,10 @@ const INITIAL_POSTS_TO_SHOW = 6;
             <div class="card-content">
               <div class="post-meta">
                 <time datetime={featuredPost.data.date.toISOString()}>
-                  {featuredPost.data.date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
+                  {featuredPost.data.date.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
                   })}
                 </time>
                 {featuredPost.data.tags && (
@@ -76,7 +76,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
             {recentPosts.map((post, index) => (
               <a
                 href={`/blog/${post.slug}`}
-                class={`post-card recent-card ${index >= INITIAL_POSTS_TO_SHOW ? 'hidden-post' : ''}`}
+                class={`post-card recent-card ${index >= INITIAL_POSTS_TO_SHOW ? "hidden-post" : ""}`}
               >
                 {post.data.image && (
                   <div class="card-image recent-image">
@@ -86,10 +86,10 @@ const INITIAL_POSTS_TO_SHOW = 6;
                 <div class="card-content">
                   <div class="post-meta">
                     <time datetime={post.data.date.toISOString()}>
-                      {post.data.date.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
+                      {post.data.date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
                       })}
                     </time>
                     {post.data.tags && (
@@ -125,7 +125,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
   .blog-header-section {
     padding: 4rem 0 2rem;
     text-align: center;
-    background-color: var(--color-bg);
+    background-color: var(--od-bg);
   }
 
   .blog-title {
@@ -137,7 +137,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
   .blog-subtitle {
     font-size: 1.15rem;
     font-weight: 400;
-    color: var(--color-text);
+    color: var(--od-text);
     opacity: 0.8;
     max-width: 800px;
     margin: 0 auto;
@@ -149,25 +149,24 @@ const INITIAL_POSTS_TO_SHOW = 6;
 
   .post-card {
     display: block;
-    border: 1px solid var(--color-border);
-    border-radius: var(--small-card-border-radius);
-    background-color: var(--color-bg);
+    border: 1px solid var(--border);
+    background-color: var(--od-bg);
     transition:
       transform 0.2s,
       box-shadow 0.2s,
       border-color 0.2s;
     overflow: hidden;
-    color: var(--color-text);
+    color: var(--od-text);
   }
 
   .post-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
-    border-color: var(--color-primary);
+    border-color: var(--primary);
     text-decoration: none;
   }
 
-  html[data-theme='dark'] .post-card:hover {
+  html[data-theme="dark"] .post-card:hover {
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
   }
 
@@ -236,7 +235,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
 
   .read-more {
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--primary);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -256,7 +255,7 @@ const INITIAL_POSTS_TO_SHOW = 6;
     font-weight: 700;
     margin-bottom: 2rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--border);
   }
 
   .recent-grid {
@@ -288,8 +287,8 @@ const INITIAL_POSTS_TO_SHOW = 6;
 
   .btn-outline {
     background-color: transparent;
-    color: var(--color-text);
-    border: 2px solid var(--color-border);
+    color: var(--od-text);
+    border: 2px solid var(--border);
     padding: 0.875rem 2rem;
     font-size: 1rem;
     font-weight: 600;
@@ -299,24 +298,24 @@ const INITIAL_POSTS_TO_SHOW = 6;
   }
 
   .btn-outline:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: var(--primary);
+    color: var(--primary);
   }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const loadMoreBtn = document.getElementById('load-more-btn');
+  document.addEventListener("DOMContentLoaded", () => {
+    const loadMoreBtn = document.getElementById("load-more-btn");
     if (loadMoreBtn) {
-      loadMoreBtn.addEventListener('click', () => {
-        const hiddenPosts = document.querySelectorAll('.hidden-post');
+      loadMoreBtn.addEventListener("click", () => {
+        const hiddenPosts = document.querySelectorAll(".hidden-post");
         for (let i = 0; i < Math.min(6, hiddenPosts.length); i++) {
-          hiddenPosts[i].classList.remove('hidden-post');
+          hiddenPosts[i].classList.remove("hidden-post");
         }
 
         // Hide button if no more hidden posts
-        if (document.querySelectorAll('.hidden-post').length === 0) {
-          loadMoreBtn.style.display = 'none';
+        if (document.querySelectorAll(".hidden-post").length === 0) {
+          loadMoreBtn.style.display = "none";
         }
       });
     }
