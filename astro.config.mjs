@@ -5,6 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import rehypeExternalLinks from "rehype-external-links";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import remarkFlexibleContainers from "remark-flexible-containers";
 import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languages.mjs";
 
@@ -21,7 +22,11 @@ export default defineConfig({
   },
 
   markdown: {
-    remarkPlugins: [remarkRewriteLinks, remarkNormalizeLanguages],
+    remarkPlugins: [
+      remarkRewriteLinks,
+      remarkNormalizeLanguages,
+      remarkFlexibleContainers,
+    ],
     rehypePlugins: [
       rehypeSlug,
       [

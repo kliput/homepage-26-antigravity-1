@@ -1,0 +1,106 @@
+/* === Markdown Containers (VuePress style) === */
+
+.remark-container {
+  @apply relative my-6 overflow-hidden rounded-xl border-l-[6px] px-6 py-4 text-[0.95rem] leading-relaxed;
+}
+
+.remark-container > :first-child {
+  @apply mt-0;
+}
+
+.remark-container > :last-child {
+  @apply mb-0;
+}
+
+.remark-container-title {
+  @apply mb-2 text-base font-bold uppercase tracking-wide;
+}
+
+/* Tip Container */
+.remark-container.tip {
+  @apply border-emerald-500 bg-emerald-50/50 text-emerald-900;
+}
+[data-theme="dark"] .remark-container.tip {
+  @apply border-emerald-500 bg-emerald-950/30 text-emerald-100;
+}
+.remark-container-title.tip {
+  @apply text-emerald-600;
+}
+[data-theme="dark"] .remark-container-title.tip {
+  @apply text-emerald-400;
+}
+
+/* Note Container */
+.remark-container.note {
+  @apply border-blue-500 bg-blue-50/50 text-blue-900;
+}
+[data-theme="dark"] .remark-container.note {
+  @apply border-blue-500 bg-blue-950/30 text-blue-100;
+}
+.remark-container-title.note {
+  @apply text-blue-600;
+}
+[data-theme="dark"] .remark-container-title.note {
+  @apply text-blue-400;
+}
+
+/* Info Container */
+.remark-container.info {
+  @apply border-sky-500 bg-sky-50/50 text-sky-900;
+}
+[data-theme="dark"] .remark-container.info {
+  @apply border-sky-500 bg-sky-950/30 text-sky-100;
+}
+.remark-container-title.info {
+  @apply text-sky-600;
+}
+[data-theme="dark"] .remark-container-title.info {
+  @apply text-sky-400;
+}
+
+/* Warning Container */
+.remark-container.warning {
+  @apply border-amber-500 bg-amber-50/50 text-amber-900;
+}
+[data-theme="dark"] .remark-container.warning {
+  @apply border-amber-500 bg-amber-950/30 text-amber-100;
+}
+.remark-container-title.warning {
+  @apply text-amber-600;
+}
+[data-theme="dark"] .remark-container-title.warning {
+  @apply text-amber-500;
+}
+
+/* Danger Container */
+.remark-container.danger {
+  @apply border-rose-500 bg-rose-50/50 text-rose-900;
+}
+[data-theme="dark"] .remark-container.danger {
+  @apply border-rose-500 bg-rose-950/30 text-rose-100;
+}
+.remark-container-title.danger {
+  @apply text-rose-600;
+}
+[data-theme="dark"] .remark-container-title.danger {
+  @apply text-rose-400;
+}
+
+/* Details Container */
+.remark-container.details {
+  @apply border-gray-400 bg-gray-50/50 p-0 text-gray-800;
+}
+[data-theme="dark"] .remark-container.details {
+  @apply border-gray-600 bg-gray-900/30 text-gray-200;
+}
+
+.remark-container.details > summary {
+  @apply cursor-pointer select-none px-6 py-4 font-bold outline-none transition-colors hover:bg-black/5;
+}
+[data-theme="dark"] .remark-container.details > summary {
+  @apply hover:bg-white/5;
+}
+
+.remark-container.details > .remark-container-content {
+  @apply px-6 pb-4 pt-1;
+}

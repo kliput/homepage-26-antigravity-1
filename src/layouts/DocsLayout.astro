@@ -1,4 +1,5 @@
 ---
+import "../styles/markdown-containers.css";
 import DocsVersionSelect from "../components/DocsVersionSelect.astro";
 import MainLayout from "./MainLayout.astro";
 import {
@@ -200,7 +201,7 @@ function renderSidebarNode(node: any, currentPath: string) {
       const hash = window.location.hash;
       const anchorLinks = document.querySelectorAll(".anchor-link");
       if (!anchorLinks.length) return;
-      
+
       anchorLinks.forEach((el) => {
         const link = el as HTMLAnchorElement;
         link.classList.remove("active");

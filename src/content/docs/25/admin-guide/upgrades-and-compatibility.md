@@ -52,7 +52,8 @@ calendar, were constructed the different way:
   emphasize subsequent versions compatibility,
 * `rc`, `beta`, and `alpha` labels did not contain a dot before their number, e.g,
 * `21.02.rc-2`.
-  :::
+
+:::
 
 ## Compatibility
 
