@@ -21,7 +21,11 @@ export async function getStaticPaths() {
       const parts = idWithoutExt.split("/");
       const version = parts[0];
       const chapter = parts[1];
-      const innerSlug = parts.slice(2).join("/");
+      let docPartsSlug = parts.slice(2);
+      if (docPartsSlug[docPartsSlug.length - 1] === "index") {
+        docPartsSlug.pop();
+      }
+      const innerSlug = docPartsSlug.length > 0 ? docPartsSlug.join("/") : undefined;
 
       // Create nested tree for sidebar for this version + chapter
       // Filter out non-content files (like -sidebar.yaml)
@@ -53,11 +57,14 @@ export async function getStaticPaths() {
             // Check if it belongs to this subtree
             if (currentRelParts.every((p, i) => p === docParts[i])) {
               const part = docParts[docParts.length - 1];
+              const isIndex = part === "index";
+              const slugParts = isIndex ? docParts.slice(0, -1) : docParts;
+              const hrefPath = slugParts.length > 0 ? `/${slugParts.join("/")}` : "";
               tree.push({
                 id: part,
                 type: "file",
                 label: doc.data.title || part,
-                href: `/docs/${version}/${chapter}/${docParts.join("/")}`,
+                href: `/docs/${version}/${chapter}${hrefPath}`,
               });
             }
           } else if (docParts.length > currentRelParts.length + 1) {
@@ -107,13 +114,17 @@ export async function getStaticPaths() {
                 // Assuming there is exactly one main document we want to extract headings from.
                 // For safety, we take the one that matches the directory name or just the first doc.
                 const targetDoc =
-                  docs.find((d) => d.id.endsWith("glossary.md")) || docs[0];
+                  docs.find((d) => d.id.endsWith("index.md")) || docs[0];
                 if (targetDoc) {
-                  const docParts = targetDoc.id
+                  const docPartsTemp = targetDoc.id
                     .replace(/\.md$/, "")
                     .split("/")
                     .slice(2);
-                  const docHref = `/docs/${version}/${chapter}/${docParts.join("/")}`;
+                  if (docPartsTemp[docPartsTemp.length - 1] === "index") {
+                    docPartsTemp.pop();
+                  }
+                  const hrefPath = docPartsTemp.length > 0 ? `/${docPartsTemp.join("/")}` : "";
+                  const docHref = `/docs/${version}/${chapter}${hrefPath}`;
                   const { headings } = await targetDoc.render();
 
                   // Clear the tree of the single file and overwrite with headings
