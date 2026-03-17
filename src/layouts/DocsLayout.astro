@@ -41,6 +41,9 @@ const { title, version, availableVersions, activeChapter, sidebarNodes } =
 
 // Helper to render sidebar recursively
 function renderSidebarNode(node: any, currentPath: string) {
+  if (node.type === "anchor") {
+    return `<li><a href="${node.href}" class="anchor-link">${node.label}</a></li>`;
+  }
   if (node.type === "file") {
     const isActive =
       Astro.url.pathname === node.href ||
@@ -191,5 +194,25 @@ function renderSidebarNode(node: any, currentPath: string) {
         });
       }
     });
+
+    // Update active anchor link on hash change
+    function updateActiveAnchor() {
+      const hash = window.location.hash;
+      const anchorLinks = document.querySelectorAll(".anchor-link");
+      if (!anchorLinks.length) return;
+      
+      anchorLinks.forEach((el) => {
+        const link = el as HTMLAnchorElement;
+        link.classList.remove("active");
+        if (hash && link.hash === hash) {
+          link.classList.add("active");
+        } else if (!hash && link === anchorLinks[0]) {
+          link.classList.add("active");
+        }
+      });
+    }
+
+    window.addEventListener("hashchange", updateActiveAnchor);
+    updateActiveAnchor();
   });
 </script>

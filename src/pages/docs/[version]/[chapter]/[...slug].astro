@@ -14,176 +14,214 @@ export async function getStaticPaths() {
   ].sort((a, b) => b.localeCompare(a)); // Descending versions
 
   // Build paths for each entry
-  const paths = docsEntries.map((entry) => {
-    // entry.id is like '25.0/Introduction/overview.md'
-    const idWithoutExt = entry.id.replace(/\.md$/, "");
-    const parts = idWithoutExt.split("/");
-    const version = parts[0];
-    const chapter = parts[1];
-    const innerSlug = parts.slice(2).join("/");
+  const paths = await Promise.all(
+    docsEntries.map(async (entry) => {
+      // entry.id is like '25.0/Introduction/overview.md'
+      const idWithoutExt = entry.id.replace(/\.md$/, "");
+      const parts = idWithoutExt.split("/");
+      const version = parts[0];
+      const chapter = parts[1];
+      const innerSlug = parts.slice(2).join("/");
 
-    // Create nested tree for sidebar for this version + chapter
-    // Filter out non-content files (like -sidebar.yaml)
-    const relevantDocs = docsEntries.filter(
-      (e) =>
-        e.id.startsWith(`${version}/${chapter}/`) &&
-        (e.id.endsWith(".md") || e.id.endsWith(".mdx")),
-    );
-
-    // Tree builder with config support
-    function buildTree(
-      docs: any[],
-      basePath: string,
-      currentRelPath: string = "",
-    ) {
-      const tree: any[] = [];
-      const dirsMap: Map<string, any[]> = new Map();
-
-      // Collect direct children
-      docs.forEach((doc: any) => {
-        const docIdWithoutExt = doc.id.replace(/\.md$/, "");
-        const docParts = docIdWithoutExt.split("/").slice(2); // Skip version/chapter
-
-        // Match only items at current level
-        const currentRelParts = currentRelPath ? currentRelPath.split("/") : [];
-        if (docParts.length === currentRelParts.length + 1) {
-          // Check if it belongs to this subtree
-          if (currentRelParts.every((p, i) => p === docParts[i])) {
-            const part = docParts[docParts.length - 1];
-            tree.push({
-              id: part,
-              type: "file",
-              label: doc.data.title || part,
-              href: `/docs/${version}/${chapter}/${docParts.join("/")}`,
-            });
-          }
-        } else if (docParts.length > currentRelParts.length + 1) {
-          // Subdirectory item
-          if (currentRelParts.every((p, i) => p === docParts[i])) {
-            const dirName = docParts[currentRelParts.length];
-            if (!dirsMap.has(dirName)) {
-              dirsMap.set(dirName, []);
-            }
-            dirsMap.get(dirName)!.push(doc);
-          }
-        }
-      });
-
-      // Process subdirectories
-      dirsMap.forEach((subDocs, dirName) => {
-        const subRelPath = currentRelPath
-          ? `${currentRelPath}/${dirName}`
-          : dirName;
-        tree.push({
-          id: dirName,
-          type: "dir",
-          label: dirName, // Default, will be overridden by config
-          children: buildTree(subDocs, basePath, subRelPath),
-        });
-      });
-
-      // Apply -sidebar.yaml configuration
-      const configPath = path.join(
-        process.cwd(),
-        "src/content/docs",
-        version,
-        chapter,
-        currentRelPath,
-        "-sidebar.yaml",
+      // Create nested tree for sidebar for this version + chapter
+      // Filter out non-content files (like -sidebar.yaml)
+      const relevantDocs = docsEntries.filter(
+        (e) =>
+          e.id.startsWith(`${version}/${chapter}/`) &&
+          (e.id.endsWith(".md") || e.id.endsWith(".mdx")),
       );
 
-      if (fs.existsSync(configPath)) {
-        try {
-          const config = yaml.load(fs.readFileSync(configPath, "utf8")) as any;
+      // Tree builder with config support
+      async function buildTree(
+        docs: any[],
+        basePath: string,
+        currentRelPath: string = "",
+      ) {
+        const tree: any[] = [];
+        const dirsMap: Map<string, any[]> = new Map();
 
-          if (config && typeof config === "object") {
-            // Apply order and titles
-            if (config.order && Array.isArray(config.order)) {
-              tree.sort((a, b) => {
-                const indexA = config.order.indexOf(a.id);
-                const indexB = config.order.indexOf(b.id);
+        // Collect direct children
+        docs.forEach((doc: any) => {
+          const docIdWithoutExt = doc.id.replace(/\.md$/, "");
+          const docParts = docIdWithoutExt.split("/").slice(2); // Skip version/chapter
 
-                if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-                if (indexA !== -1) return -1;
-                if (indexB !== -1) return 1;
-                return a.label.localeCompare(b.label);
+          // Match only items at current level
+          const currentRelParts = currentRelPath
+            ? currentRelPath.split("/")
+            : [];
+          if (docParts.length === currentRelParts.length + 1) {
+            // Check if it belongs to this subtree
+            if (currentRelParts.every((p, i) => p === docParts[i])) {
+              const part = docParts[docParts.length - 1];
+              tree.push({
+                id: part,
+                type: "file",
+                label: doc.data.title || part,
+                href: `/docs/${version}/${chapter}/${docParts.join("/")}`,
               });
-            } else {
-              // Default sort
-              tree.sort((a, b) => a.label.localeCompare(b.label));
             }
-
-            // Apply hidden items
-            if (config.hidden && Array.isArray(config.hidden)) {
-              const hiddenSet = new Set(config.hidden);
-              const filteredTree = tree.filter((node) => !hiddenSet.has(node.id));
-              // Modify tree in-place
-              tree.length = 0;
-              tree.push(...filteredTree);
+          } else if (docParts.length > currentRelParts.length + 1) {
+            // Subdirectory item
+            if (currentRelParts.every((p, i) => p === docParts[i])) {
+              const dirName = docParts[currentRelParts.length];
+              if (!dirsMap.has(dirName)) {
+                dirsMap.set(dirName, []);
+              }
+              dirsMap.get(dirName)!.push(doc);
             }
           }
-        } catch (e) {
-          console.error(`Error parsing -sidebar.yaml at ${configPath}:`, e);
+        });
+
+        // Process subdirectories
+        for (const [dirName, subDocs] of dirsMap) {
+          const subRelPath = currentRelPath
+            ? `${currentRelPath}/${dirName}`
+            : dirName;
+          tree.push({
+            id: dirName,
+            type: "dir",
+            label: dirName, // Default, will be overridden by config
+            children: await buildTree(subDocs, basePath, subRelPath),
+          });
         }
-      } else {
-        // Default sort if no config
-        tree.sort((a, b) => a.label.localeCompare(b.label));
+
+        // Apply -sidebar.yaml configuration
+        const configPath = path.join(
+          process.cwd(),
+          "src/content/docs",
+          version,
+          chapter,
+          currentRelPath,
+          "-sidebar.yaml",
+        );
+
+        if (fs.existsSync(configPath)) {
+          try {
+            const config = yaml.load(
+              fs.readFileSync(configPath, "utf8"),
+            ) as any;
+
+            if (config && typeof config === "object") {
+              // Check if this chapter specifies that we should extract headings as sidebar items
+              if (config.headingsAsSidebar && docs.length > 0) {
+                // Assuming there is exactly one main document we want to extract headings from.
+                // For safety, we take the one that matches the directory name or just the first doc.
+                const targetDoc =
+                  docs.find((d) => d.id.endsWith("glossary.md")) || docs[0];
+                if (targetDoc) {
+                  const docParts = targetDoc.id
+                    .replace(/\.md$/, "")
+                    .split("/")
+                    .slice(2);
+                  const docHref = `/docs/${version}/${chapter}/${docParts.join("/")}`;
+                  const { headings } = await targetDoc.render();
+
+                  // Clear the tree of the single file and overwrite with headings
+                  tree.length = 0;
+
+                  headings
+                    .filter((h: any) => h.depth === 2)
+                    .forEach((heading: any) => {
+                      tree.push({
+                        id: heading.slug,
+                        type: "anchor",
+                        label: heading.text.replace(/^#/, ""),
+                        href: `${docHref}#${heading.slug}`,
+                      });
+                    });
+                }
+              } else {
+                // Apply order and titles
+                if (config.order && Array.isArray(config.order)) {
+                  tree.sort((a, b) => {
+                    const indexA = config.order.indexOf(a.id);
+                    const indexB = config.order.indexOf(b.id);
+
+                    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                    if (indexA !== -1) return -1;
+                    if (indexB !== -1) return 1;
+                    return a.label.localeCompare(b.label);
+                  });
+                } else {
+                  // Default sort
+                  tree.sort((a, b) => a.label.localeCompare(b.label));
+                }
+
+                // Apply hidden items
+                if (config.hidden && Array.isArray(config.hidden)) {
+                  const hiddenSet = new Set(config.hidden);
+                  const filteredTree = tree.filter(
+                    (node) => !hiddenSet.has(node.id),
+                  );
+                  // Modify tree in-place
+                  tree.length = 0;
+                  tree.push(...filteredTree);
+                }
+              }
+            }
+          } catch (e) {
+            console.error(`Error parsing -sidebar.yaml at ${configPath}:`, e);
+          }
+        } else {
+          // Default sort if no config
+          tree.sort((a, b) => a.label.localeCompare(b.label));
+        }
+
+        // Update directory titles by looking into their folders
+        tree.forEach((node) => {
+          if (node.type === "dir") {
+            const dirConfigPath = path.join(
+              process.cwd(),
+              "src/content/docs",
+              version,
+              chapter,
+              currentRelPath,
+              node.id,
+              "-sidebar.yaml",
+            );
+            if (fs.existsSync(dirConfigPath)) {
+              try {
+                const dirConfig = yaml.load(
+                  fs.readFileSync(dirConfigPath, "utf8"),
+                ) as any;
+                if (dirConfig && dirConfig.title) {
+                  node.label = dirConfig.title;
+                }
+              } catch (e) {}
+            }
+          }
+        });
+
+        return tree;
       }
 
-      // Update directory titles by looking into their folders
-      tree.forEach((node) => {
-        if (node.type === "dir") {
-          const dirConfigPath = path.join(
-            process.cwd(),
-            "src/content/docs",
-            version,
-            chapter,
-            currentRelPath,
-            node.id,
-            "-sidebar.yaml",
-          );
-          if (fs.existsSync(dirConfigPath)) {
-            try {
-              const dirConfig = yaml.load(
-                fs.readFileSync(dirConfigPath, "utf8"),
-              ) as any;
-              if (dirConfig && dirConfig.title) {
-                node.label = dirConfig.title;
-              }
-            } catch (e) {}
-          }
-        }
-      });
+      const sidebarTree = await buildTree(
+        relevantDocs,
+        path.join(process.cwd(), "src/content/docs", version, chapter),
+      );
 
-      return tree;
-    }
-
-    const sidebarTree = buildTree(
-      relevantDocs,
-      path.join(process.cwd(), "src/content/docs", version, chapter),
-    );
-
-    return {
-      params: { version, chapter, slug: innerSlug },
-      props: {
-        entry,
-        version,
-        chapter,
-        availableVersions: versions,
-        sidebarTree,
-        isRedirect: false,
-      },
-    };
-  });
+      return {
+        params: { version, chapter, slug: innerSlug },
+        props: {
+          entry,
+          version,
+          chapter,
+          availableVersions: versions,
+          sidebarTree,
+          isRedirect: false,
+        },
+      };
+    }),
+  );
 
   // Now, find all -sidebar.yaml files that have a 'redirect' property
   // and add paths for those directories.
   const docsRoot = path.join(process.cwd(), "src/content/docs");
-  
+
   function findRedirects(dirPath: string): any[] {
     const results: any[] = [];
     const list = fs.readdirSync(dirPath);
-    
+
     // Check for -sidebar.yaml in current dir
     if (list.includes("-sidebar.yaml")) {
       const configPath = path.join(dirPath, "-sidebar.yaml");
@@ -201,7 +239,7 @@ export async function getStaticPaths() {
               params: {
                 version,
                 chapter,
-                slug: innerSlug || undefined
+                slug: innerSlug || undefined,
               },
               props: {
                 version,
@@ -211,33 +249,41 @@ export async function getStaticPaths() {
                 isRedirect: true,
                 sidebarTree: [], // Sidebar won't be seen anyway, but keeps props consistent
                 // We don't have an 'entry' for directory, but template needs it to avoid crash
-                entry: { data: { title: "Redirecting..." } }
-              }
+                entry: { data: { title: "Redirecting..." } },
+              },
             });
           }
         }
       } catch (e) {}
     }
-    
+
     // Recurse subdirs
-    list.forEach(file => {
+    list.forEach((file) => {
       const fullPath = path.join(dirPath, file);
       if (fs.statSync(fullPath).isDirectory()) {
         results.push(...findRedirects(fullPath));
       }
     });
-    
+
     return results;
   }
 
   const redirectPaths = findRedirects(docsRoot);
-  
-  // Combine normal paths and redirect paths, filtering duplicates 
+
+  // Combine normal paths and redirect paths, filtering duplicates
   // (prefer normal paths if an index.md exists, though find shows we don't have them)
   return [...paths, ...redirectPaths];
 }
 
-const { entry, version, chapter, availableVersions, sidebarTree, isRedirect, redirectTarget } = Astro.props;
+const {
+  entry,
+  version,
+  chapter,
+  availableVersions,
+  sidebarTree,
+  isRedirect,
+  redirectTarget,
+} = Astro.props;
 let Content;
 if (!isRedirect) {
   const result = await (entry as any).render();
@@ -245,31 +291,39 @@ if (!isRedirect) {
 }
 
 // Construct absolute redirect URL
-const redirectUrl = isRedirect ? (redirectTarget!.startsWith('/') ? redirectTarget : `/docs/${version}/${chapter}/${redirectTarget}`) : null;
+const redirectUrl = isRedirect
+  ? redirectTarget!.startsWith("/")
+    ? redirectTarget
+    : `/docs/${version}/${chapter}/${redirectTarget}`
+  : null;
 ---
 
-{isRedirect ? (
-  <html>
-    <head>
-      <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />
-      <script is:inline define:vars={{ redirectUrl }}>
-        window.location.href = redirectUrl;
-      </script>
-    </head>
-    <body>
-      <p>Redirecting to <a href={redirectUrl}>{redirectUrl}</a>...</p>
-    </body>
-  </html>
-) : (
-  <DocsLayout
-    title={`${entry.data.title} | Onedata Docs`}
-    version={version}
-    availableVersions={availableVersions}
-    activeChapter={chapter}
-    sidebarNodes={sidebarTree}
-  >
-    <div class="prose">
-      <Content />
-    </div>
-  </DocsLayout>
-)}
+{
+  isRedirect ? (
+    <html>
+      <head>
+        <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />
+        <script is:inline define:vars={{ redirectUrl }}>
+          window.location.href = redirectUrl;
+        </script>
+      </head>
+      <body>
+        <p>
+          Redirecting to <a href={redirectUrl}>{redirectUrl}</a>...
+        </p>
+      </body>
+    </html>
+  ) : (
+    <DocsLayout
+      title={`${entry.data.title} | Onedata Docs`}
+      version={version}
+      availableVersions={availableVersions}
+      activeChapter={chapter}
+      sidebarNodes={sidebarTree}
+    >
+      <div class="prose">
+        <Content />
+      </div>
+    </DocsLayout>
+  )
+}
