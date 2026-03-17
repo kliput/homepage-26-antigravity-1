@@ -9,6 +9,7 @@ import {
   List,
   ChevronDown,
   Key,
+  Globe,
 } from "lucide-astro";
 
 interface Props {
@@ -32,7 +33,7 @@ const chapters = [
     icon: Server,
   },
   { id: "glossary", label: "Glossary", icon: List },
-  { id: "versions", label: "Versions", icon: List },
+  { id: "releases", label: "Releases", icon: Globe },
 ];
 
 const { title, version, availableVersions, activeChapter, sidebarNodes } =
@@ -141,7 +142,7 @@ function renderSidebarNode(node: any, currentPath: string) {
         {/* Mobile sidebar toggle */}
         <div class="docs-mobile-toggle">
           <button id="mobile-sidebar-toggle" class="mobile-nav-btn">
-            <List class="w-5 h-5" /> Browse Topics
+            <List class="h-5 w-5" /> Browse Topics
           </button>
         </div>
 
