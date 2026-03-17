@@ -179,5 +179,15 @@ function renderSidebarNode(node: any, currentPath: string) {
         }
       });
     });
+
+    // Copy anchor link to clipboard on click
+    document.addEventListener("click", (e: Event) => {
+      const target = (e.target as HTMLElement).closest(".heading-anchor-link") as HTMLAnchorElement;
+      if (target && target.href) {
+        navigator.clipboard.writeText(target.href).catch((err) => {
+          console.error("Failed to copy link: ", err);
+        });
+      }
+    });
   });
 </script>

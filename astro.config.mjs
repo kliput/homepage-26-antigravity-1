@@ -3,6 +3,8 @@ import { defineConfig } from "astro/config";
 
 import sitemap from "@astrojs/sitemap";
 import rehypeExternalLinks from "rehype-external-links";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languages.mjs";
 
@@ -21,6 +23,22 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkRewriteLinks, remarkNormalizeLanguages],
     rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: "prepend",
+          properties: {
+            "aria-hidden": "true",
+            tabIndex: -1,
+            className: ["heading-anchor-link"],
+          },
+          content: {
+            type: "text",
+            value: "#",
+          },
+        },
+      ],
       [
         rehypeExternalLinks,
         { target: "_blank", rel: ["noopener", "noreferrer"] },
