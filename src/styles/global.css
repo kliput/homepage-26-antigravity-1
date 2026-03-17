@@ -7,7 +7,9 @@
     /* FIXME: użyć raczej TW Typography? */
     --font-family-sans: "Inter", system-ui, sans-serif;
     --font-family-mono: "JetBrains Mono", monospace;
-    --small-card-border-radius: 0.75rem;
+
+    --site-header-height: 75px;
+    --docs-tabs-height: 47px;
 
     --od-bg: #f9f8f6;
     --od-bg-2: #f0ede8;
@@ -243,7 +245,8 @@ h6 {
 /* Tabs Bar */
 .docs-tabs-bar {
   position: sticky;
-  top: 69px;
+  top: var(--site-header-height);
+  height: var(--docs-tabs-height);
   z-index: 40;
   background-color: var(--od-bg-2);
   border-bottom: 1px solid var(--od-border);
@@ -504,6 +507,9 @@ h6 {
 .prose h5,
 .prose h6 {
   position: relative;
+  scroll-margin-top: calc(
+    var(--site-header-height) + var(--docs-tabs-height) + 1rem
+  );
 }
 
 .heading-anchor-link {
