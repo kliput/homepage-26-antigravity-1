@@ -91,6 +91,15 @@ export default {
                 color: "var(--od-accent-2)",
               },
             },
+            code: {
+              fontWeight: "normal",
+            },
+            "code::before": {
+              content: "none",
+            },
+            "code::after": {
+              content: "none",
+            },
           },
         },
       },
