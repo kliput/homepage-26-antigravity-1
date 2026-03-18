@@ -19,8 +19,8 @@ export default function CompatibilityTable({
         <div className="max-h-[30rem] overflow-x-auto overflow-y-auto">
           <table className="m-0 w-full border-collapse">
             <thead>
-              <tr className="od-bg-2 od-border border-b">
-                <th className="od-text od-border border-r px-4 py-3 text-left text-sm font-semibold">
+              <tr className="od-border z-20 border-b">
+                <th className="od-text od-border od-bg-2 sticky left-0 top-0 z-20 border-r px-4 py-3 text-left text-sm font-semibold">
                   {rowProduct}
                   <br />
                   version
@@ -28,7 +28,7 @@ export default function CompatibilityTable({
                 {columns.map((columnVersion) => (
                   <th
                     key={columnVersion}
-                    className="od-text-muted od-border whitespace-nowrap border-r px-3 py-3 text-center text-xs font-semibold last:border-r-0"
+                    className="od-bg-2 od-text-muted od-border sticky top-0 whitespace-nowrap border-r px-3 py-3 text-center text-xs font-semibold last:border-r-0"
                   >
                     {columnProduct}
                     <br />
@@ -41,18 +41,18 @@ export default function CompatibilityTable({
               {rows.map((rowVersion) => (
                 <tr
                   key={rowVersion}
-                  className="od-border hover:od-bg-2 border-b transition-colors"
+                  className="od-border hover:od-bg-2 z-10 border-b transition-colors"
                 >
-                  <td className="od-text od-border od-bg-card hover:od-bg-2 sticky left-0 border-r px-4 py-3 text-sm font-medium">
+                  <th className="od-text od-border od-bg-card hover:od-bg-2 sticky left-0 z-10 border-r px-4 py-3 text-sm font-medium">
                     {rowVersion}
-                  </td>
+                  </th>
                   {columns.map((columnVersion) => {
                     const isCompatible =
                       compatibility[rowVersion]?.includes(columnVersion);
                     return (
                       <td
                         key={`${rowVersion}-${columnVersion}`}
-                        className="od-border border-r px-3 py-3 text-center last:border-r-0"
+                        className="od-border z-10 border-r px-3 py-3 text-center last:border-r-0"
                       >
                         {isCompatible && (
                           <Check className="od-accent-text mx-auto h-5 w-5" />
