@@ -10,6 +10,7 @@ import remarkToc from "remark-toc";
 import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languages.mjs";
 import { remarkReleaseVersion } from "./src/plugins/remark-release-version.mjs";
+import mdx from "@astrojs/mdx";
 
 import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
@@ -55,5 +56,5 @@ export default defineConfig({
     ],
   },
 
-  integrations: [sitemap(), react(), tailwind()],
+  integrations: [sitemap(), react(), tailwind(), mdx()],
 });

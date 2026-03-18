@@ -197,6 +197,56 @@ h6 {
   padding: 0 1.5rem;
 }
 
+/* Onedata utils */
+
+.od-bg {
+  background: var(--od-bg);
+  color: var(--od-text);
+}
+.od-bg-2 {
+  background: var(--od-bg-2);
+}
+.od-bg-card {
+  background: var(--od-bg-card);
+}
+.od-bg-input {
+  background: var(--od-bg-input);
+}
+.od-border {
+  border-color: var(--od-border);
+}
+.od-text {
+  color: var(--od-text);
+}
+.od-text-muted {
+  color: var(--od-text-muted);
+}
+.od-text-faint {
+  color: var(--od-text-faint);
+}
+.od-accent-text {
+  color: var(--od-accent);
+}
+.od-accent-bg {
+  background: var(--od-accent);
+}
+
+.od-gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--od-accent),
+    var(--od-accent-2),
+    var(--od-accent-3)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.od-gradient-bg {
+  background: linear-gradient(135deg, var(--od-accent), var(--od-accent-2));
+}
+
 /* FIXME: przenieść style do plików docsów, jakoś lokalnie */
 
 .docs-content-area img[alt^="screen-"] {
@@ -269,11 +319,14 @@ h6 {
 .od-card {
   background-color: var(--od-bg-card);
   border: 1px solid var(--od-border);
-  padding: 3rem;
   border-radius: 1rem;
   width: 100%;
   max-width: 100%;
   overflow: hidden;
+}
+
+.docs-main-content {
+  padding: 3rem;
 }
 
 .docs-hero-row {
