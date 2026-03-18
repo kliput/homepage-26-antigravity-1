@@ -1,16 +1,13 @@
 import { motion } from "motion/react";
 import { Check } from "lucide-react";
-import compatibility from "../config/compatibility.mjs";
 
-const zoneToProviderCompatibility =
-  compatibility.compatibility["onezone:oneprovider"];
-
-const providerVersions = [
-  ...new Set(Object.values(zoneToProviderCompatibility).flat()),
-].reverse();
-const zoneVersions = Object.keys(zoneToProviderCompatibility).reverse();
-
-export default function CompatibilityTable() {
+export default function CompatibilityTable({
+  rows,
+  columns,
+  rowProduct,
+  columnProduct,
+  compatibility,
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,39 +21,37 @@ export default function CompatibilityTable() {
             <thead>
               <tr className="od-bg-2 od-border border-b">
                 <th className="od-text od-border border-r px-4 py-3 text-left text-sm font-semibold">
-                  Onezone
+                  {rowProduct}
                   <br />
                   version
                 </th>
-                {providerVersions.map((v) => (
+                {columns.map((columnVersion) => (
                   <th
-                    key={v}
+                    key={columnVersion}
                     className="od-text-muted od-border whitespace-nowrap border-r px-3 py-3 text-center text-xs font-semibold last:border-r-0"
                   >
-                    Oneprovider
+                    {columnProduct}
                     <br />
-                    {v}
+                    {columnVersion}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {zoneVersions.map((zoneVersion) => (
+              {rows.map((rowVersion) => (
                 <tr
-                  key={zoneVersion}
+                  key={rowVersion}
                   className="od-border hover:od-bg-2 border-b transition-colors"
                 >
                   <td className="od-text od-border od-bg-card hover:od-bg-2 sticky left-0 border-r px-4 py-3 text-sm font-medium">
-                    {zoneVersion}
+                    {rowVersion}
                   </td>
-                  {providerVersions.map((providerVersion) => {
+                  {columns.map((columnVersion) => {
                     const isCompatible =
-                      zoneToProviderCompatibility[zoneVersion]?.includes(
-                        providerVersion,
-                      );
+                      compatibility[rowVersion]?.includes(columnVersion);
                     return (
                       <td
-                        key={`${zoneVersion}-${providerVersion}`}
+                        key={`${rowVersion}-${columnVersion}`}
                         className="od-border border-r px-3 py-3 text-center last:border-r-0"
                       >
                         {isCompatible && (
