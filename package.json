@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "clean-build": "rm -rf .astro && npm run sync && npm run build",
     "preview": "astro preview",
     "astro": "astro",
-    "clean": "rm -rf node_modules dist"
+    "sync": "astro sync",
+    "clean": "rm -rf node_modules dist .astro",
+    "deps": "npm install && npm run sync"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

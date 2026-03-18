@@ -4,7 +4,7 @@ title: "Overview"
 
 # Onedata overview  
 
-*Version: xRELEASExVERSIONx*
+*Version: <release />*
 
 <!-- TODO VFS-6805:
 INTRODUCTION  (landing page)

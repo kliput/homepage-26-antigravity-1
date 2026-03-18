@@ -9,6 +9,7 @@ import remarkFlexibleContainers from "remark-flexible-containers";
 import remarkToc from "remark-toc";
 import { remarkRewriteLinks } from "./src/plugins/remark-rewrite-links.mjs";
 import { remarkNormalizeLanguages } from "./src/plugins/remark-normalize-languages.mjs";
+import { remarkReleaseVersion } from "./src/plugins/remark-release-version.mjs";
 
 import tailwind from "@astrojs/tailwind";
 import react from "@astrojs/react";
@@ -24,6 +25,7 @@ export default defineConfig({
 
   markdown: {
     remarkPlugins: [
+      remarkReleaseVersion,
       remarkRewriteLinks,
       remarkNormalizeLanguages,
       remarkFlexibleContainers,

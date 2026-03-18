@@ -55,7 +55,7 @@ $ conda install -c onedata -c conda-forge python=3.9 fs.onedatafs
 or to install a specific version of `fs.onedatafs`
 
 ```bash
-$ conda install -c onedata -c conda-forge python=3.9 fs.onedatafs=xRELEASExVERSIONx
+$ conda install -c onedata -c conda-forge python=3.9 fs.onedatafs=<release />
 ```
 
 ### Docker
@@ -64,7 +64,7 @@ In addition to installing the OnedataFS packages, it is possible to use our `one
 Docker image, which provides OnedataFS Python packages and all necessary dependencies:
 
 ```bash
-❯ docker run --rm --entrypoint /usr/bin/python3 -it onedata/oneclient:xRELEASExVERSIONx
+❯ docker run --rm --entrypoint /usr/bin/python3 -it onedata/oneclient:<release />
 Python 3.8.10 (default, Nov  7 2024, 13:10:47) 
 [GCC 9.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
