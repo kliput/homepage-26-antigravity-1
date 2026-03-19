@@ -1,3 +1,7 @@
+const typoHeadingConfig = {
+  color: "var(--od-text-strong)",
+};
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
@@ -85,10 +89,13 @@ export default {
       typography: {
         DEFAULT: {
           css: {
+            color: "var(--od-text)",
             a: {
               color: "var(--od-accent)",
+              textDecoration: "none",
               "&:hover": {
                 color: "var(--od-accent-2)",
+                textDecoration: "underline",
               },
             },
             blockquote: {
@@ -101,6 +108,7 @@ export default {
               },
             },
             code: {
+              color: "var(--od-text)",
               fontWeight: "normal",
             },
             "code::before": {
@@ -108,6 +116,35 @@ export default {
             },
             "code::after": {
               content: "none",
+            },
+            h1: typoHeadingConfig,
+            h2: typoHeadingConfig,
+            h3: typoHeadingConfig,
+            h4: typoHeadingConfig,
+            h5: typoHeadingConfig,
+            h6: typoHeadingConfig,
+            li: {
+              marginTop: "0.1rem",
+              marginBottom: "0.1rem",
+            },
+            "ul ul": {
+              marginTop: "0.2rem",
+              marginBottom: "0.2rem",
+            },
+            strong: {
+              color: "currentColor",
+            },
+            thead: {
+              borderBottomColor: "var(--od-border-hover)",
+            },
+            "thead th": {
+              color: "currentColor",
+            },
+            "tbody tr": {
+              borderBottomColor: "var(--od-border)",
+            },
+            tfoot: {
+              borderTopColor: "var(--od-border-hover)",
             },
           },
         },
