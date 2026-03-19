@@ -2,26 +2,27 @@
 import "../styles/markdown-containers.css";
 import DocsVersionSelect from "../components/DocsVersionSelect.astro";
 import MainLayout from "./MainLayout.astro";
-import {
-  Book,
-  Users,
-  Server,
-  Shield,
-  List,
-  ChevronDown,
-  Key,
-  Globe,
-} from "lucide-astro";
+import { Book, Users, Server, List, Globe } from "lucide-astro";
+import type {
+  SidebarNode,
+  SidebarTree,
+} from "../pages/docs/[version]/[chapter]/[...slug].astro";
 
 interface Props {
   title: string;
   version: string;
   availableVersions: string[];
   activeChapter: string;
-  sidebarNodes: any[];
+  sidebarNodes: SidebarTree;
 }
 
-const chapters = [
+type DocsChapterItem = {
+  id: string;
+  label: string;
+  icon: any;
+};
+
+const chapters: DocsChapterItem[] = [
   { id: "intro", label: "Introduction", icon: Book },
   {
     id: "user-guide",
@@ -37,11 +38,16 @@ const chapters = [
   { id: "releases", label: "Releases", icon: Globe },
 ];
 
-const { title, version, availableVersions, activeChapter, sidebarNodes } =
-  Astro.props;
+const {
+  title,
+  version,
+  availableVersions,
+  activeChapter,
+  sidebarNodes,
+}: Props = Astro.props;
 
 // Helper to render sidebar recursively
-function renderSidebarNode(node: any, currentPath: string) {
+function renderSidebarNode(node: SidebarNode, currentPath: string) {
   if (node.type === "anchor") {
     return `<li><a href="${node.href}" class="anchor-link">${node.label}</a></li>`;
   }
@@ -52,11 +58,14 @@ function renderSidebarNode(node: any, currentPath: string) {
     return `<li><a href="${node.href}" class="${isActive ? "active" : ""}">${node.label}</a></li>`;
   } else if (node.type === "dir") {
     // Check if any child is active to keep it open
-    const isExpanded = node.children.some(
-      (child: any) =>
-        Astro.url.pathname.includes(child.href) ||
+    const isExpanded = (node.children ?? []).some(
+      (child: SidebarNode) =>
+        (child.href && Astro.url.pathname.includes(child.href)) ||
         (child.children &&
-          child.children.some((c: any) => Astro.url.pathname.includes(c.href))),
+          child.children.some(
+            (child: SidebarNode) =>
+              child.href && Astro.url.pathname.includes(child.href),
+          )),
     );
 
     let html = `
@@ -67,9 +76,11 @@ function renderSidebarNode(node: any, currentPath: string) {
         </button>
         <ul class="folder-contents" ${isExpanded ? 'style="display:block;"' : 'style="display:none;"'}>
     `;
-    node.children.forEach((child: any) => {
-      html += renderSidebarNode(child, currentPath);
-    });
+    if (node.children) {
+      for (const child of node.children) {
+        html += renderSidebarNode(child, currentPath);
+      }
+    }
     html += `</ul></li>`;
     return html;
   }

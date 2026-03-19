@@ -6,21 +6,53 @@ import path from "node:path";
 import yaml from "js-yaml";
 import type { CollectionEntry } from "astro:content";
 
+export type SidebarTree = SidebarNode[];
+
+export type SidebarNode = {
+  id: string;
+  label: string;
+  type: "file" | "dir" | "anchor";
+  href?: string;
+  children?: SidebarTree;
+};
+
 export async function getStaticPaths() {
-  async function buildTree(
+  /**
+   * The `entry.id` does not handle dots in version, eg. entry with path
+   * `21.02/intro/overview.md` has id `2102/intro/overview`, so we need special function
+   * to generate `21.02/intro/overview`.
+   */
+  function getEntryPath(entry: CollectionEntry<"docs">): string {
+    if (!entry.filePath) {
+      throw new Error(`Entry ${entry.id} has no filePath`);
+    }
+    const result = entry.filePath.replace(/\.mdx?|src\/content\/docs\//g, "");
+    console.log(`entry ${entry.id} -> ${entry.filePath} -> ${result}`);
+    return result;
+  }
+
+  function destructureEntryPath(path: string) {
+    const parts = path.split("/");
+    return {
+      version: parts[0],
+      chapter: parts[1],
+      docPartsSlug: parts.slice(2),
+    };
+  }
+
+  async function buildSidebarTree(
     version: string,
     chapter: string,
-    docs: any[],
+    docs: CollectionEntry<"docs">[],
     basePath: string,
     currentRelPath: string = "",
   ) {
-    const tree: any[] = [];
-    const dirsMap: Map<string, any[]> = new Map();
+    const sidebarTree: SidebarTree = [];
+    const dirsMap: Map<string, CollectionEntry<"docs">[]> = new Map();
 
     // Collect direct children
-    docs.forEach((doc: any) => {
-      const docIdWithoutExt = doc.id.replace(/\.mdx?$/, "");
-      const docParts = docIdWithoutExt.split("/").slice(2); // Skip version/chapter
+    for (const doc of docs) {
+      const docParts = destructureEntryPath(getEntryPath(doc)).docPartsSlug;
 
       // Match only items at current level
       const currentRelParts = currentRelPath ? currentRelPath.split("/") : [];
@@ -32,7 +64,7 @@ export async function getStaticPaths() {
           const slugParts = isIndex ? docParts.slice(0, -1) : docParts;
           const hrefPath =
             slugParts.length > 0 ? `/${slugParts.join("/")}` : "";
-          tree.push({
+          sidebarTree.push({
             id: part,
             type: "file",
             label: doc.data.title || part,
@@ -49,18 +81,18 @@ export async function getStaticPaths() {
           dirsMap.get(dirName)!.push(doc);
         }
       }
-    });
+    }
 
     // Process subdirectories
     for (const [dirName, subDocs] of dirsMap) {
       const subRelPath = currentRelPath
         ? `${currentRelPath}/${dirName}`
         : dirName;
-      tree.push({
+      sidebarTree.push({
         id: dirName,
         type: "dir",
         label: dirName, // Default, will be overridden by config
-        children: await buildTree(
+        children: await buildSidebarTree(
           version,
           chapter,
           subDocs,
@@ -90,13 +122,12 @@ export async function getStaticPaths() {
             // Assuming there is exactly one main document we want to extract headings from.
             // For safety, we take the one that matches the directory name or just the first doc.
             const targetDoc =
-              docs.find((d) => d.id.endsWith("index.md")) || docs[0];
+              docs.find((d) => getEntryPath(d).endsWith("index")) || docs[0];
             if (targetDoc) {
-              const docPartsTemp = targetDoc.id
-                .replace(/\.md$/, "")
-                .split("/")
-                .slice(2);
-              if (docPartsTemp[docPartsTemp.length - 1] === "index") {
+              const docPartsTemp = destructureEntryPath(
+                getEntryPath(targetDoc),
+              ).docPartsSlug;
+              if (docPartsTemp.at(-1) === "index") {
                 docPartsTemp.pop();
               }
               const hrefPath =
@@ -105,12 +136,12 @@ export async function getStaticPaths() {
               const { headings } = await render(targetDoc);
 
               // Clear the tree of the single file and overwrite with headings
-              tree.length = 0;
+              sidebarTree.length = 0;
 
               headings
                 .filter((h: any) => h.depth === 2)
                 .forEach((heading: any) => {
-                  tree.push({
+                  sidebarTree.push({
                     id: heading.slug,
                     type: "anchor",
                     label: heading.text.replace(/^#/, ""),
@@ -121,7 +152,7 @@ export async function getStaticPaths() {
           } else {
             // Apply order and titles
             if (config.order && Array.isArray(config.order)) {
-              tree.sort((a, b) => {
+              sidebarTree.sort((a, b) => {
                 const indexA = config.order.indexOf(a.id);
                 const indexB = config.order.indexOf(b.id);
 
@@ -132,18 +163,18 @@ export async function getStaticPaths() {
               });
             } else {
               // Default sort
-              tree.sort((a, b) => a.label.localeCompare(b.label));
+              sidebarTree.sort((a, b) => a.label.localeCompare(b.label));
             }
 
             // Apply hidden items
             if (config.hidden && Array.isArray(config.hidden)) {
               const hiddenSet = new Set(config.hidden);
-              const filteredTree = tree.filter(
+              const filteredTree = sidebarTree.filter(
                 (node) => !hiddenSet.has(node.id),
               );
               // Modify tree in-place
-              tree.length = 0;
-              tree.push(...filteredTree);
+              sidebarTree.length = 0;
+              sidebarTree.push(...filteredTree);
             }
           }
         }
@@ -152,19 +183,19 @@ export async function getStaticPaths() {
       }
     } else {
       // Default sort if no config
-      tree.sort((a, b) => a.label.localeCompare(b.label));
+      sidebarTree.sort((a, b) => a.label.localeCompare(b.label));
     }
 
     // Update directory titles by looking into their folders
-    tree.forEach((node) => {
-      if (node.type === "dir") {
+    for (const sidebarNode of sidebarTree) {
+      if (sidebarNode.type === "dir") {
         const dirConfigPath = path.join(
           process.cwd(),
           "src/content/docs",
           version,
           chapter,
           currentRelPath,
-          node.id,
+          sidebarNode.id,
           "-sidebar.yaml",
         );
         if (fs.existsSync(dirConfigPath)) {
@@ -173,28 +204,24 @@ export async function getStaticPaths() {
               fs.readFileSync(dirConfigPath, "utf8"),
             ) as any;
             if (dirConfig && dirConfig.title) {
-              node.label = dirConfig.title;
+              sidebarNode.label = dirConfig.title;
             }
           } catch (e) {}
         }
       }
-    });
+    }
 
-    return tree;
+    return sidebarTree;
   }
 
-  async function buildPath(
+  async function buildAstroPath(
     entry: CollectionEntry<"docs">,
     docsEntries: CollectionEntry<"docs">[],
     versions: string[],
   ) {
-    // entry.id is like '25.0/Introduction/overview.md'
-    const idWithoutExt = entry.id.replace(/\.md$/, "");
-    const parts = idWithoutExt.split("/");
-    const version = parts[0];
-    const chapter = parts[1];
-    let docPartsSlug = parts.slice(2);
-    if (docPartsSlug[docPartsSlug.length - 1] === "index") {
+    const entryPath = getEntryPath(entry);
+    const { version, chapter, docPartsSlug } = destructureEntryPath(entryPath);
+    if (docPartsSlug.at(-1) === "index") {
       docPartsSlug.pop();
     }
     const innerSlug =
@@ -202,11 +229,11 @@ export async function getStaticPaths() {
 
     // Create nested tree for sidebar for this version + chapter
     // Filter out non-content files (like -sidebar.yaml)
-    const relevantDocs = docsEntries.filter((entry) =>
-      entry.id.startsWith(`${version}/${chapter}/`),
+    const relevantDocs = docsEntries.filter((entry: CollectionEntry<"docs">) =>
+      getEntryPath(entry).startsWith(`${version}/${chapter}/`),
     );
 
-    const sidebarTree = await buildTree(
+    const sidebarTree = await buildSidebarTree(
       version,
       chapter,
       relevantDocs,
@@ -278,15 +305,14 @@ export async function getStaticPaths() {
 
   const docsEntries = await getCollection("docs");
 
-  // FIXME: wersja 2102 -> 21.02 ? albo załatwić to jakoś inaczej
-  // Extract unique versions based on folder structure (using entry.id to preserve dots/casing)
+  // Extract unique versions based on folder structure
   const versions = [
-    ...new Set(docsEntries.map((entry) => entry.id.split("/")[0])),
+    ...new Set(docsEntries.map((entry) => getEntryPath(entry).split("/")[0])),
   ].sort((a, b) => b.localeCompare(a)); // Descending versions
 
   // Build paths for each entry
   const paths = await Promise.all(
-    docsEntries.map((entry) => buildPath(entry, docsEntries, versions)),
+    docsEntries.map((entry) => buildAstroPath(entry, docsEntries, versions)),
   );
 
   // Now, find all -sidebar.yaml files that have a 'redirect' property
@@ -299,6 +325,16 @@ export async function getStaticPaths() {
   return [...paths, ...redirectPaths];
 }
 
+type DocsPageProps = {
+  entry: CollectionEntry<"docs">;
+  version: string;
+  chapter: string;
+  availableVersions: string[];
+  sidebarTree: SidebarTree;
+  isRedirect: boolean;
+  redirectTarget?: string;
+};
+
 const {
   entry,
   version,
@@ -307,7 +343,7 @@ const {
   sidebarTree,
   isRedirect,
   redirectTarget,
-} = Astro.props;
+}: DocsPageProps = Astro.props as DocsPageProps;
 const Content = isRedirect ? null : (await render(entry)).Content;
 
 // Construct absolute redirect URL
@@ -322,6 +358,7 @@ const redirectUrl = isRedirect
   isRedirect ? (
     <html>
       <head>
+        {/* FIXME: użyć komponentu Redirect? */}
         <meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />
         <script is:inline define:vars={{ redirectUrl }}>
           window.location.href = redirectUrl;
