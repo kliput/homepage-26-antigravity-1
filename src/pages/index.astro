@@ -1,22 +1,22 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import LandingHero from "../components/LandingHero.astro";
-import LandingNumbers from "../components/LandingNumbers.astro";
-import LandingFeatures from "../components/LandingFeatures.astro";
-import LandingHowItWorks from "../components/LandingHowItWorks.astro";
-import LandingUseCases from "../components/LandingUseCases.astro";
-import LandingContact from "../components/LandingContact.astro";
+import LandingFeatures from "../components/LandingFeatures.jsx";
+import LandingHowItWorks from "../components/LandingHowItWorks.jsx";
+import LandingUseCases from "../components/LandingUseCases.jsx";
+import LandingContact from "../components/LandingContact.jsx";
+import LandingStats from "../components/LandingStats.jsx";
 ---
 
 <MainLayout
   title="Onedata - Data Management Platform for Distributed AI Pipelines and Hybrid Clouds"
 >
   <LandingHero />
-  <LandingNumbers />
-  <LandingFeatures />
-  <LandingHowItWorks />
-  <LandingUseCases />
-  <LandingContact />
+  <LandingStats client:visible />
+  <LandingFeatures client:visible />
+  <LandingHowItWorks client:visible />
+  <LandingUseCases client:visible />
+  <LandingContact client:visible />
 </MainLayout>
 
 <style>
