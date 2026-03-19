@@ -1,8 +1,30 @@
 ---
+import { Moon, Sun } from "lucide-astro";
 import Logo from "./Logo.astro";
+
+const { pathname } = Astro.url;
+
+const isActive = (href: string) => {
+  if (href === "/") return pathname === "/";
+  // FIXME:
+  // if (href.startsWith("/#")) return pathname === "/";
+  return pathname === href || pathname.startsWith(href + "/");
+};
 
 // Header component
 ---
+
+<script>
+  function highlightHowItWorks() {
+    const hash = window.location.hash;
+    if (hash === "#how-it-works") {
+      const navLink = document.querySelector(".nav-link");
+      navLink?.classList.add("active");
+    }
+  }
+  highlightHowItWorks();
+  window.addEventListener("hashchange", highlightHowItWorks);
+</script>
 
 <header class="site-header">
   <div class="header-container header-content">
@@ -12,7 +34,7 @@ import Logo from "./Logo.astro";
       <ul class="nav-list">
         <!-- TODO: Enable features and use cases -->
         <!-- <li class="nav-item has-dropdown">
-          <span class="nav-link"
+          <span class="nav-link hover:od-text"
             >Features <svg
               class="chevron"
               viewBox="0 0 24 24"
@@ -179,10 +201,13 @@ import Logo from "./Logo.astro";
           </div>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="/#how-it-works">How it works</a>
+          <a
+            class="nav-link hover:od-text transition-colors"
+            href="/#how-it-works">How it works</a
+          >
         </li>
         <!-- <li class="nav-item has-dropdown use-cases-nav">
-          <span class="nav-link"
+          <span class="nav-link hover:od-text"
             >Use cases <svg
               class="chevron"
               viewBox="0 0 24 24"
@@ -311,19 +336,49 @@ import Logo from "./Logo.astro";
           </div>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" href="/quick-start">Quick Start</a>
+          <a
+            class:list={[
+              "nav-link hover:od-text transition-colors",
+              { active: isActive("/quick-start") },
+            ]}
+            href="/quick-start">Quick Start</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/docs">Docs</a>
+          <a
+            class:list={[
+              "nav-link hover:od-text transition-colors",
+              { active: isActive("/docs") },
+            ]}
+            href="/docs">Docs</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/api">API</a>
+          <a
+            class:list={[
+              "nav-link hover:od-text transition-colors",
+              { active: isActive("/api") },
+            ]}
+            href="/api">API</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/blog">Blog</a>
+          <a
+            class:list={[
+              "nav-link hover:od-text transition-colors",
+              { active: isActive("/blog") },
+            ]}
+            href="/blog">Blog</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/publications">Publications</a>
+          <a
+            class:list={[
+              "nav-link hover:od-text transition-colors",
+              { active: isActive("/publications") },
+            ]}
+            href="/publications">Publications</a
+          >
         </li>
       </ul>
     </nav>
@@ -351,46 +406,13 @@ import Logo from "./Logo.astro";
         >
       </a>
 
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-        <svg
-          class="sun-icon"
-          viewBox="0 0 24 24"
-          width="20"
-          height="20"
-          stroke="currentColor"
-          stroke-width="2"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          ><circle cx="12" cy="12" r="5"></circle><line
-            x1="12"
-            y1="1"
-            x2="12"
-            y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line
-            x1="4.22"
-            y1="4.22"
-            x2="5.64"
-            y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"
-          ></line><line x1="1" y1="12" x2="3" y2="12"></line><line
-            x1="21"
-            y1="12"
-            x2="23"
-            y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"
-          ></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg
-        >
-        <svg
-          class="moon-icon"
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-          stroke="currentColor"
-          stroke-width="2"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          ><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-          ></path></svg
-        >
+      <button
+        id="theme-toggle"
+        class="theme-toggle od-border od-bg-card hover:od-card rounded-lg border p-2 transition-colors"
+        aria-label="Toggle theme"
+      >
+        <Sun className="sun-icon od-text-muted h-4 w-4" />
+        <Moon className="moon-icon od-text-muted h-4 w-4" />
       </button>
 
       <!-- Mobile menu toggle placeholder -->
@@ -469,9 +491,18 @@ import Logo from "./Logo.astro";
     transition: color 0.2s;
   }
 
+  .nav-link.active {
+    color: var(--od-accent);
+    font-weight: 600;
+  }
+
   .nav-link:hover {
     color: var(--od-text);
     text-decoration: none;
+  }
+
+  .nav-link:active {
+    color: var(--od-accent);
   }
 
   .chevron {
@@ -641,27 +672,6 @@ import Logo from "./Logo.astro";
 
   .social-link:hover {
     color: var(--od-text);
-  }
-
-  .theme-toggle {
-    background: none;
-    border: none;
-    color: var(--header-text-color);
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition:
-      background-color 0.2s,
-      color 0.2s;
-  }
-
-  .theme-toggle:hover {
-    background-color: var(--od-bg-2);
-    color: var(--primary);
   }
 
   /* Theme toggle SVG display logic */
