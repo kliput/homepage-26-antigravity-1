@@ -27,7 +27,6 @@ export async function getStaticPaths() {
       throw new Error(`Entry ${entry.id} has no filePath`);
     }
     const result = entry.filePath.replace(/\.mdx?|src\/content\/docs\//g, "");
-    console.log(`entry ${entry.id} -> ${entry.filePath} -> ${result}`);
     return result;
   }
 
