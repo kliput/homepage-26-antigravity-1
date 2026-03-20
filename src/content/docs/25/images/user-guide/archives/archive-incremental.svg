@@ -7,7 +7,7 @@
    viewBox="0 0 338.66665 158.74998"
    version="1.1"
    id="svg5"
-   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   inkscape:version="1.4.3 (1:1.4.3+202512261034+0d15f75042)"
    sodipodi:docname="archive-incremental.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -25,14 +25,16 @@
      showgrid="false"
      inkscape:zoom="0.70710678"
      inkscape:cx="640.63874"
-     inkscape:cy="412.95036"
+     inkscape:cy="412.24325"
      inkscape:window-width="2560"
-     inkscape:window-height="743"
+     inkscape:window-height="1376"
      inkscape:window-x="0"
-     inkscape:window-y="660"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="layer1"
-     units="px" />
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5"
+     units="px"
+     inkscape:showpageshadow="2"
+     inkscape:deskcolor="#d1d1d1" />
   <defs
      id="defs2">
     <marker
@@ -111,6 +113,13 @@
        height="37"
        rx="5" />
   </defs>
+  <rect
+     style="fill:#ffffff;stroke-width:34.9149;stroke-linecap:round"
+     id="rect1"
+     width="338.66666"
+     height="158.75"
+     x="0"
+     y="0" />
   <g
      inkscape:label="Warstwa 1"
      inkscape:groupmode="layer"

@@ -84,7 +84,7 @@ The result of the above request will contain an ID of the created user:
 
 <!-- references -->
 
-[quickstart guide]: ../../../../../../user-guide/tokens.md#access-token-quickstart
+[quickstart guide]: ../../../user-guide/tokens.md#access-token-quickstart
 
 [api-authentication]: https://onedata.org/#/home/api/latest/onepanel?anchor=section/Overview/Authentication
 

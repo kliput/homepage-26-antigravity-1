@@ -99,6 +99,7 @@ export default {
               },
             },
             blockquote: {
+              color: "var(--od-text)",
               fontWeight: "normal",
               "p::before": {
                 content: "none",
@@ -131,14 +132,20 @@ export default {
               marginTop: "0.2rem",
               marginBottom: "0.2rem",
             },
+            "ol > li::marker": {
+              color: "var(--od-text)",
+            },
+            "ul > li::marker": {
+              color: "var(--od-text)",
+            },
             strong: {
-              color: "currentColor",
+              color: "inherit",
             },
             thead: {
               borderBottomColor: "var(--od-border-hover)",
             },
             "thead th": {
-              color: "currentColor",
+              color: "inherit",
             },
             "tbody tr": {
               borderBottomColor: "var(--od-border)",

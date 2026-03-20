@@ -98,7 +98,7 @@ the [login method][] with a Google account.
 
 [login method]: ./oidc-saml.md
 
-[1]: ../../installation.md
+[1]: ../installation.md
 
 [2]: https://accounts.google.com/
 

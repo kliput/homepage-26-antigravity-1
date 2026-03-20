@@ -410,8 +410,6 @@ function(id, type, meta, ctx) {
 
 <!-- references -->
 
-[1]: <>
-
 [2]: https://docs.couchbase.com/server/5.5/views/views-intro.html
 
 [3]: https://docs.couchbase.com/server/5.5/views/views-writing.html
@@ -450,7 +448,7 @@ function(id, type, meta, ctx) {
 
 [20]: metadata.md#custom-metadata
 
-[21]: ../../admin-guide/oneprovider/configuration/file-popularity.md
+[21]: ../admin-guide/oneprovider/configuration/file-popularity.md
 
 [22]: https://onedata.org/#/home/api/latest/oneprovider?anchor=operation/create_space_view
 

@@ -716,29 +716,27 @@ access, as they will be able to access any Onedata volume created on this host.
 
 <!-- references -->
 
-[1]: <>
-
 [fuse]: https://github.com/libfuse/libfuse
 
 [anaconda]: https://anaconda.org
 
 [anaconda onedata]: https://anaconda.org/onedata
 
-[tokens quickstart guide]: ../../tokens.md#access-token-quickstart
+[tokens quickstart guide]: ../tokens.md#access-token-quickstart
 
-[tokens]: ../../tokens.md
+[tokens]: ../tokens.md
 
-[tokens safety]: ../../tokens.md#safely-publishing-tokens
+[tokens safety]: ../tokens.md#safely-publishing-tokens
 
-[invite user]: ../../spaces.md#invite-a-user
+[invite user]: ../spaces.md#invite-a-user
 
 [direct-io]: #direct-io-and-proxy-io-modes
 
-[oneprovider-domain]: ../../data.md#provider-domain
+[oneprovider-domain]: ../data.md#provider-domain
 
 [2]: https://github.com/xattr/xattr
 
-[3]: ../../metadata.md#metadata-management-with-oneclient-and-onedatafs
+[3]: ../metadata.md#metadata-management-with-oneclient-and-onedatafs
 
 [12]: https://docs.docker.com/engine/extend/plugins_volume/
 

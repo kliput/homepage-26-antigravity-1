@@ -578,8 +578,6 @@ are presented in the below table:
 
 <!-- references -->
 
-[1]: <>
-
 [2]: ../../../../../../user-guide/data.md#posix-permissions
 
 [3]: #populating-luma-db-with-feeds

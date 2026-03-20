@@ -220,8 +220,6 @@ which could result in:
 
 <!-- references -->
 
-[1]: <>
-
 [Open Data]: https://en.wikipedia.org/wiki/Open_data
 
 [shares]: ./shares.md
@@ -236,7 +234,7 @@ which could result in:
 
 [OAI-PMH]: https://www.openarchives.org/pmh/
 
-[handle services]: ../../admin-guide/onezone/configuration/handle-services.md
+[handle services]: ../admin-guide/onezone/configuration/handle-services.md
 
 [share management view]: ./shares.md#share-management-view
 

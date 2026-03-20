@@ -442,8 +442,6 @@ You can manage the data distribution using:
 
 <!-- references -->
 
-
-
 [file-path-and-id]: #file-path-and-id
 
 [Web GUI]: #web-gui
@@ -476,15 +474,15 @@ You can manage the data distribution using:
 
 <!-- TODO VFS-10933 link to the providers section -->
 
-[Providers]: ../../intro.md#basic-concepts
+[Providers]: ../intro.md#basic-concepts
 
 <!-- TODO VFS-11766 place some sensible link here -->
 
-[Oneprovider service]: ../../intro.md#basic-concepts
+[Oneprovider service]: ../intro.md#basic-concepts
 
 <!-- TODO VFS-11766 place some sensible link here -->
 
-[Onedata zone]: ../../intro.md#basic-concepts
+[Onedata zone]: ../intro.md#basic-concepts
 
 [Web file browser guide]: interfaces/web-file-browser.md
 
@@ -520,15 +518,15 @@ You can manage the data distribution using:
 
 [RFC 3530]: https://tools.ietf.org/html/rfc3530
 
-[storage import]: ../../admin-guide/oneprovider/configuration/storage-import.md
+[storage import]: ../admin-guide/oneprovider/configuration/storage-import.md
 
-[LUMA]: ../../admin-guide/oneprovider/configuration/luma.md
+[LUMA]: ../admin-guide/oneprovider/configuration/luma.md
 
 [Transfers]: data-transfers.md
 
 [Quality of Service]: rule-based-replication-qos.md
 
-[Auto-cleaning]: ../../admin-guide/oneprovider/configuration/auto-cleaning.md
+[Auto-cleaning]: ../admin-guide/oneprovider/configuration/auto-cleaning.md
 
 [screen-file-gui-path-and-info]: ../images/user-guide/data/file-gui-path-and-info.png
 

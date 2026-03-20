@@ -26,7 +26,8 @@ the `auth.config` file in the volumes section.
 
 3. The `auth.config` file must be present on all cluster nodes hosting the
    Onezone worker service and must be identical.
-   :::
+
+:::
 
 ## Table of contents
 
@@ -1951,7 +1952,7 @@ identify the storage users effectively.
 
 To use your custom icon on the login page, place it on the Onezone host under the
 path `/var/www/html/oz_worker/custom/<path>` and reference it in the config like
-this: `iconPath => "/custom/<path>"`. If you are using docker-compose, simply
+this: `iconPath => "/custom/<path>"`. If you are using Docker Compose, simply
 mount your icon by adding a volume, for example:
 
 ```
@@ -3162,13 +3163,11 @@ required to insert the Client ID and Secret in the config.
 
 <!-- references -->
 
-
-
 [minimal auth.config]: https://github.com/onedata/oz-worker/blob/develop/rel/files/auth.config
 
 [tutorial for Google IdP]: ./oidc-google-idp.md
 
-[Onezone logs]: ../../troubleshooting.md
+[Onezone logs]: ../troubleshooting.md
 
 [supported IdP list]: #supported-idps
 
@@ -3202,7 +3201,7 @@ required to insert the Client ID and Secret in the config.
 
 [Local User Mapping (LUMA)]: #luma-integration
 
-[LUMA docs]: ../../../../oneprovider/configuration/luma.md
+[LUMA docs]: ../../oneprovider/configuration/luma.md
 
 [attribute mapper]: #attribute-mapper
 
@@ -3218,7 +3217,7 @@ required to insert the Client ID and Secret in the config.
 
 [auth plugins]: #auth-plugins
 
-[provider]: ../../../../../../user-guide/providers.md
+[provider]: ../../../user-guide/providers.md
 
 [Onedata support]: https://onedata.org/#/home/support
 

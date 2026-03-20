@@ -4,7 +4,9 @@ title: 'Storage import'
 
 # Storage import
 
-[toc][0]
+## Table of Contents
+
+## Overview
 
 *Storage import* is dedicated for importing files located on a storage by registering them in the space supported by
 the storage. The file registration process **does not copy any data**, it simply creates the necessary metadata so that

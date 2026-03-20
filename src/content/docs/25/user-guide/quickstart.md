@@ -130,8 +130,6 @@ what can be done to organize a fully-fledged Onedata ecosystem for your use case
 
 <!-- references -->
 
-[1]: <>
-
 [demo.onedata.org]: https://demo.onedata.org/
 
 [EGI]: https://www.egi.eu/services/
@@ -140,7 +138,7 @@ what can be done to organize a fully-fledged Onedata ecosystem for your use case
 
 [EGI DataHub]: https://datahub.egi.eu
 
-[demo mode]: ../../admin-guide/demo-mode.md
+[demo mode]: ../admin-guide/demo-mode.md
 
 [consuming the token]: tokens.md#consuming-invite-tokens
 
@@ -174,7 +172,7 @@ what can be done to organize a fully-fledged Onedata ecosystem for your use case
 
 [Shares]: shares.md
 
-[Deploy Onedata]: ../../admin-guide/overview.md
+[Deploy Onedata]: ../admin-guide/overview.md
 
 [screen-log-in]: ../images/user-guide/quickstart/log-in.png
 

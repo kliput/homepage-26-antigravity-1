@@ -176,6 +176,8 @@ a[target="_blank"].no-external-icon::after {
 
 .prose img[alt^="image-"] {
   border-color: transparent;
+  background-color: white;
+  padding: 1rem;
 }
 
 h1,
@@ -607,6 +609,11 @@ h6 {
 }
 
 /* TODO: uporządkować */
+
+pre,
+code {
+  font-variant-ligatures: none;
+}
 
 .prose code {
   font-family: var(--font-family-mono);

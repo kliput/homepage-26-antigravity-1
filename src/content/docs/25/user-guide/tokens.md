@@ -6,8 +6,6 @@ title: 'Tokens'
 
 ## Table of Contents
 
-## Overview
-
 ## Quickstart
 
 See the [GUI guide][2] for examples how to quickly obtain basic tokens
@@ -1117,8 +1115,6 @@ offered by Onedata tokens and the token creation GUI wizard.
 <!-- references -->
 
 [Google's macaroons]: https://ai.google/research/pubs/pub41892
-
-[1]: <>
 
 [2]: #gui-guide
 

@@ -39,12 +39,12 @@ The file will become visible immediately.
 
 <!-- [storage backend]: spaces.md#storage-backends -->
 
-[storage backend]: ../../admin-guide/oneprovider/configuration/storage-backends.md
+[storage backend]: ../admin-guide/oneprovider/configuration/storage-backends.md
 
-[imported storage]: ../../admin-guide/oneprovider/configuration/storage-backends.md#imported-storage
+[imported storage]: ../admin-guide/oneprovider/configuration/storage-backends.md#imported-storage
 
-[manual import mode]: ../../admin-guide/oneprovider/configuration/storage-import.md#manual-storage-import
+[manual import mode]: ../admin-guide/oneprovider/configuration/storage-import.md#manual-storage-import
 
-[auto import mode]: ../../admin-guide/oneprovider/configuration/storage-import.md#auto-storage-import
+[auto import mode]: ../admin-guide/oneprovider/configuration/storage-import.md#auto-storage-import
 
 [REST API]: https://onedata.org/#/home/api/stable/oneprovider?anchor=operation/register_file

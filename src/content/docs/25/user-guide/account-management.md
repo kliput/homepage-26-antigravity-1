@@ -39,7 +39,7 @@ To connect additional accounts, follow these steps:
 
 <!-- references -->
 
-[1]: <>
+
 
 [screen-manage-account]: ../images/user-guide/account-management/manage-account.png
 

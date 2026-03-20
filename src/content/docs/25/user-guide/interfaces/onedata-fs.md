@@ -219,8 +219,6 @@ space.removexattr("file.txt", "license")
 
 <!-- references -->
 
-
-
 [oneclient]: oneclient.md
 
 [PyFilesystem2]: https://www.pyfilesystem.org/

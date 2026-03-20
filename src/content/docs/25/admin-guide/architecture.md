@@ -15,7 +15,7 @@ perspective, including a brief overview of each of the components.
 The following diagram shows an example Onedata deployment including all major
 functional components.
 
-![image][architecture]
+![image-architecture][]
 
 ## Services
 
@@ -97,7 +97,7 @@ geographically distributed organizations.
 OneproviderWorker provides a self-scalable cluster, which manages the Onedata
 system in a single data center, i.e. it stores meta-data about actual users'
 data from the data center, provides several interfaces for data I/O operations
-such as CDMI, REST and internal protocol enabling [Oneclient][0] POSIX-style access. Furthermore executes QoS data management rules, which can be defined by
+such as CDMI, REST and internal protocol enabling [Oneclient][] POSIX-style access. Furthermore executes QoS data management rules, which can be defined by
 administrators and users.
 
 OneproviderWorker requires direct access to the storage resources it manages, so
@@ -189,11 +189,9 @@ will only handle metadata management.
 
 <!-- references -->
 
-[1]: <>
+[Oneclient]: #oneclient
 
-[0]: #oneclient
-
-[architecture]: ../images/admin-guide/architecture/onedata-architecture-overview.png
+[image-architecture]: ../images/admin-guide/architecture/onedata-architecture-overview.png
 
 [Couchbase]: https://www.couchbase.com
 

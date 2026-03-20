@@ -127,8 +127,6 @@ function (id, type, meta, ctx) {
 
 <!-- references -->
 
-
-
 [1]: data.md#file-distribution
 
 [screen-initiate-transfer]: ../images/user-guide/data-transfer/initiate-transfer.png

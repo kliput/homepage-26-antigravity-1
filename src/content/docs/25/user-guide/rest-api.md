@@ -74,7 +74,7 @@ Alternatively, the ID can be retrieved from the GUI:
 
 <!-- references -->
 
-[architecture]: ../../admin-guide/architecture.md
+[architecture]: ../admin-guide/architecture.md
 
 [Onezone REST API]: https://onedata.org/#/home/api/stable/onezone
 

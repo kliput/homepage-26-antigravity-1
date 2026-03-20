@@ -1,57 +1,69 @@
 ---
 title: 'Overview'
 ---
-
 # Overview
 
 <!-- @TODO VFS-11766 missing chapter -->
 
-This chapter describes the available [Oneprovider][providers] installation methods.
-All supported installation methods use our [official Docker images][docker-images]
-to run Oneprovider on any [Linux OS supporting Docker][supported-platforms].
+<!-- as needed: link to configuration, compatibility-reference [versions]). We need to decide/discuss. -->
 
+<!-- @TODO VFS-13169 compatibility reference -->
+
+This chapter describes the available [Oneprovider][providers] installation methods.
+All of them use our [official Docker images][docker-images] to run Oneprovider on any
+[Linux OS that supports Docker][supported-platforms].
+
+<!-- @TODO VFS-11766 docs for multinode deployments 
 Oneprovider service can be deployed on multiple hosts for
 high-availability purpose. If not mentioned otherwise, we assume that
 Oneprovider will be installed on a single host.
+-->
 
-There are few installation methods shortly described further to help you choose which one is best for you:
+Choose your preferred method:
 
-* [Onedatify CLI wizard][] — this method uses our convenient script integrated with Onedata UI which
-  guides you through the installation process.
-  This is the recommended quickstart method.
-* [Graphical wizard][] — the installation is done by first running an empty instance of Oneprovider
-  which later is being configured by clicking through some forms. It offers better configurability than the Onedata CLI
-  wizard, but still user-friendly.
-* [Batch mode][] — useful for more skilled administrators wanting a specifically configured deployment.
-  The deployment happens in batch mode, which does not require manual steps. It is useful for automated deployments.
-  The installation is done by preparing a YAML configuration file for Oneprovider and then running the service.
+* [Onedatify CLI wizard][] — use a one-liner that can be found in the Onedata UI to run
+  a shell script, which will guide you through the installation process using
+  command-line interface. This is **the recommended quickstart method**. Under the hood,
+  it's a wrapper for the [Batch mode][] that fills in the deployment configuration
+  according to your choices.
 
-::: tip PREREQUISITES
-Regardless of the chosen method, the host should be initially prepared — see [prerequisites][].
-:::
+* [Graphical wizard][] — use Docker Compose to start up a non-deployed Oneprovider node.
+  Then, enter the Onepanel Web interface that will guide you through the deployment with
+  a user-friendly, graphical wizard. Offers better configurability than the Onedatify CLI
+  wizard, but is harder for beginners.
 
-::: tip CHOOSING THE VERSION
-The newly deployed Oneprovider must be compatible with its [Onezone][zones], and with
-cooperating Oneproviders (if applicable). Thus, we recommend reading the [Upgrades &
-compatibility][] chapter first, to choose the proper version or upgrade other services.
+* [Batch mode][] — use Docker Compose and specify the deployment configuration in the
+  `docker-compose.yml` file. The deployment will be performed automatically upon service
+  start. Useful for automated deployments and skilled administrators.
+
+::: tip NOTE
+Regardless of the chosen method, the host should be properly set up — see [prerequisites][].
+
+After a successful installation, you can further configure your Oneprovider — see
+[Configuration][].
 :::
 
 ::: tip NOTE
-We do not officially support the traditional package installation method. If you desperately need to install it
-from packages, inspect the relevant Dockerfile and adapt the installation steps to your case.
+We do not officially support the traditional package-based installation method, and we
+do not recommend it. Our docker images hide away the complexity of dependencies and
+ensure smooth maintenance and upgrades — all of which you'd have to do on your own when
+installing from packages.
+
+If you desperately need to install Oneprovider from packages, inspect the relevant
+[Dockerfile][] and adapt the installation steps to your case.
 :::
 
 <!-- references -->
 
-[providers]: ../../../../../../intro.md#providers
-
-[zones]: ../../../../../../intro.md#zones
+[providers]: ../../../intro.md#providers
 
 [docker-images]: https://hub.docker.com/r/onedata/oneprovider/tags
 
 [supported-platforms]: https://docs.docker.com/engine/installation/#supported-platforms
 
-[prerequisites]: ../../prerequisites.md
+[prerequisites]: ../prerequisites.md
+
+[configuration]: ../configuration/cluster-members.md
 
 [Onedatify CLI wizard]: onedatify-cli.md
 
@@ -59,4 +71,4 @@ from packages, inspect the relevant Dockerfile and adapt the installation steps 
 
 [Batch mode]: docker-compose.md
 
-[Upgrades & compatibility]: ../../../../upgrades-and-compatibility.md
+[Dockerfile]: https://github.com/onedata/oneprovider-pkg/blob/develop/docker/Dockerfile

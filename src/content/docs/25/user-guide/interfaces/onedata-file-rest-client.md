@@ -33,8 +33,6 @@ For reference documentation and usage examples see the [GitHub][] page.
 
 <!-- references -->
 
-
-
 [GitHub]: https://github.com/onedata/onedatafilerestclient
 
 [PyPi]: https://pypi.org/project/onedatafilerestclient/

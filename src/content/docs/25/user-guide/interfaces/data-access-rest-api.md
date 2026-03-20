@@ -14,4 +14,4 @@ started.
 
 <!-- references -->
 
-[generic-rest-api]: ../../rest-api.md
+[generic-rest-api]: ../rest-api.md

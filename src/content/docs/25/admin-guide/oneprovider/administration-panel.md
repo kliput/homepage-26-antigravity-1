@@ -88,8 +88,6 @@ cluster.
 
 <!-- references -->
 
-
-
 [gui-wizard-deployment]: ./installation/graphical-wizard.md
 
 [REST API]: ./configuration/rest-api.md

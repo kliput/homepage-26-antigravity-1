@@ -214,8 +214,6 @@ actions][].
 
 <!-- references -->
 
-
-
 [establishing datasets]: #establishing-datasets
 
 [protection]: #data-and-metadata-write-protection

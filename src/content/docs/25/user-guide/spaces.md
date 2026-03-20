@@ -1,16 +1,5 @@
 ---
 title: 'Spaces'
-sidebar:
-  # Set a custom label for the link
-  label: Custom spaces
-  # Set a custom order for the link (lower numbers are displayed higher up)
-  order: 2
-  # Add a badge to the link
-  badge:
-
-    text: New
-    variant: tip
-
 ---
 
 # Spaces
@@ -61,7 +50,7 @@ corresponding data center.
 
  -->
 
-![space-support][]
+![screen-space-support][]
 
 Each space may be supported by one or more providers and the data produced by the space
 users will be distributed among the assigned storage backends. Users do not need to be
@@ -76,7 +65,7 @@ redundancy of data (such as [data transfers][] or [QoS][]).
 When a file within a space is written (e.g. uploaded), its content is written to one of
 the supporting physical storage backends. Similarly, during a file read, the physical data
 is read from the storage and then returned to the requesting client. Onedata stores
-information about the mapping between logical and physical files in the file metadata, 
+information about the mapping between logical and physical files in the file metadata,
 which is replicated and synchronized between all supporting providers.
 
 <!-- TODO VFS-9288 globally unify the formatting of NOTEs in all docs -->
@@ -90,13 +79,13 @@ Learn more [here][].
 ## Space members
 
 Access control to Onedata spaces is built around the concept of user and group
-memberships. Space is accessible only to its members — in a typical scenario, 
+memberships. Space is accessible only to its members — in a typical scenario,
 this can be a group of scientists that work on the same research project and
 share the related data collections. They may have different affiliations, but their view
 on the common space is the same, regardless of their institution of origin. Each
 user or group can be assigned different privileges in the space, depending on
 the capabilities they should have. In the case of group memberships, each member of
-a group that belongs to a space inherits the group's privileges. For example, 
+a group that belongs to a space inherits the group's privileges. For example,
 one may create a group called **space XYZ admins** and grant all admin
 privileges in **space XYZ**. Any user that is added to the group will inherit
 the privileges and gain access to the **space XYZ** with admin privileges.
@@ -104,9 +93,9 @@ the privileges and gain access to the **space XYZ** with admin privileges.
 ## Space privileges
 
 Privileges define what individual users or groups can do in the space.
-As an owner of the space or user with appropriate privileges, 
+As an owner of the space or user with appropriate privileges,
 you can manage what other users or groups can do in the space.
-Privileges that can be set are about managing space like viewing, 
+Privileges that can be set are about managing space like viewing,
 modifying and removing space, and viewing or setting privileges.
 
 ## Space owner
@@ -114,7 +103,7 @@ modifying and removing space, and viewing or setting privileges.
 After creating a space, you become an owner of that space, which means
 that you are authorized to perform all operations, regardless of the assigned
 privileges. As an owner, you can pass ownership to another user that belongs
-to that space. The space must always have at least one owner, 
+to that space. The space must always have at least one owner,
 but there may be more. As an owner you can not leave the space if there are no other
 owners in that space, first, you should pass ownership to another user.
 
@@ -149,7 +138,7 @@ received an invite token from another user.
 ### Request support for space
 
 To request support for your space, click on the **PROVIDERS** tile
-in the overview, which will invoke the **Add support** action. Alternatively, 
+in the overview, which will invoke the **Add support** action. Alternatively,
 navigate to the space's **Providers** submenu.
 ![screen-space-created][]
 
@@ -212,7 +201,7 @@ overwrite the old ones to identical values.
 
 ### Effective members
 
-To see not only direct members but also members that belong to the space indirectly through groups, 
+To see not only direct members but also members that belong to the space indirectly through groups,
 go to the **Members** submenu, expand the view options, and choose **Effective**
 to view all of the members. You can see that privileges are inherited from the members.
 ![screen-effective-privileges][]
@@ -229,27 +218,25 @@ Refer to the [Web file browser][] guide for further instructions.
 
 <!-- references -->
 
-[1]: <>
-
 [logical paths or global IDs]: data.md#file-path-and-id
 
 [members]: #space-members
 
-[storage backend]: ../../admin-guide/oneprovider/configuration/storage-backends.md
+[storage backend]: ../admin-guide/oneprovider/configuration/storage-backends.md
 
-[Oneprovider service]: ../../admin-guide/overview.md
+[Oneprovider service]: ../admin-guide/overview.md
 
 [data transfers]: data-transfers.md
 
 [QoS]: rule-based-replication-qos.md
 
-[here]: ../../admin-guide/oneprovider/configuration/storage-import.md
+[here]: ../admin-guide/oneprovider/configuration/storage-import.md
 
 [Tokens GUI]: tokens.md#consuming-invite-tokens
 
 [REST API]: ./rest-api.md
 
-[grant support for your space]: ../../admin-guide/oneprovider/configuration/space-support.md#granting-space-support
+[grant support for your space]: ../admin-guide/oneprovider/configuration/space-support.md#granting-space-support
 
 [Web file browser]: interfaces/web-file-browser.md
 
@@ -266,6 +253,8 @@ Refer to the [Web file browser][] guide for further instructions.
 [screen-space-menu]: ../images/user-guide/spaces/space-menu.png
 
 [screen-space-rest-api]: ../images/user-guide/spaces/space-rest-api.png
+
+[screen-space-support]: ../images/user-guide/spaces/space-support.svg
 
 [screen-invite-user]: ../images/user-guide/spaces/invite-user.png
 

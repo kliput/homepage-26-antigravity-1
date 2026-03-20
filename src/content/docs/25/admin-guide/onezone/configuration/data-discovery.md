@@ -11,7 +11,7 @@ that includes a guide for querying Data Discovery indices in Onedata and a
 [FAQ][2] that should help
 solve problems.
 
-[toc][3]
+## Table of Contents
 
 ## Harvesters
 
@@ -361,37 +361,35 @@ your own configuration in JSON format.
 
 <!-- references -->
 
-[1]: ../../../../../../user-guide/data-discovery.md
+[1]: ../../../user-guide/data-discovery.md
 
-[2]: ../../../../../../user-guide/data-discovery.md#data-discovery-faq
+[2]: ../../../user-guide/data-discovery.md#data-discovery-faq
 
-[3]: <>
+[4]: ../../../user-guide/spaces.md
 
-[4]: ../../../../../../user-guide/spaces.md
-
-[5]: ../../../../../../intro.md#basic-concepts
+[5]: ../../../intro.md#basic-concepts
 
 [6]: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping.html
 
-[7]: ../../../../../../user-guide/data-discovery.md#querying-indexed-metadata
+[7]: ../../../user-guide/data-discovery.md#querying-indexed-metadata
 
 [8]: #general-settings
 
-[9]: ../../../../../../user-guide/data-discovery.md#why-only-administrators-are-privileged-to-create-a-new-harvester
+[9]: ../../../user-guide/data-discovery.md#why-only-administrators-are-privileged-to-create-a-new-harvester
 
-[16]: ../../../../../../user-guide/metadata.md
+[16]: ../../../user-guide/metadata.md
 
-[17]: ../../../../../../user-guide/data-discovery.md#data-discovery-gui
+[17]: ../../../user-guide/data-discovery.md#data-discovery-gui
 
 [19]: #creating-a-new-harvester
 
-[20]: ../../../../../../user-guide/tokens.md#consuming-invite-tokens
+[20]: ../../../user-guide/tokens.md#consuming-invite-tokens
 
-[25]: ../../../../../../user-guide/data-discovery.md#rest-api
+[25]: ../../../user-guide/data-discovery.md#rest-api
 
 [26]: #gui-plugin-indices
 
-[33]: ../../../../../../user-guide/groups.md#group-members
+[33]: ../../../user-guide/groups.md#group-members
 
 [35]: #public-access
 

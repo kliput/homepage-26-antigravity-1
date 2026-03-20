@@ -100,8 +100,6 @@ groups like removing or adding but also modifying groups.
 
 <!-- references -->
 
-[1]: <>
-
 [Tokens GUI]: tokens.md#consuming-invite-tokens
 
 [REST API]: ./rest-api.md

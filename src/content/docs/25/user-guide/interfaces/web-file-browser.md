@@ -340,43 +340,41 @@ directories, scheduling data transfers, etc.).
 
 <!-- references -->
 
-
-
-[space]: ../../spaces.md
+[space]: ../spaces.md
 
 <!-- TODO VFS-11766 improve when the support docs are there -->
 
-[space-support]: ../../spaces.md#request-support-for-space
+[space-support]: ../spaces.md#request-support-for-space
 
-[provider]: ../../providers.md
+[provider]: ../providers.md
 
 [mobile-file-browser]: #mobile-file-browser
 
-[space-privileges]: ../../spaces.md#space-privileges
+[space-privileges]: ../spaces.md#space-privileges
 
-[share]: ../../shares.md
+[share]: ../shares.md
 
 [share action]: #share
 
-[metadata-gui]: ../../metadata.md#web-gui
+[metadata-gui]: ../metadata.md#web-gui
 
-[permissions]: ../../data.md#permissions
+[permissions]: ../data.md#permissions
 
-[posix-permissions]: ../../data.md#posix-permissions
+[posix-permissions]: ../data.md#posix-permissions
 
-[acl]: ../../data.md#access-control-lists
+[acl]: ../data.md#access-control-lists
 
 <!-- TODO VFS-11766 change to a valid link -->
 
-[data-distribution]: ../../data.md#file-distribution
+[data-distribution]: ../data.md#file-distribution
 
-[transfers]: ../../data-transfers.md
+[transfers]: ../data-transfers.md
 
-[Quality of Service]: ../../rule-based-replication-qos.md
+[Quality of Service]: ../rule-based-replication-qos.md
 
-[datasets]: ../../datasets.md
+[datasets]: ../datasets.md
 
-[REST API]: ../../rest-api.md
+[REST API]: ../rest-api.md
 
 [screen-intro-data-overview]: ../../images/user-guide/interfaces/web-file-browser/intro-data-overview.png
 

@@ -73,4 +73,4 @@ Here is a summary of all available data access interfaces:
 
 [PyFilesystem2]: https://www.pyfilesystem.org/
 
-[access token]: ../../tokens.md#access-tokens
+[access token]: ../tokens.md#access-tokens

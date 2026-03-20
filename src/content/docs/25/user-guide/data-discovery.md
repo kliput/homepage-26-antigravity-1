@@ -279,13 +279,13 @@ only JSON metadata, then all other types of metadata will be ignored and not sub
 
 <!-- references -->
 
-[1]: ../../admin-guide/onezone/configuration/data-discovery.md
+[1]: ../admin-guide/onezone/configuration/data-discovery.md
 
 [2]: #data-discovery-faq
 
 [3]: #why-some-of-my-metadata-is-not-present-in-my-index
 
-[4]: ../../admin-guide/onezone/configuration/data-discovery.md#adding-new-spaces
+[4]: ../admin-guide/onezone/configuration/data-discovery.md#adding-new-spaces
 
 [5]: tokens.md#consuming-invite-tokens
 
@@ -293,9 +293,9 @@ only JSON metadata, then all other types of metadata will be ignored and not sub
 
 [7]: #why-only-administrators-are-privileged-to-create-a-new-harvester
 
-[8]: ../../admin-guide/onezone/configuration/data-discovery.md#creating-a-new-harvester
+[8]: ../admin-guide/onezone/configuration/data-discovery.md#creating-a-new-harvester
 
-[9]: ../../admin-guide/onezone/configuration/data-discovery.md#harvester-members
+[9]: ../admin-guide/onezone/configuration/data-discovery.md#harvester-members
 
 [10]: #2-adding-a-space-to-your-own-harvester
 
@@ -303,7 +303,7 @@ only JSON metadata, then all other types of metadata will be ignored and not sub
 
 [12]: #rest-api
 
-[13]: ../../admin-guide/onezone/configuration/data-discovery.md#public-access
+[13]: ../admin-guide/onezone/configuration/data-discovery.md#public-access
 
 [14]: ./metadata.md
 
@@ -311,7 +311,7 @@ only JSON metadata, then all other types of metadata will be ignored and not sub
 
 [32]: https://onedata.org/#/home/api/stable/onezone?anchor=operation/update_user_admin_privileges
 
-[33]: ../../admin-guide/onezone/configuration/data-discovery.md#feeding-metadata-into-indices
+[33]: ../admin-guide/onezone/configuration/data-discovery.md#feeding-metadata-into-indices
 
 [screen-1-data-discovery]: ../images/user-guide/data-discovery/1-data-discovery.png
 

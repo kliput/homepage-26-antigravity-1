@@ -142,8 +142,6 @@ Refer to the linked API documentation for detailed information and examples.
 
 <!-- references -->
 
-[1]: <>
-
 [3]: http://docs.aws.amazon.com/AmazonS3/latest/API/Welcome.html
 
 [4]: http://ceph.com/ceph-storage/

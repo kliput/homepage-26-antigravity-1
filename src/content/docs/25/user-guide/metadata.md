@@ -228,8 +228,6 @@ indices that harvest metadata from multiple spaces and provide advanced search e
 
 <!-- references -->
 
-[1]: <>
-
 [2]: #web-gui
 
 [3]: #filesystem-attributes

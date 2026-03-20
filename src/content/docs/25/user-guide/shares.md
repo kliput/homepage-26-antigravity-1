@@ -224,8 +224,6 @@ documentation.
 
 <!-- references -->
 
-[1]: <>
-
 [space]: spaces.md
 
 [file browser]: ./interfaces/web-file-browser.md

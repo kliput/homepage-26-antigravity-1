@@ -158,15 +158,13 @@ Below are some links to the REST API documentation of commonly used operations:
 
 <!-- references -->
 
-[1]: <>
-
 [replica distribution]: ./data-distribution-and-metrics.md
 
 [providers]: ./providers.md
 
 [space]: ./spaces.md
 
-[admin-qos]: ../../admin-guide/oneprovider/configuration/rule-based-replication-qos.md
+[admin-qos]: ../admin-guide/oneprovider/configuration/rule-based-replication-qos.md
 
 [QoS requirements]: #qos-requirement
 
@@ -190,7 +188,7 @@ Below are some links to the REST API documentation of commonly used operations:
 
 [file browser]: interfaces/web-file-browser.md#qos
 
-[storage backends]: ../../admin-guide/oneprovider/configuration/storage-backends.md
+[storage backends]: ../admin-guide/oneprovider/configuration/storage-backends.md
 
 [7]: interfaces/web-file-browser.md#switching-between-providers
 
