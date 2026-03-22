@@ -2,31 +2,51 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import { getCollection, render } from "astro:content";
 import { ArrowLeft, Calendar } from "@lucide/astro";
+import ReleaseVersionCard from "../../components/ReleaseVersionCard.astro";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
-  return blogEntries.map((entry) => ({
+  const releaseEntries = await getCollection("releases");
+
+  const blogPaths = blogEntries.map((entry) => ({
     params: { slug: entry.id },
-    props: { entry },
+    props: { entry, isRelease: false },
   }));
+
+  const releasePaths = releaseEntries.map((entry) => ({
+    params: { slug: `release-${entry.id}` },
+    props: { entry, isRelease: true },
+  }));
+
+  return [...blogPaths, ...releasePaths];
 }
 
-const { entry } = Astro.props;
+const { entry, isRelease } = Astro.props;
 const { Content } = await render(entry);
+
+// Narrow types for TypeScript
+const blogEntry = !isRelease ? (entry as CollectionEntry<"blog">) : null;
+const releaseEntry = isRelease ? (entry as CollectionEntry<"releases">) : null;
+
+// Ensure tags includes 'Release' for release entries
+const tags = isRelease
+  ? [...(releaseEntry!.data.tags || []), "Release"]
+  : blogEntry!.data.tags;
+
+const data = isRelease ? releaseEntry!.data : blogEntry!.data;
 ---
 
 <MainLayout
-  title={`${entry.data.title} | Onedata Blog`}
-  description={entry.data.description}
+  title={`${data.title} | Onedata Blog`}
+  description={data.description}
 >
   <article class="blog-post">
     <div class="post-container container">
-      <!-- TODO: obrazek -->
       <div class="post-content od-card">
         {
-          entry.data.image && (
+          data.image && (
             <div class="post-image card-image mb-8 rounded-xl">
-              <img src={entry.data.image} alt={entry.data.title} />
+              <img src={data.image} alt={data.title} />
             </div>
           )
         }
@@ -36,9 +56,9 @@ const { Content } = await render(entry);
             class="post-meta od-border mb-6 flex items-center gap-4 border-b pb-6"
           >
             {
-              entry.data.tags && (
+              tags && (
                 <div class="tags">
-                  {entry.data.tags.map((tag) => (
+                  {tags.map((tag: string) => (
                     <span class="tag inline-block rounded-full bg-gradient-to-r from-violet-600 to-purple-400 px-3 py-1 text-xs font-semibold text-white">
                       {tag}
                     </span>
@@ -50,10 +70,10 @@ const { Content } = await render(entry);
               <Calendar class="h-4 w-4" />
               <time
                 class="text-xs text-muted"
-                datetime={entry.data.date.toISOString()}
+                datetime={data.date.toISOString()}
               >
                 {
-                  entry.data.date.toLocaleDateString("en-US", {
+                  data.date.toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -62,17 +82,47 @@ const { Content } = await render(entry);
               </time>
             </div>
           </div>
-          <h1 class="post-title">{entry.data.title}</h1>
-          <div class="text-muted">{entry.data.description}</div>
+          <h1 class="post-title">{data.title}</h1>
+          <div class="text-muted leading-relaxed mb-8">{data.description}</div>
         </header>
+
+        {isRelease && releaseEntry && (
+          <div class="release-info-box">
+             <ReleaseVersionCard
+              version={releaseEntry.data.version}
+              releaseDate={releaseEntry.data.releaseDate}
+              minOneprovider={releaseEntry.data.minOneprovider}
+            />
+
+            {releaseEntry.data.highlights && releaseEntry.data.highlights.length > 0 && (
+              <section class="release-section">
+                <h2 class="release-section-heading">What's New in Onedata {releaseEntry.data.version}</h2>
+                <ul class="release-bullets">
+                  {releaseEntry.data.highlights.map((h: string) => <li>{h}</li>)}
+                </ul>
+              </section>
+            )}
+
+            {releaseEntry.data.upgradeNotes && releaseEntry.data.upgradeNotes.length > 0 && (
+              <section class="release-section">
+                <h2 class="release-section-heading">Upgrade Notes</h2>
+                <ul class="release-bullets">
+                  {releaseEntry.data.upgradeNotes.map((n: string) => <li>{n}</li>)}
+                </ul>
+              </section>
+            )}
+            
+            <h2 class="release-section-heading">Full Changelog</h2>
+          </div>
+        )}
 
         <Content />
 
         {
-          entry.data.citationBibtex && (
+          !isRelease && blogEntry && blogEntry.data.citationBibtex && (
             <>
               <h2>Citation</h2>
-              <pre class="citation rounded-xl">{entry.data.citationBibtex}</pre>
+              <pre class="citation rounded-xl">{blogEntry.data.citationBibtex}</pre>
             </>
           )
         }
@@ -95,7 +145,6 @@ const { Content } = await render(entry);
   }
 
   .post-image {
-    /* border-radius: var(--radius-lg); */
     height: 24rem;
   }
 
@@ -116,20 +165,11 @@ const { Content } = await render(entry);
     text-decoration: none;
   }
 
-  /* .post-meta {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--od-text);
-    opacity: 0.8;
-  } */
-
   .post-title {
     font-size: 2.5rem;
     font-weight: 800;
     line-height: 1.2;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
   }
 
@@ -222,5 +262,36 @@ const { Content } = await render(entry);
     padding: 1.25rem;
     font-family: var(--font-family-mono);
     white-space: pre-wrap;
+  }
+
+  /* Release specific styles for blog */
+  .release-info-box {
+    margin-top: 2rem;
+  }
+
+  .release-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .release-section-heading {
+    font-size: 1.25rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--od-text);
+    opacity: 0.6;
+    margin-bottom: 1rem !important;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .release-bullets {
+    padding-left: 1.5rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .release-bullets li {
+    margin-bottom: 0.6rem !important;
+    line-height: 1.6;
   }
 </style>

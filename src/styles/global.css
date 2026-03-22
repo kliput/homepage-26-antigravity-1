@@ -140,10 +140,9 @@ a {
   text-decoration: none;
 }
 
-/* FIXME: wyłączone globalnie na wzór aplikacji base44 */
-/* a:hover {
-  text-decoration: underline;
-} */
+.a-btn:hover {
+  text-decoration: none;
+}
 
 /* External link icon */
 a[target="_blank"]:not(.no-external-icon)::after {

@@ -14,6 +14,7 @@ interface Props {
   availableVersions: string[];
   activeChapter: string;
   sidebarNodes: SidebarTree;
+  showVersionSelector?: boolean;
 }
 
 type DocsChapterItem = {
@@ -44,31 +45,53 @@ const {
   availableVersions,
   activeChapter,
   sidebarNodes,
+  showVersionSelector = true,
 }: Props = Astro.props;
+
+const fallbackVersion = availableVersions[0];
 
 // Helper to render sidebar recursively
 function renderSidebarNode(node: SidebarNode, currentPath: string) {
-  if (node.type === "anchor") {
-    return `<li><a href="${node.href}" class="anchor-link">${node.label}</a></li>`;
-  }
-  if (node.type === "file") {
-    const isActive =
-      Astro.url.pathname === node.href ||
-      Astro.url.pathname === node.href + "/";
-    return `<li><a href="${node.href}" class="${isActive ? "active" : ""}">${node.label}</a></li>`;
-  } else if (node.type === "dir") {
-    // Check if any child is active to keep it open
-    const isExpanded = (node.children ?? []).some(
-      (child: SidebarNode) =>
-        (child.href && Astro.url.pathname.includes(child.href)) ||
-        (child.children &&
-          child.children.some(
-            (child: SidebarNode) =>
-              child.href && Astro.url.pathname.includes(child.href),
-          )),
-    );
+  switch (node.type) {
+    case "anchor":
+      return `<li><a href="${node.href}" class="anchor-link">${node.label}</a></li>`;
+    case "link": {
+      const isActive =
+        Astro.url.pathname === node.href ||
+        Astro.url.pathname === node.href + "/";
+      return `<li><a href="${node.href}" class="${isActive ? "active" : ""}">${node.label}</a></li>`;
+    }
+    case "heading": {
+      let html = `<li class="sidebar-section-heading"><span class="sidebar-heading-label">${node.label}</span>`;
+      if (node.children && node.children.length > 0) {
+        html += `<ul class="sidebar-heading-list">`;
+        for (const child of node.children) {
+          html += renderSidebarNode(child, currentPath);
+        }
+        html += `</ul>`;
+      }
+      html += `</li>`;
+      return html;
+    }
+    case "file": {
+      const isActive =
+        Astro.url.pathname === node.href ||
+        Astro.url.pathname === node.href + "/";
+      return `<li><a href="${node.href}" class="${isActive ? "active" : ""}">${node.label}</a></li>`;
+    }
+    case "dir": {
+      // Check if any child is active to keep it open
+      const isExpanded = (node.children ?? []).some(
+        (child: SidebarNode) =>
+          (child.href && Astro.url.pathname.includes(child.href)) ||
+          (child.children &&
+            child.children.some(
+              (child: SidebarNode) =>
+                child.href && Astro.url.pathname.includes(child.href),
+            )),
+      );
 
-    let html = `
+      let html = `
       <li class="sidebar-folder ${isExpanded ? "expanded" : ""}">
         <button class="folder-toggle">
           ${node.label}
@@ -76,15 +99,17 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
         </button>
         <ul class="folder-contents" ${isExpanded ? 'style="display:block;"' : 'style="display:none;"'}>
     `;
-    if (node.children) {
-      for (const child of node.children) {
-        html += renderSidebarNode(child, currentPath);
+      if (node.children) {
+        for (const child of node.children) {
+          html += renderSidebarNode(child, currentPath);
+        }
       }
+      html += `</ul></li>`;
+      return html;
     }
-    html += `</ul></li>`;
-    return html;
+    default:
+      return "";
   }
-  return "";
 }
 ---
 
@@ -100,13 +125,17 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
               Guides, API references, and examples for building with Onedata.
             </p>
           </div>
-          <DocsVersionSelect
-            selectorId="docs-version-select"
-            version={version}
-            availableVersions={availableVersions}
-            pathPrefix="/docs"
-            pathSuffix="intro/overview"
-          />
+          {
+            showVersionSelector && (
+              <DocsVersionSelect
+                selectorId="docs-version-select"
+                version={version}
+                availableVersions={availableVersions}
+                pathPrefix="/docs"
+                pathSuffix="intro/overview"
+              />
+            )
+          }
         </div>
       </div>
     </div>
@@ -119,9 +148,15 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
             chapters.map((chapter) => {
               const Icon = chapter.icon;
               const isActive = activeChapter === chapter.id;
+              // Releases chapter is version-independent
+              // FIXME: when on releases page, generate links with latest used version or stable or newest version available
+              const href =
+                chapter.id === "releases"
+                  ? "/docs/releases"
+                  : `/docs/${version ?? fallbackVersion}/${chapter.id}`;
               return (
                 <a
-                  href={`/docs/${version}/${chapter.id}`}
+                  href={href}
                   class={`chapter-tab ${isActive ? "active" : ""}`}
                 >
                   <Icon class="tab-icon" />
@@ -226,3 +261,37 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
     updateActiveAnchor();
   });
 </script>
+
+<style is:global>
+  /* Release sidebar section styles */
+  .sidebar-section-heading {
+    margin-top: 1.5rem;
+    padding: 0 0.75rem;
+  }
+
+  .sidebar-heading-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--od-text);
+    opacity: 0.4;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-heading-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sidebar-heading-list li a {
+    padding-left: 0;
+    padding-bottom: 0;
+  }
+</style>

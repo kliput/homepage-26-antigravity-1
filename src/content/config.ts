@@ -2,7 +2,6 @@ import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
 const blogCollection = defineCollection({
-  // type: "content",
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/blog" }),
   schema: z.object({
     title: z.string(),
@@ -26,8 +25,55 @@ const blogCollection = defineCollection({
 });
 
 const docsCollection = defineCollection({
-  // type: "content",
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/docs" }),
+  schema: z.object({
+    title: z.string(),
+  }),
+});
+
+const releasesCollection = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/releases" }),
+  schema: z.object({
+    version: z.string(), // e.g. "25.0"
+    codename: z.string().optional(),
+    releaseDate: z.string(), // e.g. "Q1 2025" (human-readable)
+    date: z.date(), // for chronological sorting with blog posts
+    minOneprovider: z.string().optional(), // e.g. "20.02.8"
+    title: z.string(), // blog post / release page title
+    description: z.string(), // short description (card + full post header)
+    image: z.string().optional(), // blog card image
+    highlights: z.array(
+      z.object({
+        title: z.string(),
+        shortDescription: z.string(),
+      }),
+    ),
+    upgradeNotes: z.array(z.string()), // upgrade note bullet points
+    assets: z
+      .array(
+        z.object({
+          label: z.string(),
+          url: z.string(),
+        }),
+      )
+      .optional(),
+    installUrl: z.string().optional(),
+    upgradeUrl: z.string().optional(),
+    changelog: z.array(
+      z.object({
+        issue: z.string(),
+        products: z.string(),
+        description: z.string(),
+      }),
+    ),
+  }),
+});
+
+const releasesDocsCollection = defineCollection({
+  loader: glob({
+    pattern: "**/*.{md,mdx}",
+    base: "./src/content/releases-docs",
+  }),
   schema: z.object({
     title: z.string(),
   }),
@@ -36,4 +82,6 @@ const docsCollection = defineCollection({
 export const collections = {
   blog: blogCollection,
   docs: docsCollection,
+  releases: releasesCollection,
+  "releases-docs": releasesDocsCollection,
 };

@@ -2,8 +2,21 @@
 import MainLayout from "../../layouts/MainLayout.astro";
 import { getCollection } from "astro:content";
 
-const allPosts = await getCollection("blog");
-const sortedPosts = allPosts.sort(
+const allBlogPosts = await getCollection("blog");
+const allReleases = await getCollection("releases");
+
+// Map releases to a format compatible with blog posts for the index
+const mappedReleases = allReleases.map((release) => ({
+  ...release,
+  slug: `release-${release.id}`,
+  data: {
+    ...release.data,
+    tags: [...(release.data.tags || []), "Release"],
+  },
+}));
+
+const allEntries = [...allBlogPosts, ...mappedReleases];
+const sortedPosts = allEntries.sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 

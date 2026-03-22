@@ -11,7 +11,7 @@ export type SidebarTree = SidebarNode[];
 export type SidebarNode = {
   id: string;
   label: string;
-  type: "file" | "dir" | "anchor";
+  type: "file" | "dir" | "anchor" | "heading" | "link";
   href?: string;
   children?: SidebarTree;
 };

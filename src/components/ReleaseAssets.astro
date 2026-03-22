@@ -1,0 +1,76 @@
+---
+interface Asset {
+  label: string;
+  url: string;
+}
+interface Props {
+  assets: Asset[];
+}
+const { assets } = Astro.props;
+---
+
+{assets.length > 0 && (
+  <div class="release-assets">
+    <h3 class="assets-heading">Release Assets</h3>
+    <ul class="assets-list">
+      {assets.map((asset) => (
+        <li>
+          <a href={asset.url} target="_blank" rel="noopener noreferrer" class="asset-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            {asset.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+<style>
+  .release-assets {
+    margin-bottom: 2.5rem;
+  }
+
+  .assets-heading {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--od-text);
+    opacity: 0.55;
+    margin-bottom: 0.75rem;
+  }
+
+  .assets-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .asset-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--od-text);
+    text-decoration: none;
+    background: var(--od-bg);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .asset-link:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    text-decoration: none;
+  }
+</style>

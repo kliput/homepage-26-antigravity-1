@@ -1,0 +1,68 @@
+---
+interface Props {
+  version: string;
+  releaseDate: string;
+  minOneprovider?: string;
+}
+const { version, releaseDate, minOneprovider } = Astro.props;
+---
+
+<div class="release-version-card">
+  <dl>
+    <div class="card-row">
+      <dt>Version</dt>
+      <dd>Onedata {version}</dd>
+    </div>
+    <div class="card-row">
+      <dt>Released</dt>
+      <dd>{releaseDate}</dd>
+    </div>
+    {minOneprovider && (
+      <div class="card-row">
+        <dt>Min. Oneprovider</dt>
+        <dd>{minOneprovider}</dd>
+      </div>
+    )}
+  </dl>
+</div>
+
+<style>
+  .release-version-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    background: var(--od-bg);
+    display: inline-block;
+    margin-bottom: 2rem;
+  }
+
+  dl {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  dt {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--od-text);
+    opacity: 0.55;
+    min-width: 9rem;
+  }
+
+  dd {
+    font-weight: 600;
+    color: var(--od-text);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>
