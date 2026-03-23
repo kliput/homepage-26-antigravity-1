@@ -327,17 +327,24 @@ h6 {
   display: none;
 }
 
+/* FIXME: przejrzeć wszystkie wystąpienia .od-card */
+
 /* Content Card */
 .od-card {
   background-color: var(--od-bg-card);
   border: 1px solid var(--od-border);
+  transition: border-color 0.2s;
   border-radius: 1rem;
   width: 100%;
   max-width: 100%;
   overflow: hidden;
 }
 
-.docs-main-content {
+.od-card:hover {
+  border-color: var(--od-border-hover);
+}
+
+.od-card-main {
   padding: 3rem;
 }
 

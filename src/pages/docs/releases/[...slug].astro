@@ -6,7 +6,7 @@ import path from "node:path";
 import yaml from "js-yaml";
 import type { CollectionEntry } from "astro:content";
 import ReleaseVersionCard from "../../../components/ReleaseVersionCard.astro";
-import ReleaseAssets from "../../../components/ReleaseAssets.astro";
+import ReleaseAssets from "../../../components/ReleaseAssets.jsx";
 import { ArrowUpCircle, Download } from "lucide-astro";
 
 export type SidebarTree = SidebarNode[];
@@ -282,9 +282,11 @@ const release = props.isRelease ? props.release : null;
       showVersionSelector={false}
     >
       {release ? (
-        <div class="release-page prose">
+        <div class="release-page">
           <div class="release-header mb-6 flex flex-wrap items-start justify-between gap-4">
-            <h1 class="release-title">Release {release.data.version}</h1>
+            <h1 class="release-title od-text m-0 text-2xl font-bold">
+              Release {release.data.version}
+            </h1>
             <div class="release-action-buttons">
               {release.data.installUrl && (
                 <a
@@ -312,53 +314,49 @@ const release = props.isRelease ? props.release : null;
             </div>
           </div>
 
-          <ReleaseVersionCard
-            version={release.data.version}
-            releaseDate={release.data.releaseDate}
-            minOneprovider={release.data.minOneprovider}
-          />
+          <ReleaseAssets version={release.data.version} client:visible />
 
-          {release.data.assets && release.data.assets.length > 0 && (
-            <ReleaseAssets assets={release.data.assets} />
-          )}
-
-          {release.data.highlights && release.data.highlights.length > 0 && (
-            <section class="release-section">
-              <h2>Highlights</h2>
-              <ul>
-                {release.data.highlights.map(({ title, shortDescription }) => (
-                  <li>
-                    <strong>{title}</strong> — {shortDescription}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {release.data.upgradeNotes &&
-            release.data.upgradeNotes.length > 0 && (
+          <div class="prose">
+            {release.data.highlights && release.data.highlights.length > 0 && (
               <section class="release-section">
-                <h2>Upgrade Notes</h2>
-                <ul class="release-bullets">
-                  {release.data.upgradeNotes.map((n) => (
-                    <li>{n}</li>
-                  ))}
+                <h2>Highlights</h2>
+                <ul>
+                  {release.data.highlights.map(
+                    ({ title, shortDescription }) => (
+                      <li>
+                        <strong>{title}</strong> — {shortDescription}
+                      </li>
+                    ),
+                  )}
                 </ul>
               </section>
             )}
 
-          <section class="release-section">
-            <h2>Full Changelog</h2>
-            <ul class="release-bullets">
-              {release.data.changelog.map((changelogEntry) => (
-                <li>
-                  <strong>{changelogEntry.issue}</strong>{" "}
-                  <em>({changelogEntry.products})</em>{" "}
-                  {changelogEntry.description}
-                </li>
-              ))}
-            </ul>
-          </section>
+            {release.data.upgradeNotes &&
+              release.data.upgradeNotes.length > 0 && (
+                <section class="release-section">
+                  <h2>Upgrade Notes</h2>
+                  <ul class="release-bullets">
+                    {release.data.upgradeNotes.map((n) => (
+                      <li>{n}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+            <section class="release-section">
+              <h2>Full Changelog</h2>
+              <ul class="release-bullets">
+                {release.data.changelog.map((changelogEntry) => (
+                  <li>
+                    <strong>{changelogEntry.issue}</strong>{" "}
+                    <em>({changelogEntry.products})</em>{" "}
+                    {changelogEntry.description}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
         </div>
       ) : (
         <div class="prose">{Content && <Content />}</div>
