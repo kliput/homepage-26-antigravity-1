@@ -7,7 +7,17 @@ export async function getStaticPaths() {
   const docsEntries = await getCollection("docs");
 
   const versions = [
-    ...new Set(docsEntries.map((entry) => entry.id.split("/")[0])),
+    ...new Set(
+      docsEntries.map((entry) => {
+        // FIXME: ugly hack
+        const versionWithoutDot = entry.id.split("/")[0];
+        if (versionWithoutDot === "2102") {
+          return "21.02";
+        } else {
+          return versionWithoutDot;
+        }
+      }),
+    ),
   ].sort((a, b) => b.localeCompare(a)); // Descending versions
 
   const paths = [];

@@ -4,114 +4,115 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 interface Props {
-	title: string;
-	description?: string;
+  title: string;
+  description?: string;
 }
 
 const {
-	title,
-	description = "Data Management Platform for Distributed API Pipelines and Hybrid Clouds",
+  title,
+  description = "Data Management Platform for Distributed API Pipelines and Hybrid Clouds",
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content={description} />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="sitemap" href="/sitemap-index.xml" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-			rel="stylesheet"
-		/>
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="generator" content={Astro.generator} />
+    <script src="../scripts/redirect-old-docs.js"></script>
+    <title>{title}</title>
 
-		<!-- Inline script to prevent FOUC for dark mode -->
-		<script is:inline>
-			const theme = (() => {
-				if (
-					typeof localStorage !== "undefined" &&
-					localStorage.getItem("theme")
-				) {
-					return localStorage.getItem("theme");
-				}
-				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-					return "dark";
-				}
-				return "light";
-			})();
+    <!-- Inline script to prevent FOUC for dark mode -->
+    <script is:inline>
+      const theme = (() => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          return "dark";
+        }
+        return "light";
+      })();
 
-			if (theme === "light") {
-				document.documentElement.dataset.theme = "light";
-			} else {
-				document.documentElement.dataset.theme = "dark";
-			}
-			window.localStorage.setItem("theme", theme);
-		</script>
+      if (theme === "light") {
+        document.documentElement.dataset.theme = "light";
+      } else {
+        document.documentElement.dataset.theme = "dark";
+      }
+      window.localStorage.setItem("theme", theme);
+    </script>
 
-		<script>
-			// Handle external links globally (especially for API reference and custom content)
-			document.addEventListener("DOMContentLoaded", () => {
-				const isExternal = (url: string) => {
-					try {
-						// Only treat as external if it has a different origin or is an absolute URL
-						const urlObj = new URL(url, window.location.origin);
-						return urlObj.origin !== window.location.origin;
-					} catch (e) {
-						return false;
-					}
-				};
+    <script>
+      // Handle external links globally (especially for API reference and custom content)
+      document.addEventListener("DOMContentLoaded", () => {
+        const isExternal = (url: string) => {
+          try {
+            // Only treat as external if it has a different origin or is an absolute URL
+            const urlObj = new URL(url, window.location.origin);
+            return urlObj.origin !== window.location.origin;
+          } catch (e) {
+            return false;
+          }
+        };
 
-				const applyTargetBlank = () => {
-					document.querySelectorAll("a").forEach((a) => {
-						if (a.href && isExternal(a.href) && !a.hasAttribute("target")) {
-							a.setAttribute("target", "_blank");
-							a.setAttribute("rel", "noopener noreferrer");
-						}
-					});
-				};
+        const applyTargetBlank = () => {
+          document.querySelectorAll("a").forEach((a) => {
+            if (a.href && isExternal(a.href) && !a.hasAttribute("target")) {
+              a.setAttribute("target", "_blank");
+              a.setAttribute("rel", "noopener noreferrer");
+            }
+          });
+        };
 
-				applyTargetBlank();
+        applyTargetBlank();
 
-				// Handle dynamically added content
-				const observer = new MutationObserver((mutations) => {
-					let shouldUpdate = false;
-					for (const mutation of mutations) {
-						if (
-							mutation.type === "childList" &&
-							mutation.addedNodes.length > 0
-						) {
-							shouldUpdate = true;
-							break;
-						}
-					}
-					if (shouldUpdate) applyTargetBlank();
-				});
-				observer.observe(document.body, { childList: true, subtree: true });
-			});
-		</script>
-	</head>
-	<body class="site-wrapper">
-		<Header />
-		<main class="main-content">
-			<slot />
-		</main>
-		<Footer />
-	</body>
+        // Handle dynamically added content
+        const observer = new MutationObserver((mutations) => {
+          let shouldUpdate = false;
+          for (const mutation of mutations) {
+            if (
+              mutation.type === "childList" &&
+              mutation.addedNodes.length > 0
+            ) {
+              shouldUpdate = true;
+              break;
+            }
+          }
+          if (shouldUpdate) applyTargetBlank();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+      });
+    </script>
+  </head>
+  <body class="site-wrapper">
+    <Header />
+    <main class="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>
 
 <style>
-	.site-wrapper {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-	.main-content {
-		flex: 1;
-	}
+  .site-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .main-content {
+    flex: 1;
+  }
 </style>
