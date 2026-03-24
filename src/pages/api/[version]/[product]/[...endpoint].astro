@@ -2,6 +2,7 @@
 import ApiLayout from "../../../../layouts/ApiLayout.astro";
 import fs from "node:fs";
 import path from "node:path";
+import { marked } from "marked";
 
 export async function getStaticPaths() {
   const apiDir = path.join(process.cwd(), "api");
@@ -116,7 +117,19 @@ Object.entries(apiPaths).forEach(
     });
   },
 );
-const sidebarGroups = Array.from(groupsMap.values());
+const sidebarGroups = [
+  {
+    name: "Overview",
+    operations: [
+      {
+        href: `/api/${version}/${product}/`,
+        method: "",
+        summary: "Overview & Authentication",
+      },
+    ],
+  },
+  ...Array.from(groupsMap.values()),
+];
 
 // Calculate versions dynamically from fs here or pass from getStaticPaths
 const apiDir = path.join(process.cwd(), "api");
@@ -152,35 +165,149 @@ const pageTitle = operation
         </div>
 
         {operation.details.description && (
-          <div class="api-description">
-            <p>{operation.details.description}</p>
+          <div
+            class="prose dark:prose-invert max-w-none mb-12"
+            set:html={marked.parse(operation.details.description)}
+          />
+        )}
+
+        {/* Request Format */}
+        {operation.details.parameters && operation.details.parameters.length > 0 && (
+          <div class="api-section mt-12">
+            <h2>Parameters</h2>
+            <div class="overflow-x-auto mt-4">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-[var(--od-border)] text-sm text-[var(--od-text)]">
+                    <th class="p-3 font-semibold">Name</th>
+                    <th class="p-3 font-semibold">In</th>
+                    <th class="p-3 font-semibold">Type</th>
+                    <th class="p-3 font-semibold">Required</th>
+                    <th class="p-3 font-semibold">Description</th>
+                  </tr>
+                </thead>
+                <tbody class="text-sm">
+                  {operation.details.parameters.map((param: any) => (
+                    <tr class="border-b border-[var(--od-border)] hover:bg-[var(--od-bg-hover)]">
+                      <td class="p-3 font-mono font-medium text-[var(--od-text)]">{param.name}</td>
+                      <td class="p-3 text-[var(--od-text-muted)]">{param.in}</td>
+                      <td class="p-3 font-mono text-[var(--od-text-muted)]">{param.type || (param.schema && param.schema.type) || "object"}</td>
+                      <td class="p-3">
+                        {param.required ? <span class="text-red-500 font-bold">Yes</span> : <span class="text-[var(--od-text-muted)]">No</span>}
+                      </td>
+                      <td class="p-3">
+                        {param.description && <div class="prose dark:prose-invert prose-sm" set:html={marked.parse(param.description)} />}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
-        {/* Here you could add more Swagger rendering logic: Parameters, Responses, etc. */}
-        {operation.details.parameters &&
-          operation.details.parameters.length > 0 && (
-            <div class="api-section">
-              <h3>Parameters</h3>
-              <pre>{JSON.stringify(operation.details.parameters, null, 2)}</pre>
+        {/* Request Examples */}
+        {operation.details["x-code-samples"] && operation.details["x-code-samples"].length > 0 && (
+          <div class="api-section mt-12">
+            <h2>Request Examples</h2>
+            <div class="space-y-6 mt-4">
+              {operation.details["x-code-samples"].map((sample: any) => (
+                <div class="rounded-xl overflow-hidden border border-[#2d2d2d] bg-[#1e1e1e]">
+                  <div class="bg-[#2d2d2d] px-4 py-2 text-xs font-bold text-gray-300 border-b border-[#404040]">
+                    {sample.lang}
+                  </div>
+                  <pre class="p-4 overflow-x-auto text-sm">
+                    <code class="text-gray-300">{sample.source}</code>
+                  </pre>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
-        <div class="api-section">
-          <h3>Responses</h3>
-          <pre>
-            {JSON.stringify(operation.details.responses || {}, null, 2)}
-          </pre>
-        </div>
+        {/* Responses */}
+        {operation.details.responses && Object.keys(operation.details.responses).length > 0 && (
+          <div class="api-section mt-12">
+            <h2>Responses</h2>
+            <div class="space-y-6 mt-4">
+              {Object.entries(operation.details.responses).map(([code, response]: [string, any]) => (
+                <div class="od-card p-6 border border-[var(--od-border)] rounded-xl bg-[var(--od-bg-card)]">
+                  <div class="flex items-center gap-3 mb-4">
+                    <span class={`font-bold px-3 py-1 rounded text-sm ${
+                      code.startsWith('2') ? 'bg-green-500/10 text-green-500' :
+                      code.startsWith('3') ? 'bg-blue-500/10 text-blue-500' :
+                      code.startsWith('4') ? 'bg-yellow-500/10 text-yellow-500' :
+                      'bg-red-500/10 text-red-500'}`}>
+                      {code}
+                    </span>
+                    <h3 class="font-bold text-lg text-[var(--od-text)]">{response.description || "Response"}</h3>
+                  </div>
+                  
+                  {response.schema && (
+                    <div class="mt-4">
+                      <h4 class="text-sm font-semibold mb-2 text-[var(--od-text-muted)]">Schema</h4>
+                      <pre class="p-4 rounded-xl bg-[#1e1e1e] border border-[#2d2d2d] overflow-x-auto text-sm text-gray-300">
+                        <code>{JSON.stringify(response.schema, null, 2)}</code>
+                      </pre>
+                    </div>
+                  )}
+
+                  {response.examples && (
+                    <div class="mt-4">
+                      <h4 class="text-sm font-semibold mb-2 text-[var(--od-text-muted)]">Examples</h4>
+                      {Object.entries(response.examples).map(([mime, example]) => (
+                        <div class="mt-2 rounded-xl overflow-hidden border border-[#2d2d2d] bg-[#1e1e1e]">
+                          <div class="bg-[#2d2d2d] px-4 py-2 text-xs font-mono text-gray-300 border-b border-[#404040]">
+                            {mime}
+                          </div>
+                          <pre class="p-4 overflow-x-auto text-sm text-gray-300">
+                            <code>{typeof example === 'string' ? example : JSON.stringify(example, null, 2)}</code>
+                          </pre>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     ) : (
-      <div class="api-welcome">
+      <div class="api-welcome pt-4">
         <h1 class="api-endpoint-title" style="text-transform: capitalize;">
           {product} API Reference
         </h1>
-        <p style="font-size: 1.1rem; opacity: 0.8; margin-top: 1rem;">
-          Select an endpoint from the sidebar to view its details.
-        </p>
+        {swaggerData?.info?.description && (
+          <div
+            class="prose dark:prose-invert max-w-none mb-12"
+            set:html={marked.parse(swaggerData.info.description)}
+          />
+        )}
+
+        {swaggerData?.securityDefinitions && Object.keys(swaggerData.securityDefinitions).length > 0 && (
+          <div class="api-section mt-12">
+            <h2>Authentication</h2>
+            <div class="space-y-6 mt-6">
+              {Object.entries(swaggerData.securityDefinitions).map(([key, def]: [string, any]) => (
+                <div class="od-card p-6 border border-[var(--od-border)] rounded-xl bg-[var(--od-bg-card)]">
+                  <h3 class="font-bold text-lg mb-4 text-[var(--od-text)]">{key}</h3>
+                  <ul class="list-disc pl-5 mb-4 text-sm text-[var(--od-text-muted)]">
+                    <li><strong>Type:</strong> {def.type}</li>
+                    {def.name && <li><strong>Name:</strong> {def.name}</li>}
+                    {def.in && <li><strong>In:</strong> {def.in}</li>}
+                  </ul>
+                  {def.description && (
+                    <div
+                      class="prose dark:prose-invert max-w-none text-sm"
+                      set:html={marked.parse(def.description)}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -194,25 +321,12 @@ const pageTitle = operation
     color: var(--od-text);
   }
 
-  .api-section {
-    margin-top: 2rem;
-  }
-
-  .api-section h3 {
-    font-size: 1.3rem;
+  .api-section h2 {
+    font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .api-section pre {
-    background-color: #1e1e1e;
-    color: #d4d4d4;
-    padding: 1.25rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    font-size: 0.9rem;
-    font-family: var(--font-family-mono);
+    border-bottom: 1px solid var(--od-border);
+    color: var(--od-text);
   }
 </style>

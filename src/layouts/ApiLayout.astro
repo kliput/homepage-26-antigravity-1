@@ -109,7 +109,7 @@ const currentPath = Astro.url.pathname;
                               >
                                 {/* must be without spaces to look good in Firefox */}
                                 {/* prettier-ignore */}
-                                <span class={`method-badge method-${op.method}`}>{op.method.toUpperCase()}</span>
+                                {op.method && <span class={`method-badge method-${op.method}`}>{op.method.toUpperCase()}</span>}
                                 <span class="method-summary">
                                   {op.summary || op.method}
                                 </span>
