@@ -117,19 +117,7 @@ Object.entries(apiPaths).forEach(
     });
   },
 );
-const sidebarGroups = [
-  {
-    name: "Overview",
-    operations: [
-      {
-        href: `/api/${version}/${product}/`,
-        method: "",
-        summary: "Overview & Authentication",
-      },
-    ],
-  },
-  ...Array.from(groupsMap.values()),
-];
+const sidebarGroups = Array.from(groupsMap.values());
 
 // Calculate versions dynamically from fs here or pass from getStaticPaths
 const apiDir = path.join(process.cwd(), "api");

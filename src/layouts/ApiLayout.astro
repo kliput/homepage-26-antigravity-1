@@ -28,6 +28,9 @@ const { title, version, availableVersions, activeProduct, sidebarGroups } =
 
 // Current path for active state highlighting
 const currentPath = Astro.url.pathname;
+
+const normalizePath = (p: string) => p.replace(/\/+$/, "");
+const isActivePath = (href: string) => normalizePath(currentPath) === normalizePath(href);
 ---
 
 <MainLayout title={title}>
@@ -84,10 +87,18 @@ const currentPath = Astro.url.pathname;
           <div class="sticky top-32">
             <nav class="sidebar-nav pt-4">
               <ul class="sidebar-root-list">
+                <li class="mb-2">
+                  <a
+                    href={`/api/${version}/${activeProduct}/`}
+                    class={`api-method-link !px-0 !py-1 ${isActivePath(`/api/${version}/${activeProduct}`) || isActivePath(`/api/${version}/${activeProduct}/`) ? "active" : ""}`}
+                  >
+                    <span class="font-semibold" style="font-size: 0.95rem;">Overview & Authentication</span>
+                  </a>
+                </li>
                 {
                   sidebarGroups.map((group) => {
                     const isExpanded = group.operations.some((op: any) =>
-                      currentPath.endsWith(op.href),
+                      isActivePath(op.href),
                     );
                     return (
                       <li
@@ -105,7 +116,7 @@ const currentPath = Astro.url.pathname;
                             <li>
                               <a
                                 href={op.href}
-                                class={`api-method-link ${currentPath.endsWith(op.href) ? "active" : ""}`}
+                                class={`api-method-link ${isActivePath(op.href) ? "active" : ""}`}
                               >
                                 {/* must be without spaces to look good in Firefox */}
                                 {/* prettier-ignore */}
