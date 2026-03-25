@@ -176,128 +176,177 @@ const pageTitle = operation
           operation.details.parameters.length > 0 &&
           (() => {
             const consumes = operation.details.consumes || swaggerData.consumes;
-            return (
-              <div class="api-section mt-12">
-                <div class="mb-4 flex items-end justify-between border-b border-[var(--od-border)] pb-2">
-                  <h2 class="!mb-0 !border-0 !pb-0 text-xl font-bold">
-                    Parameters
-                  </h2>
-                  {consumes && consumes.length > 0 && (
-                    <div class="text-sm">
-                      <span class="text-[var(--od-text-muted)]">
-                        Consumes:{" "}
-                      </span>
-                      {consumes.map((c: string) => (
-                        <span class="ml-2 inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-2 py-1 font-mono text-xs text-[var(--od-text)]">
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div class="mt-4 overflow-x-auto">
-                  <table class="w-full border-collapse text-left">
-                    <thead>
-                      <tr class="border-b border-[var(--od-border)] text-sm text-[var(--od-text)]">
-                        <th class="p-3 font-semibold">Name</th>
-                        <th class="p-3 font-semibold">In</th>
-                        <th class="p-3 font-semibold">Type</th>
-                        <th class="p-3 font-semibold">Required</th>
-                        <th class="p-3 font-semibold">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody class="text-sm">
-                      {operation.details.parameters.map((param: any) => (
-                        <tr class="border-b border-[var(--od-border)] hover:bg-[var(--od-bg-hover)]">
-                          <td class="p-3 font-mono font-medium text-[var(--od-text)]">
-                            {param.name}
-                          </td>
-                          <td class="p-3 text-[var(--od-text-muted)]">
-                            {param.in}
-                          </td>
-                          <td class="p-3 font-mono text-[var(--od-text-muted)]">
-                            {param.type ||
-                              (param.schema && param.schema.type) ||
-                              "object"}
-                          </td>
-                          <td class="p-3">
-                            {param.required ? (
-                              <span class="font-bold text-red-500">Yes</span>
-                            ) : (
-                              <span class="text-[var(--od-text-muted)]">
-                                No
-                              </span>
-                            )}
-                          </td>
-                          <td class="min-w-[300px] p-3 align-top">
-                            {param.description && (
-                              <div
-                                class="prose prose-sm dark:prose-invert"
-                                set:html={marked.parse(param.description)}
-                              />
-                            )}
+            // FIXME: zrefaktorować do jednej pętli rozdzielającej (albo użycie lodash)
+            const pathParams = operation.details.parameters.filter(
+              (p: any) => p.in === "path",
+            );
+            const queryParams = operation.details.parameters.filter(
+              (p: any) => p.in === "query",
+            );
+            const headerParams = operation.details.parameters.filter(
+              (p: any) => p.in === "header",
+            );
+            const formDataParams = operation.details.parameters.filter(
+              (p: any) => p.in === "formData",
+            );
+            const bodyParams = operation.details.parameters.filter(
+              (p: any) => p.in === "body",
+            );
 
-                            {param.schema &&
-                              (() => {
-                                const resolved = resolveSchemaRef(
-                                  param.schema,
-                                  swaggerData,
-                                );
-                                if (resolved && resolved.properties) {
-                                  return (
-                                    <div class="mt-4 rounded-lg border border-[var(--od-border-light)] bg-[var(--od-bg-input)] p-4 text-sm shadow-sm">
-                                      <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-[var(--od-text)]">
-                                        Schema Properties{" "}
-                                        {param.schema.$ref ? (
-                                          <span class="ml-2 font-mono font-normal lowercase text-[var(--od-text-muted)]">
-                                            ({param.schema.$ref})
-                                          </span>
-                                        ) : (
-                                          ""
-                                        )}
-                                      </h4>
-                                      <ul class="m-0 list-none space-y-4 p-0">
-                                        {Object.entries(
-                                          resolved.properties,
-                                        ).map(
-                                          ([propName, propDef]: [
-                                            string,
-                                            any,
-                                          ]) => (
-                                            <li class="m-0 p-0">
-                                              <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)]">
-                                                <span>{propName}</span>
-                                                <span class="text-xs font-normal text-[var(--od-text-muted)]">
-                                                  {propDef.type ||
-                                                    (propDef.$ref
-                                                      ? "object"
-                                                      : "any")}
-                                                </span>
-                                              </div>
-                                              {propDef.description && (
-                                                <div
-                                                  class="prose prose-sm mb-0 mt-1.5 leading-snug opacity-90 dark:prose-invert"
-                                                  set:html={marked.parse(
-                                                    propDef.description,
-                                                  )}
-                                                />
-                                              )}
-                                            </li>
-                                          ),
-                                        )}
-                                      </ul>
-                                    </div>
-                                  );
-                                }
-                                return null;
-                              })()}
-                          </td>
+            const renderParamsTable = (title: string, params: any[]) => {
+              if (!params || params.length === 0) return null;
+              return (
+                <div class="api-section mt-12">
+                  <div class="mb-4 flex items-end justify-between border-b border-[var(--od-border)] pb-2">
+                    <h2 class="!mb-0 !border-0 !pb-0 text-xl font-bold">
+                      {title}
+                    </h2>
+                  </div>
+                  <div class="mt-4 overflow-x-auto">
+                    <table class="w-full border-collapse text-left">
+                      <thead>
+                        <tr class="border-b border-[var(--od-border)] text-sm text-[var(--od-text)]">
+                          <th class="p-3 font-semibold">Name</th>
+                          <th class="p-3 font-semibold">Type</th>
+                          <th class="p-3 font-semibold">Required</th>
+                          <th class="p-3 font-semibold">Description</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody class="text-sm">
+                        {params.map((param: any) => (
+                          <tr class="border-b border-[var(--od-border)] hover:bg-[var(--od-bg-hover)]">
+                            <td class="p-3 font-mono font-medium text-[var(--od-text)]">
+                              {param.name}
+                            </td>
+                            <td class="p-3 font-mono text-[var(--od-text-muted)]">
+                              {param.type ||
+                                (param.schema && param.schema.type) ||
+                                "string"}
+                            </td>
+                            <td class="p-3">
+                              {/* FIXME: użyć --od-accent */}
+                              {param.required ? (
+                                <span class="font-bold text-red-500">Yes</span>
+                              ) : (
+                                <span class="text-[var(--od-text-muted)]">
+                                  No
+                                </span>
+                              )}
+                            </td>
+                            <td class="min-w-[300px] p-3 align-top">
+                              {param.description && (
+                                <div
+                                  class="prose prose-sm dark:prose-invert"
+                                  set:html={marked.parse(param.description)}
+                                />
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
+              );
+            };
+
+            return (
+              <>
+                {renderParamsTable("Path parameters", pathParams)}
+                {renderParamsTable("Query parameters", queryParams)}
+                {renderParamsTable("Header parameters", headerParams)}
+                {renderParamsTable("Form parameters", formDataParams)}
+
+                {bodyParams && bodyParams.length > 0 && (
+                  <div class="api-section mt-12">
+                    <div class="mb-4 flex items-end justify-between border-b border-[var(--od-border)] pb-2">
+                      <h2 class="!mb-0 !border-0 !pb-0 text-xl font-bold">
+                        Request body
+                      </h2>
+                      {consumes && consumes.length > 0 && (
+                        <div class="text-sm">
+                          <span class="text-[var(--od-text-muted)]">
+                            Consumes:{" "}
+                          </span>
+                          {consumes.map((c: string) => (
+                            <span class="ml-2 inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-2 py-1 font-mono text-xs text-[var(--od-text)]">
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    {bodyParams.map((param: any) => (
+                      <div class="mt-4 text-sm">
+                        {param.description && (
+                          <div
+                            class="prose prose-sm mb-6 dark:prose-invert"
+                            set:html={marked.parse(param.description)}
+                          />
+                        )}
+
+                        {param.schema &&
+                          (() => {
+                            const schema = resolveSchemaRef(
+                              param.schema,
+                              swaggerData,
+                            );
+                            if (schema?.properties) {
+                              return (
+                                <div class="rounded-lg border border-[var(--od-border-light)] bg-[var(--od-bg-input)] p-4 text-sm shadow-sm">
+                                  <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-[var(--od-text)]">
+                                    Schema Properties{" "}
+                                    {param.schema.$ref ? (
+                                      <span class="ml-2 font-mono font-normal lowercase text-[var(--od-text-muted)]">
+                                        ({param.schema.$ref})
+                                      </span>
+                                    ) : (
+                                      ""
+                                    )}
+                                  </h4>
+                                  <ul class="m-0 list-none space-y-4 p-0">
+                                    {Object.entries(schema.properties).map(
+                                      ([propName, propDef]: [string, any]) => (
+                                        <li class="m-0 p-0">
+                                          <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)]">
+                                            <span>{propName}</span>
+                                            <span class="text-xs font-normal text-[var(--od-text-muted)]">
+                                              {propDef.type ||
+                                                (propDef.$ref
+                                                  ? "object"
+                                                  : "any")}
+                                            </span>
+                                          </div>
+                                          {propDef.description && (
+                                            <div
+                                              class="prose prose-sm mb-0 mt-1.5 leading-snug opacity-90 dark:prose-invert"
+                                              set:html={marked.parse(
+                                                propDef.description,
+                                              )}
+                                            />
+                                          )}
+                                        </li>
+                                      ),
+                                    )}
+                                  </ul>
+                                </div>
+                              );
+                            } else if (schema) {
+                              return (
+                                <div class="rounded-lg border border-[var(--od-border-light)] bg-[var(--od-bg-input)] p-4 text-sm shadow-sm">
+                                  <pre class="whitespace-pre-wrap font-mono text-xs text-[var(--od-text)]">
+                                    {JSON.stringify(schema, null, 2)}
+                                  </pre>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             );
           })()}
 
