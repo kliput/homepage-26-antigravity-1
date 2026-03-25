@@ -109,6 +109,18 @@ const hasExpandableChildren =
               set:html={marked.parse(schema.description)}
             />
           )}
+          {schema.enum && schema.enum.length > 0 && (
+            <div class="mt-2 pl-6 font-mono text-xs text-[var(--od-text-muted)]">
+              <span class="font-semibold">Enum:</span>
+              <div class="mt-1 flex flex-wrap gap-1.5">
+                {schema.enum.map((val: any) => (
+                  <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
+                    {typeof val === 'string' ? val : JSON.stringify(val)}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </summary>
         <div class="mt-4 border-l border-[var(--od-border)] pl-4 ml-[0.4rem]">
           <ul class="m-0 list-none space-y-4 p-0">
@@ -154,6 +166,18 @@ const hasExpandableChildren =
             class="prose prose-sm mb-0 mt-1.5 pl-6 leading-snug opacity-90 dark:prose-invert"
             set:html={marked.parse(schema.description)}
           />
+        )}
+        {schema.enum && schema.enum.length > 0 && (
+          <div class="mt-2 pl-6 font-mono text-xs text-[var(--od-text-muted)]">
+            <span class="font-semibold">Enum:</span>
+            <div class="mt-1 flex flex-wrap gap-1.5">
+              {schema.enum.map((val: any) => (
+                <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
+                  {typeof val === 'string' ? val : JSON.stringify(val)}
+                </span>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     )}

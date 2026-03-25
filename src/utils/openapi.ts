@@ -5,6 +5,7 @@ export type SchemaDefinition = {
   additionalProperties?: SchemaDefinition | boolean;
   items?: SchemaDefinition;
   required?: string[];
+  enum?: any[];
   example?: object;
   $ref?: string;
   [key: string]: any;
