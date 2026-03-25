@@ -30,7 +30,8 @@ const { title, version, availableVersions, activeProduct, sidebarGroups } =
 const currentPath = Astro.url.pathname;
 
 const normalizePath = (p: string) => p.replace(/\/+$/, "");
-const isActivePath = (href: string) => normalizePath(currentPath) === normalizePath(href);
+const isActivePath = (href: string) =>
+  normalizePath(currentPath) === normalizePath(href);
 ---
 
 <MainLayout title={title}>
@@ -90,9 +91,11 @@ const isActivePath = (href: string) => normalizePath(currentPath) === normalizeP
                 <li class="mb-2">
                   <a
                     href={`/api/${version}/${activeProduct}/`}
-                    class={`api-method-link !px-0 !py-1 ${isActivePath(`/api/${version}/${activeProduct}`) || isActivePath(`/api/${version}/${activeProduct}/`) ? "active" : ""}`}
+                    class={`api-method-link ${isActivePath(`/api/${version}/${activeProduct}`) || isActivePath(`/api/${version}/${activeProduct}/`) ? "active" : ""}`}
                   >
-                    <span class="font-semibold" style="font-size: 0.95rem;">Overview & Authentication</span>
+                    <span class="font-semibold" style="font-size: 0.95rem;">
+                      Overview & Authentication
+                    </span>
                   </a>
                 </li>
                 {
@@ -120,7 +123,13 @@ const isActivePath = (href: string) => normalizePath(currentPath) === normalizeP
                               >
                                 {/* must be without spaces to look good in Firefox */}
                                 {/* prettier-ignore */}
-                                {op.method && <span class={`method-badge method-${op.method}`}>{op.method.toUpperCase()}</span>}
+                                {op.method && (
+                                  <span
+                                    class={`method-badge method-${op.method}`}
+                                  >
+                                    {op.method.toUpperCase()}
+                                  </span>
+                                )}
                                 <span class="method-summary">
                                   {op.summary || op.method}
                                 </span>
