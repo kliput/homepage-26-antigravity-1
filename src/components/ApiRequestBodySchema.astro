@@ -1,15 +1,7 @@
 ---
 import { marked } from "marked";
-
-export type SchemaDefinition = {
-  type: string;
-  description?: string;
-  properties?: Record<string, SchemaDefinition>;
-  additionalProperties?: SchemaDefinition;
-  required?: string[];
-  example?: object;
-  $ref?: string;
-};
+import { resolveSchemaRef, type SchemaDefinition } from "../utils/openapi";
+import ApiSchemaPropertyTree from "./ApiSchemaPropertyTree.astro";
 
 export type RequestParameter = {
   name: string;
@@ -18,51 +10,31 @@ export type RequestParameter = {
   schema: SchemaDefinition;
 };
 
-// FIXME: redundancja
-function resolveSchemaRef(
-  schema: SchemaDefinition,
-  rootConfig: any,
-): SchemaDefinition | undefined {
-  if (!schema || !schema.$ref) return schema;
-  const refPath = schema.$ref.replace(/^#\//, "");
-  const parts = refPath.split("/");
-  let target = rootConfig;
-  for (const part of parts) {
-    if (!target) return undefined;
-    target = target[part];
-  }
-  return target || schema;
-}
-
 const requestParameter: RequestParameter = Astro.props.requestParameter;
 const swaggerData: object = Astro.props.swaggerData;
 const schema = resolveSchemaRef(requestParameter.schema, swaggerData);
 ---
 
 <div class="od-bg-input overflow-hidden rounded-xl border">
-  <div
-    class="od-bg-2 border-b px-4 py-2 text-xs font-bold"
-    set:html={marked.parse(requestParameter.description)}
-  />
+  {
+    requestParameter.description && (
+      <div
+        class="od-bg-2 border-b px-4 py-2 text-xs font-bold"
+        set:html={marked.parse(requestParameter.description)}
+      />
+    )
+  }
   <div class="overflow-x-auto p-4 text-sm">
     <ul class="m-0 list-none space-y-4 p-0">
       {
         Object.entries(schema?.properties || {}).map(
           ([propName, propDef]: [string, SchemaDefinition]) => (
-            <li class="m-0 p-0">
-              <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)]">
-                <span>{propName}</span>
-                <span class="text-xs font-normal text-[var(--od-text-muted)]">
-                  {propDef.type || (propDef.$ref ? "object" : "any")}
-                </span>
-              </div>
-              {propDef.description && (
-                <div
-                  class="prose prose-sm mb-0 mt-1.5 leading-snug opacity-90 dark:prose-invert"
-                  set:html={marked.parse(propDef.description)}
-                />
-              )}
-            </li>
+            <ApiSchemaPropertyTree
+              name={propName}
+              schema={propDef}
+              swaggerData={swaggerData}
+              isRequired={(schema?.required || []).includes(propName)}
+            />
           ),
         )
       }

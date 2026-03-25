@@ -129,18 +129,7 @@ const availableVersions = fs
   .filter((f) => fs.statSync(path.join(apiDir, f)).isDirectory())
   .sort((a, b) => b.localeCompare(a));
 
-// FIXME: redundancja
-function resolveSchemaRef(schema: any, rootConfig: any): any {
-  if (!schema || !schema.$ref) return schema;
-  const refPath = schema.$ref.replace(/^#\//, "");
-  const parts = refPath.split("/");
-  let target = rootConfig;
-  for (const part of parts) {
-    if (!target) return undefined;
-    target = target[part];
-  }
-  return target || schema;
-}
+
 
 const pageTitle = operation
   ? `${operation.summary} | API Reference`

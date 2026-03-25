@@ -1,0 +1,160 @@
+---
+import { marked } from "marked";
+import { resolveSchemaRef, type SchemaDefinition } from "../utils/openapi";
+
+export interface Props {
+  name?: string;
+  schema: SchemaDefinition;
+  swaggerData: any;
+  isRequired?: boolean;
+  seenRefs?: string[];
+  level?: number;
+}
+
+const {
+  name,
+  schema: rawSchema,
+  swaggerData,
+  isRequired = false,
+  seenRefs = [],
+  level = 0,
+} = Astro.props;
+
+if (!rawSchema) {
+  // Silent return for invalid schemas
+  return;
+}
+
+const refStr = rawSchema.$ref;
+const schema = resolveSchemaRef(rawSchema, swaggerData) || rawSchema;
+
+const currentSeenRefs = refStr ? [...seenRefs, refStr] : seenRefs;
+const isCircular = refStr ? seenRefs.includes(refStr) : false;
+
+let displayType = schema.type || "any";
+
+if (schema.type === "array" && schema.items) {
+  const itemRef = schema.items.$ref;
+  const itemSchema = resolveSchemaRef(schema.items, swaggerData) || schema.items;
+  const baseType = itemSchema.type || "object";
+  
+  if (itemRef) {
+    const modelName = itemRef.split("/").pop() || baseType;
+    displayType = `array of ${modelName}s`;
+  } else {
+    displayType = `array of ${baseType}s`;
+  }
+} else if (refStr) {
+  const modelName = refStr.split("/").pop();
+  displayType = modelName || displayType;
+} else if (!schema.type && schema.properties) {
+  displayType = "object";
+}
+
+const hasProperties =
+  schema.properties && Object.keys(schema.properties).length > 0;
+const isArrayOfObjects =
+  schema.type === "array" &&
+  schema.items &&
+  (schema.items.properties || schema.items.$ref);
+
+const childPropertiesSchema = hasProperties
+  ? schema
+  : isArrayOfObjects
+    ? resolveSchemaRef(schema.items, swaggerData)
+    : undefined;
+
+const hasExpandableChildren =
+  !isCircular &&
+  childPropertiesSchema &&
+  childPropertiesSchema.properties &&
+  Object.keys(childPropertiesSchema.properties).length > 0;
+
+// Adding vertical lines for tree depth spacing visually instead of nested paddings on ul
+---
+
+{rawSchema && (
+  <li class="m-0 p-0">
+    {hasExpandableChildren ? (
+      <details class="group">
+        <summary class="flex cursor-pointer list-none flex-col [&::-webkit-details-marker]:hidden">
+          <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)] hover:text-gray-300 transition-colors">
+            <div class="flex items-center gap-2">
+              <svg
+                class="h-4 w-4 text-[var(--od-text-muted)] group-open:rotate-90 transition-transform"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              {name && <span>{name}</span>}
+              {isRequired && (
+                <span class="rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] uppercase font-bold text-red-500">
+                  required
+                </span>
+              )}
+            </div>
+            <span class="text-xs font-normal text-[var(--od-text-muted)]">
+              {displayType}
+            </span>
+          </div>
+          {schema.description && (
+            <div
+              class="prose prose-sm mb-0 mt-1.5 pl-6 leading-snug opacity-90 dark:prose-invert"
+              set:html={marked.parse(schema.description)}
+            />
+          )}
+        </summary>
+        <div class="mt-4 border-l border-[var(--od-border)] pl-4 ml-[0.4rem]">
+          <ul class="m-0 list-none space-y-4 p-0">
+            {childPropertiesSchema?.properties &&
+              Object.entries(childPropertiesSchema.properties).map(
+                ([propName, propDef]: [string, any]) => (
+                  <Astro.self
+                    name={propName}
+                    schema={propDef}
+                    swaggerData={swaggerData}
+                    isRequired={(childPropertiesSchema.required || []).includes(propName)}
+                    seenRefs={currentSeenRefs}
+                    level={level + 1}
+                  />
+                )
+              )}
+          </ul>
+        </div>
+      </details>
+    ) : (
+      <div>
+        <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)]">
+          <div class="flex items-center gap-2">
+            <span class="w-4 inline-block"></span> {/* Spacer identical to SVG width */}
+            {name && <span>{name}</span>}
+            {isRequired && (
+              <span class="rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] uppercase font-bold text-red-500">
+                required
+              </span>
+            )}
+            {isCircular && (
+              <span class="rounded bg-yellow-500/10 px-1.5 py-0.5 text-[10px] uppercase font-bold text-yellow-500" title="Circular reference">
+                circular
+              </span>
+            )}
+          </div>
+          <span class="text-xs font-normal text-[var(--od-text-muted)]">
+            {displayType}
+          </span>
+        </div>
+        {schema.description && (
+          <div
+            class="prose prose-sm mb-0 mt-1.5 pl-6 leading-snug opacity-90 dark:prose-invert"
+            set:html={marked.parse(schema.description)}
+          />
+        )}
+      </div>
+    )}
+  </li>
+)}
