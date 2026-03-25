@@ -36,17 +36,18 @@ let displayType = schema.type || "any";
 if (schema.type === "array" && schema.items) {
   const itemRef = schema.items.$ref;
   const itemSchema = resolveSchemaRef(schema.items, swaggerData) || schema.items;
-  const baseType = itemSchema.type || "object";
+  const baseType = itemSchema.type || (itemSchema.properties ? "object" : "any");
   
   if (itemRef) {
     const modelName = itemRef.split("/").pop() || baseType;
-    displayType = `array of ${modelName}s`;
+    displayType = `array of ${baseType}s (${modelName})`;
   } else {
     displayType = `array of ${baseType}s`;
   }
 } else if (refStr) {
   const modelName = refStr.split("/").pop();
-  displayType = modelName || displayType;
+  const baseType = schema.type || (schema.properties ? "object" : "any");
+  displayType = modelName ? `${baseType} (${modelName})` : baseType;
 } else if (!schema.type && schema.properties) {
   displayType = "object";
 }
