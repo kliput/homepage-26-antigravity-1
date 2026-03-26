@@ -20,7 +20,9 @@ const currentPath = Astro.url.pathname;
         </div>
       )
     }
-    <span class="method-summary">
+    <span
+      class={`method-summary ${op.deprecated ? "line-through opacity-60" : ""}`}
+    >
       {op.summary || op.method}
     </span>
   </a>
