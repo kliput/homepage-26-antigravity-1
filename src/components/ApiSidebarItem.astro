@@ -1,0 +1,36 @@
+---
+import { isActivePath } from "../layouts/ApiLayout.astro";
+
+const { op } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<li>
+  <a
+    href={op.href}
+    class={`api-method-link ${isActivePath(op.href, currentPath) ? "active" : ""}`}
+  >
+    {/* must be without spaces to look good in Firefox */}
+    {
+      op.method && (
+        <div class="api-sidebar-item-container">
+          <div class={`method-badge method-${op.method}`}>
+            {op.method.toUpperCase()}
+          </div>
+        </div>
+      )
+    }
+    <span class="method-summary">
+      {op.summary || op.method}
+    </span>
+  </a>
+</li>
+
+<style>
+  .api-sidebar-item-container {
+    display: flex;
+    justify-content: center;
+    /* reserve space for the widest badge */
+    min-width: 3.4rem;
+  }
+</style>

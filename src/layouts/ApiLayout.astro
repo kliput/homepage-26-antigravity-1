@@ -1,5 +1,6 @@
 ---
 import DocsVersionSelect from "../components/DocsVersionSelect.astro";
+import ApiSidebarItem from "../components/ApiSidebarItem.astro";
 import MainLayout from "./MainLayout.astro";
 import {
   Globe,
@@ -29,9 +30,13 @@ const { title, version, availableVersions, activeProduct, sidebarGroups } =
 // Current path for active state highlighting
 const currentPath = Astro.url.pathname;
 
-const normalizePath = (p: string) => p.replace(/\/+$/, "");
-const isActivePath = (href: string) =>
-  normalizePath(currentPath) === normalizePath(href);
+export function isActivePath(href: string, currentPath: string) {
+  function normalizePath(p: string) {
+    return p.replace(/\/+$/, "");
+  }
+
+  return normalizePath(currentPath) === normalizePath(href);
+}
 ---
 
 <MainLayout title={title}>
@@ -91,7 +96,7 @@ const isActivePath = (href: string) =>
                 <li class="mb-2">
                   <a
                     href={`/api/${version}/${activeProduct}/`}
-                    class={`api-method-link ${isActivePath(`/api/${version}/${activeProduct}`) || isActivePath(`/api/${version}/${activeProduct}/`) ? "active" : ""}`}
+                    class={`api-method-link ${isActivePath(`/api/${version}/${activeProduct}`, currentPath) || isActivePath(`/api/${version}/${activeProduct}/`, currentPath) ? "active" : ""}`}
                   >
                     <span class="font-semibold" style="font-size: 0.95rem;">
                       Overview & Authentication
@@ -101,7 +106,7 @@ const isActivePath = (href: string) =>
                 {
                   sidebarGroups.map((group) => {
                     const isExpanded = group.operations.some((op: any) =>
-                      isActivePath(op.href),
+                      isActivePath(op.href, currentPath),
                     );
                     return (
                       <li
@@ -116,25 +121,10 @@ const isActivePath = (href: string) =>
                           style={{ display: isExpanded ? "block" : "none" }}
                         >
                           {group.operations.map((op: any) => (
-                            <li>
-                              <a
-                                href={op.href}
-                                class={`api-method-link ${isActivePath(op.href) ? "active" : ""}`}
-                              >
-                                {/* must be without spaces to look good in Firefox */}
-                                {/* prettier-ignore */}
-                                {op.method && (
-                                  <span
-                                    class={`method-badge method-${op.method}`}
-                                  >
-                                    {op.method.toUpperCase()}
-                                  </span>
-                                )}
-                                <span class="method-summary">
-                                  {op.summary || op.method}
-                                </span>
-                              </a>
-                            </li>
+                            <ApiSidebarItem
+                              op={op}
+                              isActivePath={isActivePath}
+                            />
                           ))}
                         </ul>
                       </li>
@@ -165,16 +155,12 @@ const isActivePath = (href: string) =>
 <style is:global>
   /* Sidebar */
 
-  .api-method-link {
+  .sidebar-root-list a.api-method-link {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0.75rem;
-    color: var(--od-text-muted);
-    font-size: 0.875rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s;
-    min-width: 0;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
   }
 
   .api-method-link:hover {
@@ -190,33 +176,19 @@ const isActivePath = (href: string) =>
   .method-badge {
     font-size: 0.65rem;
     font-weight: 700;
-    padding: 0.15rem 0.4rem;
-    border-radius: 3px;
-    min-width: 44px;
-    text-align: center;
-    flex-shrink: 0;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    background-color: var(--od-bg-2);
+    color: var(--od-text-muted);
+    border-color: var(--od-border);
+    display: inline-flex;
+    justify-content: center;
+    border-width: 1px;
   }
 
-  .method-get {
-    background-color: rgba(97, 175, 254, 0.15);
-    color: #61affe;
-  }
-  .method-post {
-    background-color: rgba(73, 204, 144, 0.15);
-    color: #49cc90;
-  }
-  .method-put {
-    background-color: rgba(252, 161, 48, 0.15);
-    color: #fca130;
-  }
-  .method-delete {
-    background-color: rgba(249, 62, 62, 0.15);
-    color: #f93e3e;
-  }
-  .method-patch {
-    background-color: rgba(80, 227, 194, 0.15);
-    color: #50e3c2;
-  }
+  /* To customize various types of HTTP methods, use:
+     method-get, method-post, method-put, method-delete, method-patch
+  */
 
   /* API detail styles */
   .api-endpoint-title {
