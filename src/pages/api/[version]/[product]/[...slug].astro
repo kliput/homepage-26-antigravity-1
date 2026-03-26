@@ -7,7 +7,15 @@ import ApiRequestBodySchema, {
   type RequestParameter,
 } from "../../../../components/ApiRequestBodySchema.astro";
 
+// FIXME: usunąć redundancję
+function getAbsolutePath(version: string, product: string, slug: string) {
+  return `/api/${version}/${product}/${slug}`;
+}
+
 export async function getStaticPaths() {
+  function getAbsolutePath(version: string, product: string, slug: string) {
+    return `/api/${version}/${product}/${slug}`;
+  }
   const apiDir = path.join(process.cwd(), "api");
   if (!fs.existsSync(apiDir)) {
     console.warn("API root directory not found");
@@ -44,18 +52,14 @@ export async function getStaticPaths() {
             Object.entries(methods).forEach(([method, op]: [string, any]) => {
               const groupName =
                 op.tags && op.tags.length > 0 ? op.tags[0] : "General";
-              const endpointSlug = endpointPattern
-                .replace(/^\//, "")
-                .replace(/\/+/g, "-")
-                .replace(/[{}]/g, "");
-              const slug = `${endpointSlug}-${method}`;
+              const slug = `operation/${op.operationId}`;
 
               if (!groupsMap.has(groupName)) {
                 groupsMap.set(groupName, { name: groupName, operations: [] });
               }
 
               const operationData = {
-                href: `/api/${version}/${product}/${slug}`,
+                href: getAbsolutePath(version, product, slug),
                 method,
                 summary: op.summary || endpointPattern,
                 endpointPath: endpointPattern,
@@ -66,7 +70,7 @@ export async function getStaticPaths() {
               groupsMap.get(groupName).operations.push(operationData);
 
               paths.push({
-                params: { version, product, endpoint: slug },
+                params: { version, product, slug },
                 props: {
                   version,
                   product,
@@ -80,7 +84,7 @@ export async function getStaticPaths() {
 
         // Add index path for the product dashboard (default to first endpoint or empty)
         paths.push({
-          params: { version, product, endpoint: undefined },
+          params: { version, product, slug: undefined },
           props: { version, product, operation: null, swaggerData },
         });
       } catch (e) {
@@ -101,20 +105,17 @@ const { version, product, operation, swaggerData } = Astro.props;
 const apiPaths = swaggerData.paths || {};
 const groupsMap = new Map();
 Object.entries(apiPaths).forEach(
+  // FIXME: redundancy with getStaticPaths
   ([endpointPattern, methods]: [string, any]) => {
     Object.entries(methods).forEach(([method, op]: [string, any]) => {
       const groupName = op.tags && op.tags.length > 0 ? op.tags[0] : "General";
-      const endpointSlug = endpointPattern
-        .replace(/^\//, "")
-        .replace(/\/+/g, "-")
-        .replace(/[{}]/g, "");
-      const slug = `${endpointSlug}-${method}`;
+      const slug = `operation/${op.operationId}`;
 
       if (!groupsMap.has(groupName)) {
         groupsMap.set(groupName, { name: groupName, operations: [] });
       }
       groupsMap.get(groupName).operations.push({
-        href: `/api/${version}/${product}/${slug}`,
+        href: getAbsolutePath(version, product, slug),
         method,
         summary: op.summary || endpointPattern,
         deprecated: op.deprecated,

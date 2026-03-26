@@ -2,13 +2,7 @@
 import DocsVersionSelect from "../components/DocsVersionSelect.astro";
 import ApiSidebarItem from "../components/ApiSidebarItem.astro";
 import MainLayout from "./MainLayout.astro";
-import {
-  Globe,
-  Database,
-  Settings,
-  ChevronDown,
-  ExternalLink,
-} from "lucide-astro";
+import { Globe, Database, Settings, ChevronDown } from "lucide-astro";
 
 interface Props {
   title: string;
@@ -120,9 +114,9 @@ export function isActivePath(href: string, currentPath: string) {
                           class="folder-contents"
                           style={{ display: isExpanded ? "block" : "none" }}
                         >
-                          {group.operations.map((op: any) => (
+                          {group.operations.map((operation: any) => (
                             <ApiSidebarItem
-                              op={op}
+                              operation={operation}
                               isActivePath={isActivePath}
                             />
                           ))}

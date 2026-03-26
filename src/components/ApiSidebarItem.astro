@@ -1,29 +1,29 @@
 ---
 import { isActivePath } from "../layouts/ApiLayout.astro";
 
-const { op } = Astro.props;
+const { operation } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
 <li>
   <a
-    href={op.href}
-    class={`api-method-link ${isActivePath(op.href, currentPath) ? "active" : ""}`}
+    href={operation.href}
+    class={`api-method-link ${isActivePath(operation.href, currentPath) ? "active" : ""}`}
   >
     {/* must be without spaces to look good in Firefox */}
     {
-      op.method && (
+      operation.method && (
         <div class="api-sidebar-item-container">
-          <div class={`method-badge method-${op.method}`}>
-            {op.method.toUpperCase()}
+          <div class={`method-badge method-${operation.method}`}>
+            {operation.method.toUpperCase()}
           </div>
         </div>
       )
     }
     <span
-      class={`method-summary ${op.deprecated ? "line-through opacity-60" : ""}`}
+      class={`method-summary ${operation.deprecated ? "line-through opacity-60" : ""}`}
     >
-      {op.summary || op.method}
+      {operation.summary || operation.method}
     </span>
   </a>
 </li>
