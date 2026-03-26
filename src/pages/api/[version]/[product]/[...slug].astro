@@ -272,7 +272,7 @@ const pageTitle = operation
                         </div>
                       )}
                     </div>
-                    {bodyParams.map((param: RequestParameter) => (
+                    {bodyParams?.map((param: RequestParameter) => (
                       <div class="mt-4 text-sm">
                         <ApiRequestBodySchema
                           requestParameter={param}
@@ -297,9 +297,9 @@ const pageTitle = operation
                     <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 text-xs font-bold text-gray-300">
                       {sample.lang}
                     </div>
-                    <pre class="overflow-x-auto p-4 text-sm">
+                    <div class="overflow-x-auto break-all p-4 text-sm">
                       <code class="text-gray-300">{sample.source}</code>
-                    </pre>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -315,7 +315,7 @@ const pageTitle = operation
                 {Object.entries(operation.details.responses).map(
                   ([code, response]: [string, any]) => (
                     <div class="od-card rounded-xl border border-[var(--od-border)] bg-[var(--od-bg-card)] p-6">
-                      <div class="mb-4 flex items-center gap-3">
+                      <div class="flex items-baseline gap-3">
                         <span
                           class={`rounded px-3 py-1 text-sm font-bold ${
                             code.startsWith("2")
@@ -329,21 +329,21 @@ const pageTitle = operation
                         >
                           {code}
                         </span>
-                        <h3 class="text-lg font-bold text-[var(--od-text)]">
+                        <h3 class="mb-0">
                           {response.description || "Response"}
                         </h3>
                       </div>
 
                       {response.schema && (
                         <div class="mt-4">
-                          <h4 class="mb-2 text-sm font-semibold text-[var(--od-text-muted)]">
+                          <h4 class="mb-2 mt-4 text-sm font-semibold text-[var(--od-text-muted)]">
                             Schema
                           </h4>
-                          <pre class="overflow-x-auto rounded-xl border border-[#2d2d2d] bg-[#1e1e1e] p-4 text-sm text-gray-300">
+                          <div class="overflow-x-auto rounded-xl border border-[#2d2d2d] bg-[#1e1e1e] p-4 text-sm text-gray-300">
                             <code>
                               {JSON.stringify(response.schema, null, 2)}
                             </code>
-                          </pre>
+                          </div>
                         </div>
                       )}
 
@@ -358,13 +358,13 @@ const pageTitle = operation
                                 <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 font-mono text-xs text-gray-300">
                                   {mime}
                                 </div>
-                                <pre class="overflow-x-auto p-4 text-sm text-gray-300">
+                                <div class="overflow-x-auto p-4 text-sm text-gray-300">
                                   <code>
                                     {typeof example === "string"
                                       ? example
                                       : JSON.stringify(example, null, 2)}
                                   </code>
-                                </pre>
+                                </div>
                               </div>
                             ),
                           )}
