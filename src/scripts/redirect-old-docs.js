@@ -18,6 +18,13 @@
  */
 
 /**
+ * @typedef {Object} ApiDocsGroup
+ * @property {string} version
+ * @property {string} product
+ * @property {string} anchor
+ */
+
+/**
  * @param {string} url
  * @returns {void}
  */
@@ -71,11 +78,29 @@ function topicDocPathMatcher(hash) {
 }
 
 /**
+ * Eg. https://onedata.org/#/home/api/stable/onezone?anchor=operation/health ->
+ * http://onedata.org/docs/api/25.0/onezone/operation/health
+ * @param {string} hash
+ * @returns {string | undefined}
+ */
+function apiPathMatcher(hash) {
+  /** @type {(RegExpMatchArray & { groups: ApiDocsGroup }) | null} */
+  const apiMatch = hash.match(
+    /#\/home\/api\/(?<version>(?:(?:\d|\.)+)|stable|latest)\/(?<product>.*)\?anchor=(?<anchor>.*)/,
+  );
+  if (!apiMatch) {
+    return;
+  }
+  const { version, product, anchor } = apiMatch.groups;
+  return `/api/${version}/${product}/${anchor}`;
+}
+
+/**
  * @param {string} hash
  * @returns {string | undefined}
  */
 function convertHash(hash) {
-  const matchers = [topicDocPathMatcher, fullDocsPathMatcher];
+  const matchers = [topicDocPathMatcher, fullDocsPathMatcher, apiPathMatcher];
   for (const fun of matchers) {
     const redirectUrl = fun(hash);
     if (redirectUrl) {
@@ -85,6 +110,7 @@ function convertHash(hash) {
 }
 
 function redirectOldDocs() {
+  // FIXME: testing code
   // console.log(
   //   convertHash(
   //     // "#/home/documentation/25/admin-guide/oneprovider/installation/onedatify-cli[prerequisites].html",
