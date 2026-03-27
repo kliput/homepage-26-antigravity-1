@@ -6,6 +6,7 @@ import { marked } from "marked";
 import ApiRequestBodySchema, {
   type RequestParameter,
 } from "../../../../components/ApiRequestBodySchema.astro";
+import ApiSchemaPropertyTree from "../../../../components/ApiSchemaPropertyTree.astro";
 
 // FIXME: usunąć redundancję
 function getAbsolutePath(version: string, product: string, slug: string) {
@@ -339,10 +340,13 @@ const pageTitle = operation
                           <h4 class="mb-2 mt-4 text-sm font-semibold text-[var(--od-text-muted)]">
                             Schema
                           </h4>
-                          <div class="overflow-x-auto rounded-xl border border-[#2d2d2d] bg-[#1e1e1e] p-4 text-sm text-gray-300">
-                            <code>
-                              {JSON.stringify(response.schema, null, 2)}
-                            </code>
+                          <div class="od-bg-input overflow-hidden rounded-xl border p-4 text-sm">
+                            <ul class="m-0 list-none space-y-4 p-0">
+                              <ApiSchemaPropertyTree
+                                schema={response.schema}
+                                swaggerData={swaggerData}
+                              />
+                            </ul>
                           </div>
                         </div>
                       )}
