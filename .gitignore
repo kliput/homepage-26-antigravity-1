@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # base44 generated app
 one-data-hub*
+
+# api
+src/content/api/*
+!src/content/api/.gitkeep

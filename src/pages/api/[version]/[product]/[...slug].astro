@@ -1,104 +1,17 @@
 ---
 import ApiLayout from "../../../../layouts/ApiLayout.astro";
-import fs from "node:fs";
-import path from "node:path";
 import { marked } from "marked";
+import {
+  getAbsoluteApiPath,
+  getAvailableVersions,
+} from "../../../../utils/api/api.ts";
 import ApiRequestBodySchema, {
   type RequestParameter,
 } from "../../../../components/ApiRequestBodySchema.astro";
 import ApiSchemaPropertyTree from "../../../../components/ApiSchemaPropertyTree.astro";
+import { getStaticPaths } from "../../../../utils/api/get-static-paths.ts";
 
-// FIXME: usunąć redundancję
-function getAbsolutePath(version: string, product: string, slug: string) {
-  return `/api/${version}/${product}/${slug}`;
-}
-
-export async function getStaticPaths() {
-  function getAbsolutePath(version: string, product: string, slug: string) {
-    return `/api/${version}/${product}/${slug}`;
-  }
-  const apiDir = path.join(process.cwd(), "api");
-  if (!fs.existsSync(apiDir)) {
-    console.warn("API root directory not found");
-    return [];
-  }
-
-  const versions = fs
-    .readdirSync(apiDir)
-    .filter((f) => fs.statSync(path.join(apiDir, f)).isDirectory())
-    .sort((a, b) => b.localeCompare(a));
-
-  let paths: any[] = [];
-
-  for (const version of versions) {
-    const versionDir = path.join(apiDir, version);
-    const products = ["onezone", "oneprovider", "onepanel"];
-
-    for (const product of products) {
-      const swaggerPath = path.join(versionDir, `${product}.json`);
-      if (!fs.existsSync(swaggerPath)) {
-        console.warn(`API ${version} ${product} not found`);
-        continue;
-      }
-
-      try {
-        const swaggerData = JSON.parse(fs.readFileSync(swaggerPath, "utf8"));
-        const apiPaths = swaggerData.paths || {};
-
-        // Group operations
-        const groupsMap = new Map();
-
-        Object.entries(apiPaths).forEach(
-          ([endpointPattern, methods]: [string, any]) => {
-            Object.entries(methods).forEach(([method, op]: [string, any]) => {
-              const groupName =
-                op.tags && op.tags.length > 0 ? op.tags[0] : "General";
-              const slug = `operation/${op.operationId}`;
-
-              if (!groupsMap.has(groupName)) {
-                groupsMap.set(groupName, { name: groupName, operations: [] });
-              }
-
-              const operationData = {
-                href: getAbsolutePath(version, product, slug),
-                method,
-                summary: op.summary || endpointPattern,
-                endpointPath: endpointPattern,
-                details: op,
-                deprecated: op.deprecated,
-              };
-
-              groupsMap.get(groupName).operations.push(operationData);
-
-              paths.push({
-                params: { version, product, slug },
-                props: {
-                  version,
-                  product,
-                  operation: operationData,
-                  swaggerData,
-                },
-              });
-            });
-          },
-        );
-
-        // Add index path for the product dashboard (default to first endpoint or empty)
-        paths.push({
-          params: { version, product, slug: undefined },
-          props: { version, product, operation: null, swaggerData },
-        });
-      } catch (e) {
-        console.error(`Error processing ${swaggerPath}`, e);
-      }
-    }
-  }
-
-  // Need to pass availableVersions and sidebarGroups correctly to each page
-  // We'll reconstruct sidebarGroups dynamically inside the component instead to simplify getStaticPaths
-
-  return paths;
-}
+export { getStaticPaths };
 
 const { version, product, operation, swaggerData } = Astro.props;
 
@@ -116,7 +29,7 @@ Object.entries(apiPaths).forEach(
         groupsMap.set(groupName, { name: groupName, operations: [] });
       }
       groupsMap.get(groupName).operations.push({
-        href: getAbsolutePath(version, product, slug),
+        href: getAbsoluteApiPath(version, product, slug),
         method,
         summary: op.summary || endpointPattern,
         deprecated: op.deprecated,
@@ -127,11 +40,7 @@ Object.entries(apiPaths).forEach(
 const sidebarGroups = Array.from(groupsMap.values());
 
 // Calculate versions dynamically from fs here or pass from getStaticPaths
-const apiDir = path.join(process.cwd(), "api");
-const availableVersions = fs
-  .readdirSync(apiDir)
-  .filter((f) => fs.statSync(path.join(apiDir, f)).isDirectory())
-  .sort((a, b) => b.localeCompare(a));
+const availableVersions = getAvailableVersions();
 
 const pageTitle = operation
   ? `${operation.summary} | API Reference`
