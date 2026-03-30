@@ -27,8 +27,14 @@ const schemaProperties = Object.entries(schema?.properties || {});
   {
     schemaProperties.length ? (
       <div class="overflow-x-auto">
-        <table>
-          <tbody>
+        <table class="w-full table-fixed border-collapse border-[var(--od-border)]">
+          <thead class="border-b text-sm">
+            <tr class="text-left font-semibold">
+              <th class="w-1/3 p-3">Property</th>
+              <th class="w-2/3 p-3 pl-0">Type & Description</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--od-border)]">
             {schemaProperties.map(
               ([propName, propDef]: [string, SchemaDefinition]) => (
                 <ApiSchemaPropertyTree
