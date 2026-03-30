@@ -174,21 +174,35 @@ export function isActivePath(href: string, currentPath: string) {
   }
 
   .method-badge {
+    --method-badge-bg-opacity: 0.15;
     font-size: 0.65rem;
     font-weight: 700;
     padding: 0.1rem 0.4rem;
     border-radius: 4px;
-    background-color: var(--od-bg-2);
-    color: var(--od-text-muted);
-    border-color: var(--od-border);
     display: inline-flex;
     justify-content: center;
     border-width: 1px;
+    color: var(--od-text-muted);
+    background-color: var(--od-bg-2);
+    border-color: var(--od-border);
   }
 
-  /* To customize various types of HTTP methods, use:
-     method-get, method-post, method-put, method-delete, method-patch
-  */
+  .method-get {
+    background-color: hsla(210, 99%, 69%, var(--method-badge-bg-opacity));
+  }
+  .method-post {
+    background-color: hsla(135, 56%, 54%, var(--method-badge-bg-opacity));
+  }
+  .method-put {
+    background-color: hsl(166, 70%, 50%, var(--method-badge-bg-opacity));
+  }
+  .method-delete {
+    background-color: hsla(0, 84%, 60%, var(--method-badge-bg-opacity));
+  }
+  .method-patch {
+    background-color: hsla(33, 97%, 59%, var(--method-badge-bg-opacity));
+    /* background-color: hsla(33, 97%, 59%, 0.15); */
+  }
 
   /* API detail styles */
   .api-endpoint-title {

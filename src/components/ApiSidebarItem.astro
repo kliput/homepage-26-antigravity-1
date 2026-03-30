@@ -14,7 +14,9 @@ const currentPath = Astro.url.pathname;
     {
       operation.method && (
         <div class="api-sidebar-item-container">
-          <div class={`method-badge method-${operation.method}`}>
+          <div
+            class={`method-badge method-${operation.method} ${operation.deprecated ? "opacity-60" : ""}`}
+          >
             {operation.method.toUpperCase()}
           </div>
         </div>
