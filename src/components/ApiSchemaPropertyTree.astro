@@ -1,6 +1,7 @@
 ---
 import { marked } from "marked";
 import { resolveSchemaRef, type SchemaDefinition } from "../utils/openapi";
+import ApiExpandArrow from "./ApiExpandArrow.astro";
 
 export interface Props {
   name?: string;
@@ -35,9 +36,11 @@ let displayType = schema.type || "any";
 
 if (schema.type === "array" && schema.items) {
   const itemRef = schema.items.$ref;
-  const itemSchema = resolveSchemaRef(schema.items, swaggerData) || schema.items;
-  const baseType = itemSchema.type || (itemSchema.properties ? "object" : "any");
-  
+  const itemSchema =
+    resolveSchemaRef(schema.items, swaggerData) || schema.items;
+  const baseType =
+    itemSchema.type || (itemSchema.properties ? "object" : "any");
+
   if (itemRef) {
     const modelName = itemRef.split("/").pop() || baseType;
     displayType = `array of ${baseType}s (${modelName})`;
@@ -72,31 +75,45 @@ const hasExpandableChildren =
   Object.keys(childPropertiesSchema.properties).length > 0;
 
 // Adding vertical lines for tree depth spacing visually instead of nested paddings on ul
+  const Container = hasExpandableChildren ? "details" : "div";
+  const HeaderWrapper = hasExpandableChildren ? "summary" : "div";
 ---
 
-{rawSchema && (
-  <li class="m-0 p-0">
-    {hasExpandableChildren ? (
-      <details class="group">
-        <summary class="flex cursor-pointer list-none flex-col [&::-webkit-details-marker]:hidden">
-          <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)] hover:text-gray-300 transition-colors">
+{
+  rawSchema && (
+    <li class="api-schema-property-tree m-0 p-0">
+      <Container class={hasExpandableChildren ? "group" : ""}>
+        <HeaderWrapper
+          class={
+            hasExpandableChildren
+              ? "flex cursor-pointer list-none flex-col [&::-webkit-details-marker]:hidden"
+              : "flex flex-col"
+          }
+        >
+          <div
+            class:list={[
+              "flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)]",
+              hasExpandableChildren && "transition-colors hover:text-gray-300",
+            ]}
+          >
             <div class="flex items-center gap-2">
-              <svg
-                class="h-4 w-4 text-[var(--od-text-muted)] group-open:rotate-90 transition-transform"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
               {name && <span>{name}</span>}
               {isRequired && (
-                <span class="rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] uppercase font-bold text-red-500">
+                <span class="rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] font-bold uppercase text-red-500">
                   required
                 </span>
+              )}
+              {hasExpandableChildren ? (
+                <ApiExpandArrow />
+              ) : (
+                isCircular && (
+                  <span
+                    class="rounded bg-yellow-500/10 px-1.5 py-0.5 text-[10px] font-bold uppercase text-yellow-500"
+                    title="Circular reference"
+                  >
+                    circular
+                  </span>
+                )
               )}
             </div>
             <span class="text-xs font-normal text-[var(--od-text-muted)]">
@@ -115,71 +132,36 @@ const hasExpandableChildren =
               <div class="mt-1 flex flex-wrap gap-1.5">
                 {schema.enum.map((val: any) => (
                   <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
-                    {typeof val === 'string' ? val : JSON.stringify(val)}
+                    {typeof val === "string" ? val : JSON.stringify(val)}
                   </span>
                 ))}
               </div>
             </div>
           )}
-        </summary>
-        <div class="mt-4 border-l border-[var(--od-border)] pl-4 ml-[0.4rem]">
-          <ul class="m-0 list-none space-y-4 p-0">
-            {childPropertiesSchema?.properties &&
-              Object.entries(childPropertiesSchema.properties).map(
-                ([propName, propDef]: [string, any]) => (
-                  <Astro.self
-                    name={propName}
-                    schema={propDef}
-                    swaggerData={swaggerData}
-                    isRequired={(childPropertiesSchema.required || []).includes(propName)}
-                    seenRefs={currentSeenRefs}
-                    level={level + 1}
-                  />
-                )
-              )}
-          </ul>
-        </div>
-      </details>
-    ) : (
-      <div>
-        <div class="flex items-center justify-between font-mono text-sm font-medium text-[var(--od-accent)]">
-          <div class="flex items-center gap-2">
-            <span class="w-4 inline-block"></span> {/* Spacer identical to SVG width */}
-            {name && <span>{name}</span>}
-            {isRequired && (
-              <span class="rounded bg-red-500/10 px-1.5 py-0.5 text-[10px] uppercase font-bold text-red-500">
-                required
-              </span>
-            )}
-            {isCircular && (
-              <span class="rounded bg-yellow-500/10 px-1.5 py-0.5 text-[10px] uppercase font-bold text-yellow-500" title="Circular reference">
-                circular
-              </span>
-            )}
-          </div>
-          <span class="text-xs font-normal text-[var(--od-text-muted)]">
-            {displayType}
-          </span>
-        </div>
-        {schema.description && (
-          <div
-            class="prose prose-sm mb-0 mt-1.5 pl-6 leading-snug opacity-90 dark:prose-invert"
-            set:html={marked.parse(schema.description)}
-          />
-        )}
-        {schema.enum && schema.enum.length > 0 && (
-          <div class="mt-2 pl-6 font-mono text-xs text-[var(--od-text-muted)]">
-            <span class="font-semibold">Enum:</span>
-            <div class="mt-1 flex flex-wrap gap-1.5">
-              {schema.enum.map((val: any) => (
-                <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
-                  {typeof val === 'string' ? val : JSON.stringify(val)}
-                </span>
-              ))}
-            </div>
+        </HeaderWrapper>
+
+        {hasExpandableChildren && (
+          <div class="ml-[0.4rem] mt-4 border-l border-[var(--od-border)] pl-4">
+            <ul class="m-0 list-none space-y-4 p-0">
+              {childPropertiesSchema?.properties &&
+                Object.entries(childPropertiesSchema.properties).map(
+                  ([propName, propDef]: [string, any]) => (
+                    <Astro.self
+                      name={propName}
+                      schema={propDef}
+                      swaggerData={swaggerData}
+                      isRequired={(
+                        childPropertiesSchema.required || []
+                      ).includes(propName)}
+                      seenRefs={currentSeenRefs}
+                      level={level + 1}
+                    />
+                  ),
+                )}
+            </ul>
           </div>
         )}
-      </div>
-    )}
-  </li>
-)}
+      </Container>
+    </li>
+  )
+}

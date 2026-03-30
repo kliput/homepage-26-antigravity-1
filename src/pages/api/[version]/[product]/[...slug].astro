@@ -175,12 +175,10 @@ const pageTitle = operation
                       )}
                     </div>
                     {bodyParams?.map((param: RequestParameter) => (
-                      <div class="mt-4 text-sm">
-                        <ApiRequestBodySchema
-                          requestParameter={param}
-                          swaggerData={swaggerData}
-                        />
-                      </div>
+                      <ApiRequestBodySchema
+                        requestParameter={param}
+                        swaggerData={swaggerData}
+                      />
                     ))}
                   </div>
                 )}
