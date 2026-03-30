@@ -47,12 +47,17 @@ const {
         return "light";
       })();
 
-      if (theme === "light") {
-        document.documentElement.dataset.theme = "light";
-      } else {
-        document.documentElement.dataset.theme = "dark";
-      }
-      window.localStorage.setItem("theme", theme);
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", (event) => {
+          // do not auto-change theme, if user set it manually at least once
+          if (localStorage.getItem("theme")) return;
+          const newColorScheme = event.matches ? "dark" : "light";
+          document.documentElement.dataset.theme = newColorScheme;
+        });
+
+      document.documentElement.dataset.theme =
+        theme === "dark" ? "dark" : "light";
     </script>
 
     <script>
