@@ -85,14 +85,34 @@ function topicDocPathMatcher(hash) {
  */
 function apiPathMatcher(hash) {
   /** @type {(RegExpMatchArray & { groups: ApiDocsGroup }) | null} */
-  const apiMatch = hash.match(
+  const fullApiMatch = hash.match(
     /#\/home\/api\/(?<version>(?:(?:\d|\.)+)|stable|latest)\/(?<product>.*)\?anchor=(?<anchor>.*)/,
   );
-  if (!apiMatch) {
+  if (!fullApiMatch) {
     return;
   }
-  const { version, product, anchor } = apiMatch.groups;
+  const { version, product, anchor } = fullApiMatch.groups;
   return `/api/${version}/${product}/${anchor}`;
+}
+
+function apiProductMatcher(hash) {
+  /** @type {(RegExpMatchArray & { groups: ApiDocsGroup }) | null} */
+  const match = hash.match(
+    /^#\/home\/api\/(?<version>(?:(?:\d|\.)+)|stable|latest)\/(?<product>.*)$/,
+  );
+  if (!match) {
+    return;
+  }
+  const { version, product } = match.groups;
+  return `/api/${version}/${product}`;
+}
+
+function apiIndexMatcher(hash) {
+  /** @type {(RegExpMatchArray & { groups: ApiDocsGroup }) | null} */
+  const match = hash.match(/^#\/home\/api$/);
+  if (match) {
+    return `/api/`;
+  }
 }
 
 /**
@@ -100,7 +120,13 @@ function apiPathMatcher(hash) {
  * @returns {string | undefined}
  */
 function convertHash(hash) {
-  const matchers = [topicDocPathMatcher, fullDocsPathMatcher, apiPathMatcher];
+  const matchers = [
+    topicDocPathMatcher,
+    fullDocsPathMatcher,
+    apiPathMatcher,
+    apiProductMatcher,
+    apiIndexMatcher,
+  ];
   for (const fun of matchers) {
     const redirectUrl = fun(hash);
     if (redirectUrl) {
