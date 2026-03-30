@@ -3,11 +3,11 @@ import DocsVersionSelect from "../components/DocsVersionSelect.astro";
 import ApiSidebarItem from "../components/ApiSidebarItem.astro";
 import MainLayout from "./MainLayout.astro";
 import { Globe, Database, Settings, ChevronDown } from "lucide-astro";
+import { ApiVersionManager } from "../utils/api/api";
 
 interface Props {
   title: string;
   version: string;
-  availableVersions: string[];
   activeProduct: string;
   sidebarGroups: any[];
 }
@@ -18,11 +18,15 @@ const products = [
   { id: "onepanel", label: "Onepanel REST API", icon: Settings },
 ];
 
-const { title, version, availableVersions, activeProduct, sidebarGroups } =
-  Astro.props;
+const { title, version, activeProduct, sidebarGroups } = Astro.props;
 
 // Current path for active state highlighting
 const currentPath = Astro.url.pathname;
+
+const versionManager = new ApiVersionManager();
+const availableVersions = versionManager.getVersions();
+const stableVersion = versionManager.getStableVersion();
+const latestVersion = versionManager.getLatestVersion();
 
 export function isActivePath(href: string, currentPath: string) {
   function normalizePath(p: string) {
@@ -49,6 +53,8 @@ export function isActivePath(href: string, currentPath: string) {
             selectorId="api-version-select"
             version={version}
             availableVersions={availableVersions}
+            stableVersion={stableVersion}
+            latestVersion={latestVersion}
             pathPrefix="/api"
             pathSuffix="onezone/"
           />

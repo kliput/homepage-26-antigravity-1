@@ -1,12 +1,23 @@
 import path from "node:path";
 import fs from "node:fs";
-import { getAbsoluteApiPath, getApiDir, getAvailableVersions } from "./api";
+import { getAbsoluteApiPath, getApiDir, getAvailableVersions } from "./api.ts";
+import { ApiVersionManager } from "./api.ts";
 
 export async function getStaticPaths() {
+  const versionManager = new ApiVersionManager();
   const apiDir = getApiDir();
-  const versions = getAvailableVersions();
+  const versions = versionManager.getVersions();
+  const stableVersion = versionManager.getStableVersion();
+  const latestVersion = versionManager.getLatestVersion();
 
   let paths: any[] = [];
+
+  function pathOtherVersion(pathDefinition: any, version: string) {
+    return {
+      ...pathDefinition,
+      params: { ...pathDefinition.params, version },
+    };
+  }
 
   for (const version of versions) {
     const versionDir = path.join(apiDir, version);
@@ -48,7 +59,7 @@ export async function getStaticPaths() {
 
               groupsMap.get(groupName).operations.push(operationData);
 
-              paths.push({
+              const pathDefinition = {
                 params: { version, product, slug },
                 props: {
                   version,
@@ -56,16 +67,36 @@ export async function getStaticPaths() {
                   operation: operationData,
                   swaggerData,
                 },
-              });
+              };
+
+              paths.push(pathDefinition);
+
+              if (version === stableVersion) {
+                paths.push(pathOtherVersion(pathDefinition, "stable"));
+              }
+
+              if (version === latestVersion) {
+                paths.push(pathOtherVersion(pathDefinition, "latest"));
+              }
             });
           },
         );
 
-        // Add index path for the product dashboard (default to first endpoint or empty)
-        paths.push({
+        const indexPathDefinition = {
           params: { version, product, slug: undefined },
           props: { version, product, operation: null, swaggerData },
-        });
+        };
+
+        // Add index path for the product dashboard (default to first endpoint or empty)
+        paths.push(indexPathDefinition);
+
+        if (version === stableVersion) {
+          paths.push(pathOtherVersion(indexPathDefinition, "stable"));
+        }
+
+        if (version === latestVersion) {
+          paths.push(pathOtherVersion(indexPathDefinition, "latest"));
+        }
       } catch (e) {
         console.error(`Error processing ${swaggerPath}`, e);
       }

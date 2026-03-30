@@ -1,10 +1,7 @@
 ---
 import ApiLayout from "../../../../layouts/ApiLayout.astro";
 import { marked } from "marked";
-import {
-  getAbsoluteApiPath,
-  getAvailableVersions,
-} from "../../../../utils/api/api.ts";
+import { getAbsoluteApiPath } from "../../../../utils/api/api.ts";
 import ApiRequestBodySchema, {
   type RequestParameter,
 } from "../../../../components/ApiRequestBodySchema.astro";
@@ -38,10 +35,6 @@ Object.entries(apiPaths).forEach(
   },
 );
 const sidebarGroups = Array.from(groupsMap.values());
-
-// Calculate versions dynamically from fs here or pass from getStaticPaths
-const availableVersions = getAvailableVersions();
-
 const pageTitle = operation
   ? `${operation.summary} | API Reference`
   : `${product.toUpperCase()} API Reference`;
@@ -50,7 +43,6 @@ const pageTitle = operation
 <ApiLayout
   title={pageTitle}
   version={version}
-  availableVersions={availableVersions}
   activeProduct={product}
   sidebarGroups={sidebarGroups}
 >

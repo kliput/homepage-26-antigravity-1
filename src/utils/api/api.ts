@@ -17,6 +17,28 @@ export function getAvailableVersions() {
     .sort((a, b) => b.localeCompare(a));
 }
 
+export class ApiVersionManager {
+  private versions: string[];
+
+  constructor() {
+    this.versions = getAvailableVersions();
+  }
+
+  getVersions() {
+    return this.versions;
+  }
+
+  getLatestVersion() {
+    return this.versions[0];
+  }
+
+  getStableVersion() {
+    return this.versions.filter(
+      (v) => ![/alpha/, /beta/, /rc/].some((tag) => tag.test(v)),
+    )[0];
+  }
+}
+
 export function getAbsoluteApiPath(
   version: string,
   product: string,

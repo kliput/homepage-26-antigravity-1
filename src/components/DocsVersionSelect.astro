@@ -1,6 +1,23 @@
 ---
-const { availableVersions, version, pathPrefix, pathSuffix, selectorId } =
-  Astro.props;
+const {
+  availableVersions,
+  version,
+  pathPrefix,
+  pathSuffix,
+  selectorId,
+  stableVersion,
+  latestVersion,
+} = Astro.props;
+
+function isVersionSelected(v: string) {
+  if (version === "stable") {
+    return v === stableVersion;
+  }
+  if (version === "latest") {
+    return v === latestVersion;
+  }
+  return v === version;
+}
 ---
 
 <div class="version-select-wrap">
@@ -11,12 +28,17 @@ const { availableVersions, version, pathPrefix, pathSuffix, selectorId } =
     onchange="window.location.href=this.value"
   >
     {
-      availableVersions.map((v) => (
+      availableVersions.map((v: string) => (
         <option
           value={`${pathPrefix}/${v}/${pathSuffix}`}
-          selected={v === version}
+          selected={isVersionSelected(v)}
         >
-          {v}
+          {v}{" "}
+          {stableVersion && v === stableVersion
+            ? "(stable)"
+            : latestVersion && v === latestVersion
+              ? "(latest)"
+              : ""}
         </option>
       ))
     }
