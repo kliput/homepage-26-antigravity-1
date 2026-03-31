@@ -7,6 +7,7 @@ import ApiSchemaBody from "../../../../components/ApiSchemaBody.astro";
 import { getStaticPaths } from "../../../../utils/api/get-static-paths.ts";
 import ApiSchemaTable from "../../../../components/ApiSchemaTable.astro";
 import ApiHttpResponseCode from "../../../../components/ApiHttpResponseCode.astro";
+import ApiBodyTag from "../../../../components/ApiBodyTag.astro";
 
 export { getStaticPaths };
 
@@ -107,34 +108,27 @@ const pageTitle = operation
                     <table class="w-full border-collapse text-left">
                       <thead>
                         <tr class="border-b border-[var(--od-border)] text-sm text-[var(--od-text)]">
-                          <th class="p-3 font-semibold">Name</th>
-                          <th class="p-3 font-semibold">Type</th>
-                          <th class="p-3 font-semibold">Required</th>
-                          <th class="p-3 font-semibold">Description</th>
+                          <th class="p-3 pl-0 font-semibold">Parameter</th>
+                          <th class="p-3 pl-0 font-semibold">
+                            Type & Description
+                          </th>
                         </tr>
                       </thead>
                       <tbody class="text-sm">
                         {params.map((param: any) => (
                           <tr class="hover:bg-[var(--od-bg-hover)]">
-                            <td class="p-3 font-mono font-medium text-[var(--od-text)]">
-                              {param.name}
-                            </td>
-                            <td class="p-3 font-mono text-[var(--od-text-muted)]">
-                              {param.type ||
-                                (param.schema && param.schema.type) ||
-                                "string"}
-                            </td>
-                            <td class="p-3">
-                              {/* FIXME: użyć --od-accent */}
-                              {param.required ? (
-                                <span class="font-bold text-red-500">Yes</span>
-                              ) : (
-                                <span class="text-[var(--od-text-muted)]">
-                                  No
-                                </span>
+                            <td class="p-3 pl-0 font-mono font-medium text-[var(--od-text)]">
+                              <span>{param.name}</span>
+                              {param.required && (
+                                <ApiBodyTag colorStyle="red" text="required" />
                               )}
                             </td>
-                            <td class="min-w-[300px] p-3 align-top">
+                            <td class="p-3 pl-0">
+                              <div class="font-mono text-xs text-[var(--od-text-muted)]">
+                                {param.type ||
+                                  (param.schema && param.schema.type) ||
+                                  "string"}
+                              </div>
                               {param.description && (
                                 <div
                                   class="prose prose-sm dark:prose-invert"
