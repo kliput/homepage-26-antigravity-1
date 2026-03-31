@@ -1,7 +1,7 @@
 ---
 import { marked } from "marked";
 import { resolveSchemaRef, type SchemaDefinition } from "../utils/openapi";
-import ApiExpandArrow from "./ApiExpandArrow.astro";
+import { ApiExpandArrow } from "./ApiExpandArrow.jsx";
 import ApiBodyTag from "./ApiBodyTag.astro";
 
 export interface Props {
@@ -83,16 +83,17 @@ const hasExpandableChildren =
   Object.keys(childPropertiesSchema.properties).length > 0;
 
 // FIXME: śmieci po refaktorze SI
-// Adding vertical lines for tree depth spacing visually instead of nested paddings on ul
 const Container = hasExpandableChildren ? "details" : "div";
 const HeaderWrapper = hasExpandableChildren ? "summary" : "div";
+
+const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
 ---
 
 {
   rawSchema && (
     <tr class="api-schema-property-tree">
       <td colspan="2" class="border-none p-0">
-        <details class="group" open={initiallyOpened}>
+        <details class="group" open={initiallyOpened} id={detailsElementId}>
           <summary
             class:list={[
               "cursor-pointer list-none outline-none",
@@ -109,7 +110,12 @@ const HeaderWrapper = hasExpandableChildren ? "summary" : "div";
                 {isCircular && (
                   <ApiBodyTag colorStyle="yellow" text="circular reference" />
                 )}
-                {hasExpandableChildren && <ApiExpandArrow />}
+                {hasExpandableChildren && (
+                  <ApiExpandArrow
+                    client:only
+                    detailsElementId={detailsElementId}
+                  />
+                )}
               </div>
               <div class="w-2/3 pr-4">
                 <div class="font-mono text-xs font-normal text-[var(--od-text-muted)]">
