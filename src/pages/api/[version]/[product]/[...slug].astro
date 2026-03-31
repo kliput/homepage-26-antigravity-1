@@ -2,11 +2,11 @@
 import ApiLayout from "../../../../layouts/ApiLayout.astro";
 import { marked } from "marked";
 import { getAbsoluteApiPath } from "../../../../utils/api/api.ts";
-import ApiRequestBodySchema, {
-  type RequestParameter,
-} from "../../../../components/ApiRequestBodySchema.astro";
-import ApiSchemaPropertyTree from "../../../../components/ApiSchemaPropertyTree.astro";
+import { type RequestParameter } from "../../../../components/ApiSchemaBody.astro";
+import ApiSchemaBody from "../../../../components/ApiSchemaBody.astro";
 import { getStaticPaths } from "../../../../utils/api/get-static-paths.ts";
+import ApiSchemaTable from "../../../../components/ApiSchemaTable.astro";
+import ApiHttpResponseCode from "../../../../components/ApiHttpResponseCode.astro";
 
 export { getStaticPaths };
 
@@ -175,9 +175,10 @@ const pageTitle = operation
                       )}
                     </div>
                     {bodyParams?.map((param: RequestParameter) => (
-                      <ApiRequestBodySchema
+                      <ApiSchemaBody
                         requestParameter={param}
                         swaggerData={swaggerData}
+                        collapsed={true}
                       />
                     ))}
                   </div>
@@ -210,54 +211,37 @@ const pageTitle = operation
         {operation.details.responses &&
           Object.keys(operation.details.responses).length > 0 && (
             <div class="api-section mt-12">
-              <h2>Responses</h2>
+              <div class="mb-4 flex items-end justify-between border-b border-[var(--od-border)] pb-2">
+                <h2 class="!mb-0 !border-0 !pb-0 text-xl font-bold">
+                  Responses
+                </h2>
+                <div class="text-sm">
+                  <span class="ml-2 inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-2 py-1 font-mono text-xs text-[var(--od-text)]">
+                    application/json
+                  </span>
+                </div>
+              </div>
+
               <div class="mt-4 space-y-6">
                 {Object.entries(operation.details.responses).map(
                   ([code, response]: [string, any]) => (
                     <div class="od-card rounded-xl border border-[var(--od-border)] bg-[var(--od-bg-card)] p-6">
                       <div class="flex items-baseline gap-3">
-                        <span
-                          class={`rounded px-3 py-1 text-sm font-bold ${
-                            code.startsWith("2")
-                              ? "bg-green-500/10 text-green-500"
-                              : code.startsWith("3")
-                                ? "bg-blue-500/10 text-blue-500"
-                                : code.startsWith("4")
-                                  ? "bg-yellow-500/10 text-yellow-500"
-                                  : "bg-red-500/10 text-red-500"
-                          }`}
-                        >
-                          {code}
-                        </span>
-                        <h3 class="mb-0">
-                          {response.description || "Response"}
-                        </h3>
+                        <ApiHttpResponseCode code={code} />
+                        <div
+                          class="mb-4"
+                          set:html={
+                            marked.parse(response.description) || "Response"
+                          }
+                        />
                       </div>
 
                       {response.schema && (
-                        <div class="mt-4">
-                          <h4 class="mb-2 mt-4 text-sm font-semibold text-[var(--od-text-muted)]">
-                            Schema
-                          </h4>
-                          <div class="overflow-x-auto text-sm">
-                            <table class="w-full table-fixed border-collapse border-y border-[var(--od-border)]">
-                              <thead>
-                                <tr class="bg-[var(--od-bg-input)]/30 text-left font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--od-text-muted)]">
-                                  <th class="w-1/3 py-2 pl-4">Property</th>
-                                  <th class="w-2/3 py-2 pr-4">
-                                    Type & Description
-                                  </th>
-                                </tr>
-                              </thead>
-                              <tbody class="divide-y divide-[var(--od-border)]">
-                                <ApiSchemaPropertyTree
-                                  schema={response.schema}
-                                  swaggerData={swaggerData}
-                                />
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
+                        <ApiSchemaTable
+                          schema={response.schema}
+                          swaggerData={swaggerData}
+                          collapsed={true}
+                        />
                       )}
 
                       {response.examples && (

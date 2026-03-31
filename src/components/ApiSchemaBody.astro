@@ -1,21 +1,21 @@
 ---
 import { marked } from "marked";
 import { resolveSchemaRef, type SchemaDefinition } from "../utils/openapi";
-import ApiSchemaPropertyTree from "./ApiSchemaPropertyTree.astro";
+import ApiSchemaTable from "./ApiSchemaTable.astro";
 
 export type RequestParameter = {
   name: string;
   in: string;
   description: string;
   schema: SchemaDefinition;
+  collapsed?: boolean;
 };
 
 const requestParameter: RequestParameter = Astro.props.requestParameter;
 const swaggerData: object = Astro.props.swaggerData;
+const collapsed: boolean = Astro.props.collapsed;
 let className = Astro.props.class || "";
 className += " api-request-body-schema";
-const schema = resolveSchemaRef(requestParameter.schema, swaggerData);
-const schemaProperties = Object.entries(schema?.properties || {});
 ---
 
 <div class={className}>
@@ -24,34 +24,9 @@ const schemaProperties = Object.entries(schema?.properties || {});
       <div set:html={marked.parse(requestParameter.description)} class="mb-4" />
     )
   }
-  {
-    schemaProperties.length ? (
-      <div class="overflow-x-auto">
-        <table class="w-full table-fixed border-collapse border-[var(--od-border)]">
-          <thead class="border-b text-sm">
-            <tr class="text-left font-semibold">
-              <th class="w-1/3 p-3 pl-0 font-semibold">Property</th>
-              <th class="w-2/3 p-3 pl-0 font-semibold">Type & Description</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-[var(--od-border)]">
-            {schemaProperties.map(
-              ([propName, propDef]: [string, SchemaDefinition]) => (
-                <ApiSchemaPropertyTree
-                  name={propName}
-                  schema={propDef}
-                  swaggerData={swaggerData}
-                  isRequired={(schema?.required || []).includes(propName)}
-                />
-              ),
-            )}
-          </tbody>
-        </table>
-      </div>
-    ) : (
-      <div class="overflow-x-auto p-4 text-sm">
-        <p class="text-gray-500">No schema provided.</p>
-      </div>
-    )
-  }
+  <ApiSchemaTable
+    schema={requestParameter.schema}
+    swaggerData={swaggerData}
+    collapsed={collapsed}
+  />
 </div>

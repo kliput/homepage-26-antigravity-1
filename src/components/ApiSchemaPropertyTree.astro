@@ -12,6 +12,7 @@ export interface Props {
   seenRefs?: string[];
   level?: number;
   initiallyOpened?: boolean;
+  collapsed?: boolean;
 }
 
 const {
@@ -21,12 +22,17 @@ const {
   isRequired = false,
   seenRefs = [],
   level = 0,
+  collapsed,
 } = Astro.props;
 
 let { initiallyOpened } = Astro.props;
 
 if (initiallyOpened === undefined) {
-  initiallyOpened = level < 1;
+  if (typeof collapsed === "boolean") {
+    initiallyOpened = !collapsed;
+  } else {
+    initiallyOpened = level < 1;
+  }
 }
 
 if (!rawSchema) {

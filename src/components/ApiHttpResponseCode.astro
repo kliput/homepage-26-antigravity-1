@@ -1,0 +1,17 @@
+---
+const { code } = Astro.props;
+---
+
+<span
+  class={`rounded px-3 py-1 text-sm font-semibold ${
+    code.startsWith("2")
+      ? "bg-green-500/10 text-green-500"
+      : code.startsWith("3")
+        ? "bg-blue-500/10 text-blue-500"
+        : code.startsWith("4")
+          ? "bg-yellow-500/10 text-yellow-500"
+          : "bg-red-500/10 text-red-500"
+  }`}
+>
+  {code}
+</span>
