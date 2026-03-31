@@ -1,0 +1,14 @@
+---
+const { colorStyle, text } = Astro.props;
+const colorClasses: Record<string, string> = {
+  red: "bg-red-500/10 text-red-500",
+  yellow: "bg-yellow-500/10 text-yellow-500",
+};
+const colorClass: string = colorClasses[colorStyle];
+---
+
+<span
+  class={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${colorClass}`}
+>
+  {text}
+</span>
