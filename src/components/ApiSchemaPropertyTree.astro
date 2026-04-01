@@ -125,12 +125,14 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
           <HeaderWrapper
             class:list={[
               "list-none outline-none",
-              hasExpandableChildren ? "cursor-pointer" : "",
+              hasExpandableChildren
+                ? "cursor-pointer transition-colors hover:bg-[var(--od-bg-input)]"
+                : "",
             ]}
           >
-            <div class="hover:bg-[var(--od-bg-input)]/50 flex w-full items-start py-3 transition-colors">
+            <div class="flex w-full items-start py-3">
               <div
-                class="flex w-1/3 flex-wrap items-center gap-2 pl-0 pr-3 font-mono text-sm font-medium"
+                class="flex w-1/3 flex-wrap items-center gap-2 pl-3 pr-3 font-mono text-sm font-medium"
                 style="overflow-wrap: anywhere;"
               >
                 {name && <span>{name}</span>}
@@ -173,48 +175,48 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                     )}
                   </>
                 ) : (
-                  <>
-                    {discriminatorOptions &&
-                      propsDiscriminatorSchemaId &&
-                      discriminatorOptions.map((opt, index) => {
+                  discriminatorOptions &&
+                  propsDiscriminatorSchemaId && (
+                    <>
+                      <div class="mb-1.5 font-mono text-xs font-normal text-[var(--od-text-muted)]">
+                        discriminator string
+                      </div>
+                      <ApiDiscriminatorSelect
+                        schemaId={propsDiscriminatorSchemaId}
+                        options={
+                          discriminatorOptions?.map((sc) => ({
+                            name: sc.name,
+                            label: sc.name,
+                          })) || []
+                        }
+                      />
+                      {discriminatorOptions.map((opt, index) => {
                         const subSchemaMerged = resolveAllOf(
                           opt.schema,
                           swaggerData,
                         );
                         const subSchemaProperty =
                           subSchemaMerged?.properties?.[name || ""] || schema;
-                        const subDisplayType = subSchemaProperty.type || "any";
 
                         return (
-                          <div
-                            data-discriminator-parent={
-                              propsDiscriminatorSchemaId
-                            }
-                            data-discriminator-value={opt.name}
-                            style={index === 0 ? "" : "display: none;"}
-                          >
-                            <div class="mb-1.5 font-mono text-xs font-normal text-[var(--od-text-muted)]">
-                              discriminator {subDisplayType}
-                            </div>
-                            <ApiDiscriminatorSelect
-                              schemaId={propsDiscriminatorSchemaId}
-                              options={discriminatorOptions.map((sc) => ({
-                                name: sc.name,
-                                label: sc.name,
-                              }))}
-                            />
+                          <>
                             {subSchemaProperty.description && (
                               <div
                                 class="prose prose-sm mt-3 leading-snug opacity-90 dark:prose-invert"
+                                data-discriminator-parent={
+                                  propsDiscriminatorSchemaId
+                                }
+                                data-discriminator-value={opt.name}
                                 set:html={marked.parse(
                                   subSchemaProperty.description,
                                 )}
                               />
                             )}
-                          </div>
+                          </>
                         );
                       })}
-                  </>
+                    </>
+                  )
                 )}
               </div>
             </div>
