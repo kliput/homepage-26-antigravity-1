@@ -4,6 +4,7 @@ import {
   resolveSchemaRef,
   getSubclasses,
   getSubclassProperties,
+  resolveAllOf,
   type SchemaDefinition,
 } from "../utils/openapi";
 import { ApiExpandArrow } from "./ApiExpandArrow.jsx";
@@ -19,6 +20,9 @@ export interface Props {
   level?: number;
   initiallyOpened?: boolean;
   collapsed?: boolean;
+  isDiscriminatorField?: boolean;
+  discriminatorSchemaId?: string;
+  discriminatorOptions?: { name: string; schema: SchemaDefinition }[];
 }
 
 const {
@@ -29,6 +33,9 @@ const {
   seenRefs = [],
   level = 0,
   collapsed,
+  isDiscriminatorField,
+  discriminatorSchemaId: propsDiscriminatorSchemaId,
+  discriminatorOptions,
 } = Astro.props;
 
 let { initiallyOpened } = Astro.props;
@@ -99,7 +106,7 @@ const discriminatorField = childPropertiesSchema?.discriminator;
 const subclasses = discriminatorField
   ? getSubclasses(childPropertiesSchema, swaggerData, currentModelName)
   : [];
-const discriminatorSchemaId = discriminatorField
+const childDiscriminatorSchemaId = discriminatorField
   ? `disc-${Math.floor(Math.random() * 100000)}`
   : "";
 
@@ -139,26 +146,85 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                 )}
               </div>
               <div class="w-2/3 pr-4">
-                <div class="font-mono text-xs font-normal text-[var(--od-text-muted)]">
-                  {displayType}
-                </div>
-                {schema.description && (
-                  <div
-                    class="prose prose-sm mt-1.5 leading-snug opacity-90 dark:prose-invert"
-                    set:html={marked.parse(schema.description)}
-                  />
-                )}
-                {schema.enum && schema.enum.length > 0 && (
-                  <div class="mt-2 font-mono text-xs text-[var(--od-text-muted)]">
-                    <span class="font-semibold">Enum:</span>
-                    <div class="mt-1 flex flex-wrap gap-1.5">
-                      {schema.enum.map((val: any) => (
-                        <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
-                          {typeof val === "string" ? val : JSON.stringify(val)}
-                        </span>
-                      ))}
+                {!isDiscriminatorField ? (
+                  <>
+                    <div class="font-mono text-xs font-normal text-[var(--od-text-muted)]">
+                      {displayType}
                     </div>
-                  </div>
+                    {schema.description && (
+                      <div
+                        class="prose prose-sm mt-1.5 leading-snug opacity-90 dark:prose-invert"
+                        set:html={marked.parse(schema.description)}
+                      />
+                    )}
+                    {schema.enum && schema.enum.length > 0 && (
+                      <div class="mt-2 font-mono text-xs text-[var(--od-text-muted)]">
+                        <span class="font-semibold">Enum:</span>
+                        <div class="mt-1 flex flex-wrap gap-1.5">
+                          {schema.enum.map((val: any) => (
+                            <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
+                              {typeof val === "string" ? val : JSON.stringify(val)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {discriminatorOptions &&
+                      discriminatorOptions.map((opt, index) => {
+                        const subSchemaMerged = resolveAllOf(opt.schema, swaggerData);
+                        const subSchemaProperty =
+                          subSchemaMerged?.properties?.[name || ""] || schema;
+                        const subDisplayType = subSchemaProperty.type || "any";
+
+                        return (
+                          <div
+                            data-discriminator-parent={propsDiscriminatorSchemaId}
+                            data-discriminator-value={opt.name}
+                            style={index === 0 ? "" : "display: none;"}
+                          >
+                            <div class="font-mono text-xs font-normal text-[var(--od-text-muted)]">
+                              {subDisplayType}
+                            </div>
+                            {subSchemaProperty.description && (
+                              <div
+                                class="prose prose-sm mt-1.5 leading-snug opacity-90 dark:prose-invert"
+                                set:html={marked.parse(subSchemaProperty.description)}
+                              />
+                            )}
+                            {subSchemaProperty.enum &&
+                              subSchemaProperty.enum.length > 0 && (
+                                <div class="mt-2 font-mono text-xs text-[var(--od-text-muted)]">
+                                  <span class="font-semibold">Enum:</span>
+                                  <div class="mt-1 flex flex-wrap gap-1.5">
+                                    {subSchemaProperty.enum.map((val: any) => (
+                                      <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
+                                        {typeof val === "string"
+                                          ? val
+                                          : JSON.stringify(val)}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                          </div>
+                        );
+                      })}
+                    {discriminatorOptions && propsDiscriminatorSchemaId && (
+                      <div class="mt-4">
+                        <ApiDiscriminatorSelect
+                          schemaId={propsDiscriminatorSchemaId}
+                          discriminatorName={name || ""}
+                          options={discriminatorOptions.map((sc) => ({
+                            name: sc.name,
+                            label: sc.name,
+                          }))}
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -166,23 +232,10 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
 
           {hasExpandableChildren && (
             <div class="ml-6 pl-3">
-              {discriminatorField && subclasses.length > 0 && (
-                <div class="mb-4">
-                  <ApiDiscriminatorSelect
-                    schemaId={discriminatorSchemaId}
-                    discriminatorName={discriminatorField}
-                    options={subclasses.map((sc) => ({
-                      name: sc.name,
-                      label: sc.name,
-                    }))}
-                  />
-                </div>
-              )}
               <table class="mb-6 w-full table-fixed border-collapse">
                 <tbody class="divide-y divide-[var(--od-border)]">
                   {childPropertiesSchema?.properties &&
                     Object.entries(childPropertiesSchema.properties)
-                      .filter(([propName]) => propName !== discriminatorField)
                       .map(([propName, propDef]: [string, any]) => (
                         <Astro.self
                           name={propName}
@@ -193,6 +246,9 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                           ).includes(propName)}
                           seenRefs={currentSeenRefs}
                           level={level + 1}
+                          isDiscriminatorField={propName === discriminatorField}
+                          discriminatorSchemaId={propName === discriminatorField ? childDiscriminatorSchemaId : undefined}
+                          discriminatorOptions={propName === discriminatorField ? subclasses : undefined}
                         />
                       ))}
                 </tbody>
@@ -210,7 +266,7 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                     return (
                       <tbody
                         class="divide-y divide-[var(--od-border)]"
-                        data-discriminator-parent={discriminatorSchemaId}
+                        data-discriminator-parent={childDiscriminatorSchemaId}
                         data-discriminator-value={sc.name}
                         style="display: none;"
                       >

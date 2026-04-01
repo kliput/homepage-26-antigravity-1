@@ -57,10 +57,9 @@ const { schemaId, discriminatorName, options } = Astro.props;
 
   // Initialize display states on load
   document.addEventListener("DOMContentLoaded", () => {
-    const selects = document
-      .querySelectorAll(".api-discriminator-select")
-      .values()
-      .filter((element) => element instanceof HTMLSelectElement);
+    const selects = document.querySelectorAll(
+      "select.api-discriminator-select",
+    ) as NodeListOf<HTMLSelectElement>;
     selects.forEach((selectElement) => {
       const schemaId = selectElement.getAttribute("data-schema-id");
       const selectedValue = selectElement.value;
