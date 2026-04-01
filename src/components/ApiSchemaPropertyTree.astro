@@ -1,8 +1,14 @@
 ---
 import { marked } from "marked";
-import { resolveSchemaRef, type SchemaDefinition } from "../utils/openapi";
+import {
+  resolveSchemaRef,
+  getSubclasses,
+  getSubclassProperties,
+  type SchemaDefinition,
+} from "../utils/openapi";
 import { ApiExpandArrow } from "./ApiExpandArrow.jsx";
 import ApiBodyTag from "./ApiBodyTag.astro";
+import ApiDiscriminatorSelect from "./ApiDiscriminatorSelect.astro";
 
 export interface Props {
   name?: string;
@@ -68,6 +74,7 @@ if (schema.type === "array" && schema.items) {
 } else if (!schema.type && schema.properties) {
   displayType = "object";
 }
+const currentModelName = refStr ? refStr.split("/").pop() : undefined;
 
 const hasProperties =
   schema.properties && Object.keys(schema.properties).length > 0;
@@ -87,6 +94,14 @@ const hasExpandableChildren =
   childPropertiesSchema &&
   childPropertiesSchema.properties &&
   Object.keys(childPropertiesSchema.properties).length > 0;
+
+const discriminatorField = childPropertiesSchema?.discriminator;
+const subclasses = discriminatorField
+  ? getSubclasses(childPropertiesSchema, swaggerData, currentModelName)
+  : [];
+const discriminatorSchemaId = discriminatorField
+  ? `disc-${Math.floor(Math.random() * 100000)}`
+  : "";
 
 // FIXME: śmieci po refaktorze SI
 const Container = hasExpandableChildren ? "details" : "div";
@@ -151,11 +166,24 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
 
           {hasExpandableChildren && (
             <div class="ml-6 pl-3">
+              {discriminatorField && subclasses.length > 0 && (
+                <div class="mb-4">
+                  <ApiDiscriminatorSelect
+                    schemaId={discriminatorSchemaId}
+                    discriminatorName={discriminatorField}
+                    options={subclasses.map((sc) => ({
+                      name: sc.name,
+                      label: sc.name,
+                    }))}
+                  />
+                </div>
+              )}
               <table class="mb-6 w-full table-fixed border-collapse">
                 <tbody class="divide-y divide-[var(--od-border)]">
                   {childPropertiesSchema?.properties &&
-                    Object.entries(childPropertiesSchema.properties).map(
-                      ([propName, propDef]: [string, any]) => (
+                    Object.entries(childPropertiesSchema.properties)
+                      .filter(([propName]) => propName !== discriminatorField)
+                      .map(([propName, propDef]: [string, any]) => (
                         <Astro.self
                           name={propName}
                           schema={propDef}
@@ -166,9 +194,41 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                           seenRefs={currentSeenRefs}
                           level={level + 1}
                         />
-                      ),
-                    )}
+                      ))}
                 </tbody>
+                {discriminatorField &&
+                  subclasses.map((sc) => {
+                    const subclassProps = getSubclassProperties(
+                      childPropertiesSchema,
+                      sc.schema,
+                      swaggerData,
+                    );
+                    if (Object.keys(subclassProps).length === 0) return null;
+
+                    const requiredProps =
+                      resolveSchemaRef(sc.schema, swaggerData)?.required || [];
+                    return (
+                      <tbody
+                        class="divide-y divide-[var(--od-border)]"
+                        data-discriminator-parent={discriminatorSchemaId}
+                        data-discriminator-value={sc.name}
+                        style="display: none;"
+                      >
+                        {Object.entries(subclassProps).map(
+                          ([propName, propDef]: [string, any]) => (
+                            <Astro.self
+                              name={propName}
+                              schema={propDef}
+                              swaggerData={swaggerData}
+                              isRequired={requiredProps.includes(propName)}
+                              seenRefs={currentSeenRefs}
+                              level={level + 1}
+                            />
+                          ),
+                        )}
+                      </tbody>
+                    );
+                  })}
               </table>
             </div>
           )}

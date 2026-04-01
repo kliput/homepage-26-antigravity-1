@@ -1,0 +1,81 @@
+---
+export interface Props {
+  schemaId: string;
+  discriminatorName: string;
+  options: { name: string; label?: string }[];
+}
+
+const { schemaId, discriminatorName, options } = Astro.props;
+---
+
+<div class="mt-2 text-xs">
+  <span class="font-semibold text-[var(--od-text)]"
+    >Subtype ({discriminatorName}):</span
+  >
+  <select
+    class="api-discriminator-select mt-1 block w-full rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-2 py-1.5 text-sm text-[var(--od-text)] focus:border-[var(--od-color-accent)] focus:outline-none"
+    data-schema-id={schemaId}
+  >
+    {
+      options.map((opt) => (
+        <option value={opt.name}>{opt.label || opt.name}</option>
+      ))
+    }
+  </select>
+</div>
+
+<script>
+  // FIXME: refactor: remove redundancy
+
+  function handleDiscriminatorChange(event: Event) {
+    const target =
+      event.target instanceof HTMLSelectElement ? event.target : null;
+    if (
+      target &&
+      target.classList &&
+      target.classList.contains("api-discriminator-select")
+    ) {
+      const schemaId = target.getAttribute("data-schema-id");
+      const selectedValue = target.value;
+
+      const variants = document.querySelectorAll(
+        `[data-discriminator-parent="${schemaId}"]`,
+      ) as NodeListOf<HTMLElement>;
+      variants.forEach((variant) => {
+        if (
+          variant.getAttribute("data-discriminator-value") === selectedValue
+        ) {
+          variant.style.display = "";
+        } else {
+          variant.style.display = "none";
+        }
+      });
+    }
+  }
+
+  document.addEventListener("change", handleDiscriminatorChange);
+
+  // Initialize display states on load
+  document.addEventListener("DOMContentLoaded", () => {
+    const selects = document
+      .querySelectorAll(".api-discriminator-select")
+      .values()
+      .filter((element) => element instanceof HTMLSelectElement);
+    selects.forEach((selectElement) => {
+      const schemaId = selectElement.getAttribute("data-schema-id");
+      const selectedValue = selectElement.value;
+      const variants = document.querySelectorAll(
+        `[data-discriminator-parent="${schemaId}"]`,
+      ) as NodeListOf<HTMLElement>;
+      variants.forEach((variant) => {
+        if (
+          variant.getAttribute("data-discriminator-value") === selectedValue
+        ) {
+          variant.style.display = "";
+        } else {
+          variant.style.display = "none";
+        }
+      });
+    });
+  });
+</script>
