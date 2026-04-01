@@ -121,11 +121,11 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
   rawSchema && (
     <tr class="api-schema-property-tree">
       <td colspan="2" class="border-none p-0">
-        <details class="group" open={initiallyOpened} id={detailsElementId}>
-          <summary
+        <Container class="group" open={initiallyOpened} id={detailsElementId}>
+          <HeaderWrapper
             class:list={[
-              "cursor-pointer list-none outline-none",
-              !hasExpandableChildren && "pointer-events-none",
+              "list-none outline-none",
+              hasExpandableChildren ? "cursor-pointer" : "",
             ]}
           >
             <div class="hover:bg-[var(--od-bg-input)]/50 flex w-full items-start py-3 transition-colors">
@@ -163,7 +163,9 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                         <div class="mt-1 flex flex-wrap gap-1.5">
                           {schema.enum.map((val: any) => (
                             <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
-                              {typeof val === "string" ? val : JSON.stringify(val)}
+                              {typeof val === "string"
+                                ? val
+                                : JSON.stringify(val)}
                             </span>
                           ))}
                         </div>
@@ -173,70 +175,58 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                 ) : (
                   <>
                     {discriminatorOptions &&
+                      propsDiscriminatorSchemaId &&
                       discriminatorOptions.map((opt, index) => {
-                        const subSchemaMerged = resolveAllOf(opt.schema, swaggerData);
+                        const subSchemaMerged = resolveAllOf(
+                          opt.schema,
+                          swaggerData,
+                        );
                         const subSchemaProperty =
                           subSchemaMerged?.properties?.[name || ""] || schema;
                         const subDisplayType = subSchemaProperty.type || "any";
 
                         return (
                           <div
-                            data-discriminator-parent={propsDiscriminatorSchemaId}
+                            data-discriminator-parent={
+                              propsDiscriminatorSchemaId
+                            }
                             data-discriminator-value={opt.name}
                             style={index === 0 ? "" : "display: none;"}
                           >
-                            <div class="font-mono text-xs font-normal text-[var(--od-text-muted)]">
-                              {subDisplayType}
+                            <div class="mb-1.5 font-mono text-xs font-normal text-[var(--od-text-muted)]">
+                              discriminator {subDisplayType}
                             </div>
+                            <ApiDiscriminatorSelect
+                              schemaId={propsDiscriminatorSchemaId}
+                              options={discriminatorOptions.map((sc) => ({
+                                name: sc.name,
+                                label: sc.name,
+                              }))}
+                            />
                             {subSchemaProperty.description && (
                               <div
-                                class="prose prose-sm mt-1.5 leading-snug opacity-90 dark:prose-invert"
-                                set:html={marked.parse(subSchemaProperty.description)}
+                                class="prose prose-sm mt-3 leading-snug opacity-90 dark:prose-invert"
+                                set:html={marked.parse(
+                                  subSchemaProperty.description,
+                                )}
                               />
                             )}
-                            {subSchemaProperty.enum &&
-                              subSchemaProperty.enum.length > 0 && (
-                                <div class="mt-2 font-mono text-xs text-[var(--od-text-muted)]">
-                                  <span class="font-semibold">Enum:</span>
-                                  <div class="mt-1 flex flex-wrap gap-1.5">
-                                    {subSchemaProperty.enum.map((val: any) => (
-                                      <span class="inline-block rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-1.5 py-0.5 text-[var(--od-text)]">
-                                        {typeof val === "string"
-                                          ? val
-                                          : JSON.stringify(val)}
-                                      </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
                           </div>
                         );
                       })}
-                    {discriminatorOptions && propsDiscriminatorSchemaId && (
-                      <div class="mt-4">
-                        <ApiDiscriminatorSelect
-                          schemaId={propsDiscriminatorSchemaId}
-                          discriminatorName={name || ""}
-                          options={discriminatorOptions.map((sc) => ({
-                            name: sc.name,
-                            label: sc.name,
-                          }))}
-                        />
-                      </div>
-                    )}
                   </>
                 )}
               </div>
             </div>
-          </summary>
+          </HeaderWrapper>
 
           {hasExpandableChildren && (
             <div class="ml-6 pl-3">
               <table class="mb-6 w-full table-fixed border-collapse">
-                <tbody class="divide-y divide-[var(--od-border)]">
+                <tbody class="divide-y divide-[var(--od-border)] border-t">
                   {childPropertiesSchema?.properties &&
-                    Object.entries(childPropertiesSchema.properties)
-                      .map(([propName, propDef]: [string, any]) => (
+                    Object.entries(childPropertiesSchema.properties).map(
+                      ([propName, propDef]: [string, any]) => (
                         <Astro.self
                           name={propName}
                           schema={propDef}
@@ -247,10 +237,19 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                           seenRefs={currentSeenRefs}
                           level={level + 1}
                           isDiscriminatorField={propName === discriminatorField}
-                          discriminatorSchemaId={propName === discriminatorField ? childDiscriminatorSchemaId : undefined}
-                          discriminatorOptions={propName === discriminatorField ? subclasses : undefined}
+                          discriminatorSchemaId={
+                            propName === discriminatorField
+                              ? childDiscriminatorSchemaId
+                              : undefined
+                          }
+                          discriminatorOptions={
+                            propName === discriminatorField
+                              ? subclasses
+                              : undefined
+                          }
                         />
-                      ))}
+                      ),
+                    )}
                 </tbody>
                 {discriminatorField &&
                   subclasses.map((sc) => {
@@ -265,7 +264,7 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
                       resolveSchemaRef(sc.schema, swaggerData)?.required || [];
                     return (
                       <tbody
-                        class="divide-y divide-[var(--od-border)]"
+                        class="divide-y divide-[var(--od-border)] border-t"
                         data-discriminator-parent={childDiscriminatorSchemaId}
                         data-discriminator-value={sc.name}
                         style="display: none;"
@@ -288,7 +287,7 @@ const detailsElementId = `api-details-${Math.floor(Math.random() * 10000)}`;
               </table>
             </div>
           )}
-        </details>
+        </Container>
       </td>
     </tr>
   )

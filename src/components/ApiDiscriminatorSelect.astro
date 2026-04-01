@@ -1,55 +1,45 @@
 ---
 export interface Props {
   schemaId: string;
-  discriminatorName: string;
   options: { name: string; label?: string }[];
 }
 
-const { schemaId, discriminatorName, options } = Astro.props;
+const { schemaId, options } = Astro.props;
 ---
 
-<div class="mt-2 text-xs">
-  <span class="font-semibold text-[var(--od-text)]"
-    >Subtype ({discriminatorName}):</span
-  >
-  <select
-    class="api-discriminator-select mt-1 block w-full rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-2 py-1.5 text-sm text-[var(--od-text)] focus:border-[var(--od-color-accent)] focus:outline-none"
-    data-schema-id={schemaId}
-  >
-    {
-      options.map((opt) => (
-        <option value={opt.name}>{opt.label || opt.name}</option>
-      ))
-    }
-  </select>
-</div>
+<select
+  class="api-discriminator-select block w-full rounded border border-[var(--od-border)] bg-[var(--od-bg-input)] px-2 py-1.5 text-sm text-[var(--od-text)] focus:border-[var(--od-color-accent)] focus:outline-none"
+  data-schema-id={schemaId}
+>
+  {
+    options.map((opt) => (
+      <option value={opt.name}>{opt.label || opt.name}</option>
+    ))
+  }
+</select>
 
 <script>
   // FIXME: refactor: remove redundancy
 
-  function handleDiscriminatorChange(event: Event) {
-    const target =
-      event.target instanceof HTMLSelectElement ? event.target : null;
-    if (
-      target &&
-      target.classList &&
-      target.classList.contains("api-discriminator-select")
-    ) {
-      const schemaId = target.getAttribute("data-schema-id");
-      const selectedValue = target.value;
+  function toggleCustomProperties(selectElement: HTMLSelectElement) {
+    const schemaId = selectElement.getAttribute("data-schema-id");
+    const selectedValue = selectElement.value;
+    const variantsElements = document.querySelectorAll(
+      `[data-discriminator-parent="${schemaId}"]`,
+    ) as NodeListOf<HTMLElement>;
+    variantsElements.forEach((variantElement) => {
+      const isChosenVariant =
+        variantElement.getAttribute("data-discriminator-value") ===
+        selectedValue;
+      variantElement.style.display = isChosenVariant ? "" : "none";
+    });
+  }
 
-      const variants = document.querySelectorAll(
-        `[data-discriminator-parent="${schemaId}"]`,
-      ) as NodeListOf<HTMLElement>;
-      variants.forEach((variant) => {
-        if (
-          variant.getAttribute("data-discriminator-value") === selectedValue
-        ) {
-          variant.style.display = "";
-        } else {
-          variant.style.display = "none";
-        }
-      });
+  function handleDiscriminatorChange(event: Event) {
+    const selectElement =
+      event.target instanceof HTMLSelectElement ? event.target : null;
+    if (selectElement?.classList?.contains("api-discriminator-select")) {
+      toggleCustomProperties(selectElement);
     }
   }
 
@@ -60,21 +50,6 @@ const { schemaId, discriminatorName, options } = Astro.props;
     const selects = document.querySelectorAll(
       "select.api-discriminator-select",
     ) as NodeListOf<HTMLSelectElement>;
-    selects.forEach((selectElement) => {
-      const schemaId = selectElement.getAttribute("data-schema-id");
-      const selectedValue = selectElement.value;
-      const variants = document.querySelectorAll(
-        `[data-discriminator-parent="${schemaId}"]`,
-      ) as NodeListOf<HTMLElement>;
-      variants.forEach((variant) => {
-        if (
-          variant.getAttribute("data-discriminator-value") === selectedValue
-        ) {
-          variant.style.display = "";
-        } else {
-          variant.style.display = "none";
-        }
-      });
-    });
+    selects.forEach((selectElement) => toggleCustomProperties(selectElement));
   });
 </script>
