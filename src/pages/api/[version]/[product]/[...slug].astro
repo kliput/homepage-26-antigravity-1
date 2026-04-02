@@ -220,12 +220,16 @@ const pageTitle = operation
                     <div class="od-card rounded-xl border border-[var(--od-border)] bg-[var(--od-bg-card)] p-6">
                       <div class="flex items-baseline gap-3">
                         <ApiHttpResponseCode code={code} />
-                        <div
-                          class="mb-4"
-                          set:html={
-                            marked.parse(response.description) || "Response"
-                          }
-                        />
+                        {response.description ? (
+                          <div
+                            class="mb-4"
+                            set:html={marked.parse(response.description)}
+                          />
+                        ) : (
+                          <div class="italic text-[var(--od-text-muted)]">
+                            No description.
+                          </div>
+                        )}
                       </div>
 
                       {response.schema && (
