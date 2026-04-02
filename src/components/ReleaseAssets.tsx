@@ -1,42 +1,36 @@
 import {
   Anchor,
-  Box,
-  Code2,
+  BookMarked,
+  ClipboardCopy,
+  Database,
   ExternalLink,
-  Layers,
-  Package,
+  Globe,
+  LibraryBig,
+  Ship,
+  SquareTerminal,
+  type LucideIcon,
 } from "lucide-react";
 import { useState } from "react";
 import stripVersion from "../utils/strip-version.js";
 
-const RELEASE_IDS = [
-  "ver-25-0",
-  "ver-21-02-8",
-  "ver-21-02-7",
-  "ver-21-02-6",
-  "ver-21-02-5",
-  "ver-20-02-20",
-];
-
 export type ReleaseAssetsCollectionType = "docker" | "deb" | "python" | "conda";
-// TODO: add helm assets after consultation with MO
-// | "helm";
+
+// typy assetów: tekst monospace, podpis, kopiarka tekstu monospace, link z prawej (różne ikony); sam link (różne ikony?);
 
 export interface ReleaseAsset {
   name: string;
-  href: string;
-  desc: string;
+  monospaced?: boolean;
+  copyable?: boolean;
+  mainIcon: LucideIcon;
+  secondaryIcon?: LucideIcon;
+  description: string;
+  href?: string;
 }
 
-export interface ReleaseAssetsCollection {
-  hubUrl?: string;
-  items: ReleaseAsset[];
-}
-
-export type PredefinedReleaseAssetsMap = Record<
-  string,
-  Partial<Record<ReleaseAssetsCollectionType, ReleaseAssetsCollection>>
->;
+// class ReleaseAsset implements IReleaseAsset {
+//   constructor(name, ) {
+//   }
+// }
 
 const collectionTypes: Readonly<Array<ReleaseAssetsCollectionType>> =
   Object.freeze([
@@ -50,26 +44,61 @@ const collectionTypes: Readonly<Array<ReleaseAssetsCollectionType>> =
 
 // FIXME: uniwersalność - automatyczne generowanie linków na podstawie samej wersji?
 
-interface AssetTab {
-  key: ReleaseAssetsCollectionType;
-  icon: any;
+type AssetTab = {
+  key: ProductId;
+  icon: LucideIcon;
   label: string;
-  sub: string;
-}
+  sub?: string;
+};
+
+type AssetSection = {
+  icon: LucideIcon;
+  title: string;
+  assets: ReleaseAsset[];
+};
+
+type ProductAssets = {
+  tab: AssetTab;
+  sections: AssetSection[];
+};
+
+type ProductId =
+  | "onezone"
+  | "oneprovider"
+  | "oneclient"
+  | "onedatafs"
+  | "onedatarestfs"
+  | "onedatafilerestclient"
+  | "restcli";
+
+type AssetsCollection = Record<ProductId, ProductAssets>;
 
 // FIXME: disable ligatures, for x86_64
 // font-variant-ligatures: none;
 
 const ASSET_TABS: AssetTab[] = [
-  { key: "docker", icon: Anchor, label: "Docker Images", sub: "Docker Hub" },
-  { key: "deb", icon: Package, label: "DEB Packages", sub: "Ubuntu / Debian" },
-  { key: "python", icon: Code2, label: "Python Libraries", sub: "PyPI" },
-  { key: "conda", icon: Box, label: "Conda Packages", sub: "conda-forge" },
-  // TODO: add helm
-  // { key: "helm", icon: Layers, label: "Helm Charts", sub: "ArtifactHub" },
+  { key: "onezone", icon: Globe, label: "Onezone" },
+  { key: "oneprovider", icon: Database, label: "Oneprovider" },
+  { key: "oneclient", icon: SquareTerminal, label: "Oneclient" },
+  { key: "onedatafs", icon: LibraryBig, label: "OnedataFS" },
+  { key: "onedatarestfs", icon: LibraryBig, label: "OnedataRestFS" },
+  {
+    key: "onedatafilerestclient",
+    icon: LibraryBig,
+    label: "OnedataFileRestClient",
+  },
+  { key: "restcli", icon: SquareTerminal, label: "REST CLI" },
 ];
 
-function generateAssetsCollection(
+function getAssetTab(key: ProductId): AssetTab {
+  const assetTab = ASSET_TABS.find((tab) => tab.key === key);
+  if (!assetTab) {
+    throw new Error(`Unknown asset tab type: ${key}`);
+  }
+  return assetTab;
+}
+
+function oldGenerateAssetsCollection(
   type: ReleaseAssetsCollectionType,
   version: string,
 ): ReleaseAssetsCollection {
@@ -161,18 +190,149 @@ function generateAssetsCollection(
   }
 }
 
+function createAsset(
+  name: string,
+  href: string,
+  description: string,
+  optionals: any = {},
+): ReleaseAsset {
+  const result: Partial<ReleaseAsset> = { name, href, description };
+  if (href) {
+    result.href = href;
+    result.secondaryIcon = ExternalLink;
+  }
+  if (optionals?.copyable !== undefined) {
+    result.copyable = optionals.copyable;
+  }
+  if (optionals?.mainIcon) {
+    result.mainIcon = optionals.mainIcon;
+  } else if (optionals?.copyable) {
+    result.mainIcon = ClipboardCopy;
+  }
+  if (optionals?.secondaryIcon) {
+    result.secondaryIcon = optionals.secondaryIcon;
+  }
+  if (!result.name || !result.description || !result.mainIcon) {
+    throw new Error("Asset name, description and main icon are required");
+  }
+  return result as ReleaseAsset;
+}
+
+function generateAssetsCollection(version: string): AssetsCollection {
+  const majorVersion = stripVersion(version);
+  return {
+    onezone: {
+      tab: { key: "onezone", icon: Globe, label: "Onezone" },
+      sections: [
+        {
+          icon: Ship,
+          title: "Docker Images",
+          assets: [
+            createAsset(
+              `onedata/onezone:${version}`,
+              `https://hub.docker.com/r/onedata/onezone/tags?name=${version}`,
+              "Central zone service",
+            ),
+          ],
+        },
+        {
+          icon: BookMarked,
+          title: "Documentation",
+          assets: [
+            createAsset(
+              "How to install",
+              `/docs/${majorVersion}/admin-guide/onezone/installation/`,
+              "Onezone installation guide",
+            ),
+            // FIXME: dodać jak pojawi się strona podręcznika o upgrade
+            // createAsset(
+            //   "How to upgrade",
+            //   `/docs/${majorVersion}/admin-guide/onezone/maintenance/`,
+            //   "Onezone upgrade guide",
+            // ),
+          ],
+        },
+      ],
+    },
+    onezone: {
+      tab: { key: "oneprovider", icon: Database, label: "Oneprovider" },
+      sections: [
+        {
+          icon: Ship,
+          title: "Docker Images",
+          assets: [
+            createAsset(
+              `onedata/oneprovider:${version}`,
+              `https://hub.docker.com/r/onedata/oneprovider/tags?name=${version}`,
+              "Storage provider service",
+            ),
+          ],
+        },
+        {
+          icon: BookMarked,
+          title: "Documentation",
+          assets: [
+            createAsset(
+              "How to install",
+              `/docs/${majorVersion}/admin-guide/oneprovider/installation/overview`,
+              "Oneprovider installation guide",
+            ),
+            // FIXME: dodać jak pojawi się strona podręcznika o upgrade
+            // createAsset(
+            //   "How to upgrade",
+            //   `/docs/${majorVersion}/admin-guide/oneprovider/maintenance`,
+            //   "Oneprovider upgrade guide",
+            // ),
+          ],
+        },
+      ],
+    },
+    oneclient: {
+      tab: { key: "oneclient", icon: SquareTerminal, label: "Oneclient" },
+      sections: [
+        {
+          icon: Ship,
+          title: "Docker Images (containerized)",
+          assets: [
+            createAsset(
+              `onedata/oneclient:${version}`,
+              `/docs/${majorVersion}/user-guide/interfaces/oneclient/#using-oneclient-from-docker`,
+              "Oneclient Docker image",
+              { secondaryIcon: BookMarked },
+            ),
+          ],
+        },
+        {
+          icon: BookMarked,
+          title: "Documentation",
+          assets: [
+            createAsset(
+              "How to install",
+              `/docs/${majorVersion}/admin-guide/oneclient/installation/overview`,
+              "Oneprovider installation guide",
+            ),
+            // FIXME: dodać jak pojawi się strona podręcznika o upgrade
+            // createAsset(
+            //   "How to upgrade",
+            //   `/docs/${majorVersion}/admin-guide/oneprovider/maintenance`,
+            //   "Oneprovider upgrade guide",
+            // ),
+          ],
+        },
+      ],
+    },
+    onedatafs: {},
+    onedatarestfs: {},
+    onedatafilerestclient: {},
+    restcli: {},
+  };
+}
+
 export default function ReleaseAssets({ version }: { version: string }) {
   const [active, setActive] = useState<ReleaseAssetsCollectionType | null>(
     null,
   );
-  const assets = collectionTypes.reduce(
-    (acc, type) => {
-      acc[type] = generateAssetsCollection(type, version);
-      return acc;
-    },
-    {} as Record<ReleaseAssetsCollectionType, ReleaseAssetsCollection>,
-  );
-  const tab = ASSET_TABS.find((t) => t.key === active);
+  const data: AssetsCollection = generateAssetsCollection(version);
   const items = active ? assets[active]?.items || [] : [];
   const hubUrl = active ? assets[active]?.hubUrl || "" : "";
 
@@ -195,11 +355,13 @@ export default function ReleaseAssets({ version }: { version: string }) {
             >
               <Icon className="h-3.5 w-3.5" />
               {label}
-              <span
-                className={`hidden font-normal sm:inline ${active === key ? "opacity-80" : "od-text-faint"}`}
-              >
-                — {sub}
-              </span>
+              {sub && (
+                <span
+                  className={`hidden font-normal sm:inline ${active === key ? "opacity-80" : "od-text-faint"}`}
+                >
+                  — {sub}
+                </span>
+              )}
             </button>
           ))}
         </div>
