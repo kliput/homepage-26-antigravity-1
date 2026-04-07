@@ -287,31 +287,6 @@ const release = props.isRelease ? props.release : null;
             <h1 class="release-title od-text m-0 text-2xl font-bold">
               Release {release.data.version}
             </h1>
-            <div class="release-action-buttons">
-              {release.data.installUrl && (
-                <a
-                  class="a-btn"
-                  href="/docs/25/admin-guide/oneprovider/installation/overview/"
-                >
-                  <button class="od-gradient-bg flex items-center gap-2 rounded-xl border-2 border-transparent px-4 py-2 text-sm font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg">
-                    <Download className="w-4 h-4" />
-                    How to Install
-                  </button>
-                </a>
-              )}
-              <a
-                class="a-btn"
-                href="/docs/25/admin-guide/oneprovider/installation/overview/"
-              >
-                <button
-                  class="od-accent-text hover:od-gradient-bg flex items-center gap-2 rounded-xl border-2 px-4 py-2 text-sm font-semibold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-                  style="border-color: var(--od-accent)"
-                >
-                  <ArrowUpCircle className="w-4 h-4" />
-                  How to Upgrade
-                </button>
-              </a>
-            </div>
           </div>
 
           <ReleaseAssets version={release.data.version} client:visible />
