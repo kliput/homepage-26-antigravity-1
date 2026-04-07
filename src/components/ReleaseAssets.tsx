@@ -2,6 +2,7 @@ import {
   BookMarked,
   ClipboardCopy,
   Database,
+  ExternalLink,
   Globe,
   LibraryBig,
   Ship,
@@ -30,11 +31,6 @@ function createAsset(
   }
   if (href) {
     result.href = href;
-    // FIXME: the logic below was setting ExternalLink as secondaryIcon, but the Asset component uses ExternalLink explicitly
-    // so maybe we don't need secondaryIcon to be ExternalLink if it's already used?
-    // In original code, it was used to render the icon on the right.
-    // However, createAsset was return partial and it was casted to ReleaseAsset.
-    // The Asset component currently uses ExternalLink on the far right.
   }
   if (optionals.copyable === undefined) {
     result.copyable = false;
@@ -46,11 +42,15 @@ function createAsset(
     result.primaryIcon = optionals.primaryIcon;
   } else if (result.copyable) {
     result.primaryIcon = ClipboardCopy;
+  } else {
+    result.primaryIcon = ExternalLink;
   }
   // This was in original code but not really used as far as I can see in the render part.
   // The Asset component we extracted only uses name, description, href, and monospaced.
   if (optionals?.secondaryIcon) {
     result.secondaryIcon = optionals.secondaryIcon;
+  } else if (result.copyable && result.href) {
+    result.secondaryIcon = ExternalLink;
   }
   return result as ReleaseAsset;
 }

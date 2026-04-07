@@ -686,4 +686,21 @@ code {
 
 /* ReleaseAssets */
 
-/* FIXME: */
+.cursor-copy {
+  cursor: copy;
+}
+
+.tooltip-up {
+  animation: tooltip-fade-in 0.2s ease-out;
+}
+
+@keyframes tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
