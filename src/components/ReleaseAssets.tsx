@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import stripVersion, { type MajorVersion } from "../utils/strip-version.js";
-import type { AssetTab, AssetsCollection, ProductId, ReleaseAsset } from "./ReleaseAssets/types.js";
+import type {
+  AssetTab,
+  AssetsCollection,
+  ProductId,
+  ReleaseAsset,
+} from "./ReleaseAssets/types.js";
 import { Tab } from "./ReleaseAssets/Tab.js";
 import { Section } from "./ReleaseAssets/Section.js";
 
@@ -17,7 +22,7 @@ function createAsset(
   name: string,
   href: string,
   description: string,
-  optionals: any = {},
+  optionals: Partial<ReleaseAsset> = {},
 ): ReleaseAsset {
   const result: Partial<ReleaseAsset> = { name, href, description };
   if (!name || !description || !href) {
@@ -31,16 +36,16 @@ function createAsset(
     // However, createAsset was return partial and it was casted to ReleaseAsset.
     // The Asset component currently uses ExternalLink on the far right.
   }
-  if (optionals?.copyable !== undefined) {
-    result.copyable = optionals.copyable;
-    if (optionals.monospace === undefined) {
-      result.monospaced = result.copyable;
-    }
+  if (optionals.copyable === undefined) {
+    result.copyable = false;
+  } else {
+    result.copyable = Boolean(optionals.copyable);
   }
-  if (optionals?.mainIcon) {
-    result.mainIcon = optionals.mainIcon;
-  } else if (optionals?.copyable) {
-    result.mainIcon = ClipboardCopy;
+  result.monospaced = optionals.monospaced ?? result.copyable;
+  if (optionals?.primaryIcon) {
+    result.primaryIcon = optionals.primaryIcon;
+  } else if (result.copyable) {
+    result.primaryIcon = ClipboardCopy;
   }
   // This was in original code but not really used as far as I can see in the render part.
   // The Asset component we extracted only uses name, description, href, and monospaced.
@@ -64,6 +69,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
               `onedata/onezone:${version}`,
               `https://hub.docker.com/r/onedata/onezone/tags?name=${version}`,
               "Central zone service",
+              { copyable: true },
             ),
           ],
         },
@@ -91,6 +97,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
               `onedata/oneprovider:${version}`,
               `https://hub.docker.com/r/onedata/oneprovider/tags?name=${version}`,
               "Storage provider service",
+              { copyable: true },
             ),
           ],
         },
@@ -118,7 +125,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
               `onedata/oneclient:${version}`,
               `/docs/${majorVersion}/user-guide/interfaces/oneclient/#using-oneclient-from-docker`,
               "Oneclient Docker image",
-              { secondaryIcon: BookMarked },
+              { secondaryIcon: BookMarked, copyable: true },
             ),
           ],
         },
@@ -130,6 +137,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
               oneclientInstallOneliner(majorVersion),
               `/docs/${majorVersion}/admin-guide/oneclient/installation/overview`,
               "The above command will install the Oneclient using packages in Ubuntu (16.04+), Fedora, or CentOS/Rocky.",
+              { copyable: true },
             ),
           ],
         },

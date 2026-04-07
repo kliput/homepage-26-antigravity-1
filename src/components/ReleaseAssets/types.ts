@@ -13,7 +13,7 @@ export interface ReleaseAsset {
   name: string;
   monospaced?: boolean;
   copyable?: boolean;
-  mainIcon: LucideIcon;
+  primaryIcon: LucideIcon;
   secondaryIcon?: LucideIcon;
   description: string;
   href?: string;
