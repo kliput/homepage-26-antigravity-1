@@ -128,6 +128,46 @@ function homeVersionsMatcher(hash) {
   }
 }
 
+// FIXME: change 25 to "stable" when available
+const legacyDocsMap = {
+  "administering_onedata/luma.html": "docs/topic/luma",
+  "advanced/cdmi.html": "docs/25/user-guide/interfaces/cdmi",
+  "using_onedata/qos.html": "docs/25/user-guide/rule-based-replication-qos",
+  "using_onedata/replication_management.html#advanced-operations-using-views":
+    "docs", // FIXME: find or create new docs
+  "using_onedata/using_onedata_from_cli.html": "docs", // FIXME: find or create new docs
+  "administering_onedata/administering_onedata_from_cli.html": "docs", // FIXME: find or create new docs
+  "administering_onedata/openid_saml_configuration/openid_saml_configuration_19_02[authority-delegation].html":
+    "docs/25/admin-guide/onezone/configuration/oidc-saml/#authority-delegation",
+  "using_onedata/tokens[access-tokens].html":
+    "docs/25/user-guide/tokens#access-tokens",
+  "using_onedata/tokens[identity-tokens].html":
+    "docs/25/user-guide/tokens#identity-tokens",
+  "using_onedata/tokens[invite-tokens].html":
+    "docs/25/user-guide/tokens#invite-tokens",
+  "using_onedata/tokens[named-and-temporary-tokens].html":
+    "docs/25/user-guide/tokens#named-and-temporary-tokens",
+  "using_onedata/tokens[token-caveats].html":
+    "docs/25/user-guide/tokens#token-caveats",
+  "using_onedata/tokens[service].html": "docs/25/user-guide/tokens#service",
+  "using_onedata/tokens[consumer].html": "docs/25/user-guide/tokens#consumer",
+  "using_onedata/tokens[data-access-caveats].html":
+    "docs/25/user-guide/tokens#data-access-caveats",
+};
+
+function legacyDocsMatcher(hash) {
+  const match = hash.match(/^#\/home\/documentation\/doc\/(?<legacySlug>.*)$/);
+  if (!match) {
+    return;
+  }
+  const { legacySlug } = match.groups;
+  const redirectPath = legacyDocsMap[legacySlug];
+  if (!redirectPath) {
+    return "/docs";
+  }
+  return `/${redirectPath}`;
+}
+
 /**
  * @param {string} hash
  * @returns {string | undefined}
@@ -141,6 +181,7 @@ function convertHash(hash) {
     apiIndexMatcher,
     homeContactMatcher,
     homeVersionsMatcher,
+    legacyDocsMatcher,
   ];
   for (const fun of matchers) {
     const redirectUrl = fun(hash);
