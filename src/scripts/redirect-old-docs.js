@@ -115,6 +115,20 @@ function apiIndexMatcher(hash) {
   }
 }
 
+function homeContactMatcher(hash) {
+  const match = hash.match(/^#\/home\/contact/);
+  if (match) {
+    return `/contact/`;
+  }
+}
+
+function homeVersionsMatcher(hash) {
+  const match = hash.match(/^#\/home\/versions/);
+  if (match) {
+    return `/docs/releases/`;
+  }
+}
+
 /**
  * @param {string} hash
  * @returns {string | undefined}
@@ -126,6 +140,8 @@ function convertHash(hash) {
     apiPathMatcher,
     apiProductMatcher,
     apiIndexMatcher,
+    homeContactMatcher,
+    homeVersionsMatcher,
   ];
   for (const fun of matchers) {
     const redirectUrl = fun(hash);
