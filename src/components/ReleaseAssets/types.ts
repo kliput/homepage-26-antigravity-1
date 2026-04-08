@@ -30,6 +30,7 @@ export type AssetSection = {
   icon: LucideIcon;
   title: string;
   assets: ReleaseAsset[];
+  endNote?: string;
 };
 
 export type ProductAssets = {
@@ -38,3 +39,5 @@ export type ProductAssets = {
 };
 
 export type AssetsCollection = Record<ProductId, ProductAssets>;
+
+export type UbuntuCodename = "xenial" | "bionic" | "focal" | "jammy";

@@ -2,9 +2,11 @@ import {
   BookMarked,
   ClipboardCopy,
   Database,
+  Download,
   ExternalLink,
   Globe,
   LibraryBig,
+  Package,
   Ship,
   SquareTerminal,
 } from "lucide-react";
@@ -15,9 +17,13 @@ import type {
   AssetsCollection,
   ProductId,
   ReleaseAsset,
+  UbuntuCodename,
 } from "./ReleaseAssets/types.js";
 import { Tab } from "./ReleaseAssets/Tab.js";
 import { Section } from "./ReleaseAssets/Section.js";
+import { upperFirst } from "../utils/string.js";
+
+const onedataRepoDomain = "get.onedata.org";
 
 function createAsset(
   name: string,
@@ -118,7 +124,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
       tab: { key: "oneclient", icon: SquareTerminal, label: "Oneclient" },
       sections: [
         {
-          icon: SquareTerminal,
+          icon: Ship,
           title: "Docker Images (containerized)",
           assets: [
             createAsset(
@@ -130,16 +136,41 @@ function generateAssetsCollection(version: string): AssetsCollection {
           ],
         },
         {
-          icon: BookMarked,
-          title: "Installation script (native packages)",
+          icon: SquareTerminal,
+          title: "Installation Script (native packages)",
           assets: [
             createAsset(
               oneclientInstallOneliner(majorVersion),
-              `/docs/${majorVersion}/admin-guide/oneclient/installation/overview`,
-              "The above command will install the Oneclient using packages in Ubuntu (16.04+), Fedora, or CentOS/Rocky.",
+              `/docs/${majorVersion}/user-guide/interfaces/oneclient#packages`,
+              "The above command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which allows the updates.",
+              { copyable: true, secondaryIcon: BookMarked },
+            ),
+          ],
+        },
+        {
+          icon: Package,
+          title: "Conda Packages",
+          assets: [
+            createAsset(
+              `onedata::oneclient=${version}`,
+              `https://anaconda.org/channels/onedata/packages/oneclient/files?file_q=${version}`,
+              "Oneclient Conda package",
+              { copyable: true },
+            ),
+            createAsset(
+              `onedata::onedatafs=${version}`,
+              `https://anaconda.org/channels/onedata/packages/onedatafs/files?file_q=${version}`,
+              "OnedataFS Conda package",
               { copyable: true },
             ),
           ],
+        },
+        {
+          icon: Package,
+          title: "DEB Packages",
+          assets: oneclientDebAssets(version),
+          endNote:
+            "We recommend to use the Installation Script instead of manually installing DEB packages.",
         },
       ],
     },
@@ -166,11 +197,55 @@ function generateAssetsCollection(version: string): AssetsCollection {
   };
 }
 
+const ubuntuCodenames: UbuntuCodename[] = [
+  "jammy",
+  "focal",
+  "bionic",
+  "xenial",
+];
+
+const ubuntuVersions = {
+  jammy: "22.04",
+  focal: "20.04",
+  bionic: "18.04",
+  xenial: "16.04",
+} as const satisfies Record<UbuntuCodename, string>;
+
+// FIXME: stare wersje mogą nie mieć jammy
+function oneclientDebAssets(
+  version: string,
+  codenames: UbuntuCodename[] = ubuntuCodenames,
+) {
+  return codenames.map((codename) => {
+    const debPackage = oneclientDebPackage(version, codename);
+    return createAsset(
+      debPackage.filename,
+      debPackage.url,
+      `Ubuntu ${ubuntuVersions[codename]} (${upperFirst(codename)})`,
+      { copyable: false, primaryIcon: Download },
+    );
+  });
+}
+
+function oneclientDebPackage(
+  version: string,
+  distro: UbuntuCodename,
+  subversion = "1",
+) {
+  const majorVersion = stripVersion(version);
+  const aptRepoVersion = majorVersion.replaceAll(".", "");
+  const filename = `oneclient_${version}-${subversion}~${distro}_amd64.deb`;
+  return {
+    filename,
+    url: `https://${onedataRepoDomain}/apt/ubuntu/${aptRepoVersion}/pool/main/o/oneclient/${filename}`,
+  };
+}
+
 function oneclientInstallOneliner(majorVersion: MajorVersion) {
   const suffix = isLegacyMajorVersion(majorVersion)
     ? `-${majorVersion.replace(".", "")}`
     : "";
-  return `curl -sS http://get.onedata.org/oneclient${suffix}.sh | bash`;
+  return `curl -sS http://${onedataRepoDomain}/oneclient${suffix}.sh | bash`;
 }
 
 function isLegacyMajorVersion(majorVersion: MajorVersion) {

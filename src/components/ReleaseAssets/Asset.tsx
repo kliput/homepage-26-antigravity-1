@@ -36,7 +36,7 @@ export function Asset({ asset }: { asset: ReleaseAsset }) {
           </p>
           <p className="od-text-faint mt-0.5 text-xs">{asset.description}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="ml-3 flex items-center gap-3">
           {PrimaryIcon && (
             <div className="relative flex items-center justify-center">
               {showTooltip && (

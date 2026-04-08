@@ -16,6 +16,9 @@ export function Section({ section }: { section: AssetSection }) {
           <Asset key={asset.name} asset={asset} />
         ))}
       </div>
+      {section.endNote && (
+        <p className="od-text mt-3 text-xs">{section.endNote}</p>
+      )}
     </div>
   );
 }
