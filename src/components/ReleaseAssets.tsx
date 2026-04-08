@@ -22,6 +22,7 @@ import type {
 import { Tab } from "./ReleaseAssets/Tab.js";
 import { Section } from "./ReleaseAssets/Section.js";
 import { upperFirst } from "../utils/string.js";
+import { semversionize } from "../utils/version.mjs";
 
 const onedataRepoDomain = "get.onedata.org";
 
@@ -48,6 +49,8 @@ function createAsset(
     result.primaryIcon = optionals.primaryIcon;
   } else if (result.copyable) {
     result.primaryIcon = ClipboardCopy;
+  } else if (result.href?.startsWith("/docs")) {
+    result.primaryIcon = BookMarked;
   } else {
     result.primaryIcon = ExternalLink;
   }
@@ -56,13 +59,16 @@ function createAsset(
   if (optionals?.secondaryIcon) {
     result.secondaryIcon = optionals.secondaryIcon;
   } else if (result.copyable && result.href) {
-    result.secondaryIcon = ExternalLink;
+    result.secondaryIcon = result.href?.startsWith("/docs")
+      ? BookMarked
+      : ExternalLink;
   }
   return result as ReleaseAsset;
 }
 
 function generateAssetsCollection(version: string): AssetsCollection {
   const majorVersion = stripVersion(version);
+  const semversion = semversionize(version);
   return {
     onezone: {
       tab: { key: "onezone", icon: Globe, label: "Onezone" },
@@ -84,8 +90,8 @@ function generateAssetsCollection(version: string): AssetsCollection {
           title: "Documentation",
           assets: [
             createAsset(
-              "How to install",
-              `/docs/${majorVersion}/admin-guide/onezone/installation/`,
+              "Installation Guide",
+              docsUrl(majorVersion, "admin-guide/onezone/installation/"),
               "Onezone installation guide",
             ),
           ],
@@ -112,7 +118,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
           title: "Documentation",
           assets: [
             createAsset(
-              "How to install",
+              "Installation Guide",
               `/docs/${majorVersion}/admin-guide/oneprovider/installation/overview`,
               "Oneprovider installation guide",
             ),
@@ -129,7 +135,10 @@ function generateAssetsCollection(version: string): AssetsCollection {
           assets: [
             createAsset(
               `onedata/oneclient:${version}`,
-              `/docs/${majorVersion}/user-guide/interfaces/oneclient/#using-oneclient-from-docker`,
+              docsUrl(
+                majorVersion,
+                "user-guide/interfaces/oneclient/#using-oneclient-from-docker",
+              ),
               "Oneclient Docker image",
               { secondaryIcon: BookMarked, copyable: true },
             ),
@@ -141,7 +150,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
           assets: [
             createAsset(
               oneclientInstallOneliner(majorVersion),
-              `/docs/${majorVersion}/user-guide/interfaces/oneclient#packages`,
+              docsUrl(majorVersion, "user-guide/interfaces/oneclient#packages"),
               "The command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which provide the updates.",
               { copyable: true, secondaryIcon: BookMarked },
             ),
@@ -218,7 +227,34 @@ function generateAssetsCollection(version: string): AssetsCollection {
     },
     onedatarestfs: {
       tab: { key: "onedatarestfs", icon: LibraryBig, label: "OnedataRestFS" },
-      sections: [],
+      sections: [
+        {
+          icon: LibraryBig,
+          title: "Python Libraries",
+          assets: [
+            createAsset(
+              `fs.onedatarestfs==${semversion}`,
+              `https://pypi.org/project/fs.onedatarestfs/${semversion}`,
+              "Onedata REST-based filesystem for PyFilesystem",
+              { copyable: true },
+            ),
+          ],
+        },
+        {
+          icon: BookMarked,
+          title: "Documentation",
+          assets: [
+            createAsset(
+              "Installation Guide",
+              docsUrl(
+                majorVersion,
+                "user-guide/interfaces/onedata-rest-fs#installation",
+              ),
+              "OnedataRestFS installation guide",
+            ),
+          ],
+        },
+      ],
     },
     onedatafilerestclient: {
       tab: {
@@ -226,13 +262,57 @@ function generateAssetsCollection(version: string): AssetsCollection {
         icon: LibraryBig,
         label: "OnedataFileRestClient",
       },
-      sections: [],
+      sections: [
+        {
+          icon: LibraryBig,
+          title: "Python Libraries",
+          assets: [
+            createAsset(
+              `fs.onedatafilerestclient==${semversion}`,
+              `https://pypi.org/project/fs.onedatafilerestclient/${semversion}`,
+              "Onedata REST-based filesystem for PyFilesystem",
+              { copyable: true },
+            ),
+          ],
+        },
+        {
+          icon: BookMarked,
+          title: "Documentation",
+          assets: [
+            createAsset(
+              "Installation Guide",
+              docsUrl(
+                majorVersion,
+                "user-guide/interfaces/onedata-file-rest-client#installation",
+              ),
+              "OnedataFileRestClient installation guide",
+            ),
+          ],
+        },
+      ],
     },
     restcli: {
       tab: { key: "restcli", icon: SquareTerminal, label: "REST CLI" },
-      sections: [],
+      sections: [
+        {
+          icon: Ship,
+          title: "Docker Images",
+          assets: [
+            createAsset(
+              `onedata/rest-cli:${version}`,
+              `https://hub.docker.com/r/onedata/rest-cli/tags?name=${version}`,
+              "REST command-line helper",
+              { copyable: true },
+            ),
+          ],
+        },
+      ],
     },
   };
+}
+
+function docsUrl(majorVersion: MajorVersion, path: string) {
+  return `/docs/${majorVersion}/${path}`;
 }
 
 const ubuntuCodenames: UbuntuCodename[] = [
