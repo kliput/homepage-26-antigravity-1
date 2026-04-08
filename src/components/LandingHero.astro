@@ -2,6 +2,13 @@
 import { ArrowRight, ChevronDown } from "@lucide/astro";
 import { motion } from "motion/react";
 import PulseDot from "./PulseDot.astro";
+import {
+  getLatestReleaseSlug,
+  getLatestReleaseVersion,
+} from "../utils/releases";
+
+const latestReleaseString = `v${await getLatestReleaseVersion()}`;
+const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
 ---
 
 <section class="hero-section">
@@ -85,9 +92,9 @@ import PulseDot from "./PulseDot.astro";
       className="mt-5 flex justify-center"
       client:visible
     >
-      <a href="/docs#ver-25-0" class="release-pill">
+      <a href={latestReleaseSlug} class="release-pill">
         <PulseDot />
-        Latest release — v25.0
+        Latest release — {latestReleaseString}
         <svg
           class="release-arrow"
           fill="none"

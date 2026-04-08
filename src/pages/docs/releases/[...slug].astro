@@ -106,16 +106,17 @@ export async function getStaticPaths() {
       sidebarTree.sort((a, b) => a.label.localeCompare(b.label));
     }
 
+    const sortedReleases = [...releases].sort(
+      (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+    );
+
     // Append RELEASES section below regular items
     if (currentRelPath === "" && releases.length > 0) {
-      const sorted = [...releases].sort(
-        (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-      );
       sidebarTree.push({
         id: "__releases__",
         type: "heading",
         label: "RELEASES",
-        children: sorted.map((r) => ({
+        children: sortedReleases.map((r) => ({
           id: r.id,
           type: "link" as const,
           label: r.data.version,
