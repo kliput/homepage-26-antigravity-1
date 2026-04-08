@@ -36,6 +36,7 @@ export async function getStaticPaths() {
 
         // Group operations
         const groupsMap = new Map();
+        const tagFirstOperation = new Map();
 
         Object.entries(apiPaths).forEach(
           ([endpointPattern, methods]: [string, any]) => {
@@ -46,6 +47,7 @@ export async function getStaticPaths() {
 
               if (!groupsMap.has(groupName)) {
                 groupsMap.set(groupName, { name: groupName, operations: [] });
+                tagFirstOperation.set(groupName, op.operationId);
               }
 
               const operationData = {
@@ -96,6 +98,27 @@ export async function getStaticPaths() {
 
         if (version === latestVersion) {
           paths.push(pathOtherVersion(indexPathDefinition, "latest"));
+        }
+
+        const slugify = (text: string) => text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
+        
+        for (const [groupName, operationId] of tagFirstOperation.entries()) {
+          const tagSlug = slugify(groupName);
+          const slug = `tag/${tagSlug}`;
+          const redirectDestination = getAbsoluteApiPath(version, product, `operation/${operationId}`);
+          
+          const pathDefinition = {
+            params: { version, product, slug },
+            props: { version, product, redirectDestination },
+          };
+          paths.push(pathDefinition);
+          
+          if (version === stableVersion) {
+             paths.push(pathOtherVersion(pathDefinition, "stable"));
+          }
+          if (version === latestVersion) {
+             paths.push(pathOtherVersion(pathDefinition, "latest"));
+          }
         }
       } catch (e) {
         console.error(`Error processing ${swaggerPath}`, e);

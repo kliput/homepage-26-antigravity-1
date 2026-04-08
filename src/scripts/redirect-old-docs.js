@@ -18,13 +18,6 @@
  */
 
 /**
- * @typedef {Object} ApiDocsGroup
- * @property {string} version
- * @property {string} product
- * @property {string} anchor
- */
-
-/**
  * @param {string} url
  * @returns {void}
  */
@@ -83,18 +76,24 @@ function topicDocPathMatcher(hash) {
  * @param {string} hash
  * @returns {string | undefined}
  */
-function apiPathMatcher(hash) {
-  /** @type {(RegExpMatchArray & { groups: ApiDocsGroup }) | null} */
+function apiAnchorMatcher(hash) {
   const fullApiMatch = hash.match(
     /#\/home\/api\/(?<version>(?:(?:\d|\.)+)|stable|latest)\/(?<product>.*)\?anchor=(?<anchor>.*)/,
   );
   if (!fullApiMatch) {
     return;
   }
-  const { version, product, anchor } = fullApiMatch.groups;
+  let { version, product, anchor } = fullApiMatch.groups;
+  if (anchor.startsWith("tag/")) {
+    anchor = anchor.toLowerCase();
+  }
   return `/api/${version}/${product}/${anchor}`;
 }
 
+/**
+ * @param {string} hash
+ * @returns {string | undefined}
+ */
 function apiProductMatcher(hash) {
   /** @type {(RegExpMatchArray & { groups: ApiDocsGroup }) | null} */
   const match = hash.match(
@@ -137,7 +136,7 @@ function convertHash(hash) {
   const matchers = [
     topicDocPathMatcher,
     fullDocsPathMatcher,
-    apiPathMatcher,
+    apiAnchorMatcher,
     apiProductMatcher,
     apiIndexMatcher,
     homeContactMatcher,

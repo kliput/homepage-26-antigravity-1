@@ -11,7 +11,11 @@ import ApiBodyTag from "../../../../components/ApiBodyTag.astro";
 
 export { getStaticPaths };
 
-const { version, product, operation, swaggerData } = Astro.props;
+const { version, product, operation, swaggerData, redirectDestination } = Astro.props;
+
+if (redirectDestination) {
+  return Astro.redirect(redirectDestination);
+}
 
 // Reconstruct Sidebar groups for current product
 const apiPaths = swaggerData.paths || {};
