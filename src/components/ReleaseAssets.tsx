@@ -142,7 +142,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
             createAsset(
               oneclientInstallOneliner(majorVersion),
               `/docs/${majorVersion}/user-guide/interfaces/oneclient#packages`,
-              "The above command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which allows the updates.",
+              "The command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which provide the updates.",
               { copyable: true, secondaryIcon: BookMarked },
             ),
           ],
@@ -155,12 +155,6 @@ function generateAssetsCollection(version: string): AssetsCollection {
               `onedata::oneclient=${version}`,
               `https://anaconda.org/channels/onedata/packages/oneclient/files?file_q=${version}`,
               "Oneclient Conda package",
-              { copyable: true },
-            ),
-            createAsset(
-              `onedata::onedatafs=${version}`,
-              `https://anaconda.org/channels/onedata/packages/onedatafs/files?file_q=${version}`,
-              "OnedataFS Conda package",
               { copyable: true },
             ),
           ],
@@ -176,7 +170,51 @@ function generateAssetsCollection(version: string): AssetsCollection {
     },
     onedatafs: {
       tab: { key: "onedatafs", icon: LibraryBig, label: "OnedataFS" },
-      sections: [],
+      sections: [
+        {
+          icon: Ship,
+          title: "Docker Images (containerized)",
+          assets: [
+            createAsset(
+              `onedata/oneclient:${version}`,
+              `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#installation`,
+              "The Oneclient Docker image provides OnedataFS Python packages and all necessary dependencies.",
+              { secondaryIcon: BookMarked, copyable: true },
+            ),
+          ],
+        },
+        {
+          icon: SquareTerminal,
+          title: "Installation Script (native packages in Ubuntu 20.04)",
+          assets: [
+            createAsset(
+              onedatafsInstallOneliner(majorVersion),
+              `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#ubuntu`,
+              "The command installs OnedataFS packages in Ubuntu 20.04 (Focal), automatically adding the required repositories to the system, which provide the updates.",
+              { copyable: true, secondaryIcon: BookMarked },
+            ),
+          ],
+        },
+        {
+          icon: Package,
+          title: "Conda Packages",
+          assets: [
+            createAsset(
+              `onedata::onedatafs=${version}`,
+              `https://anaconda.org/channels/onedata/packages/onedatafs/files?file_q=${version}`,
+              "OnedataFS Conda package",
+              { copyable: true },
+            ),
+          ],
+        },
+        {
+          icon: Package,
+          title: "DEB Packages",
+          assets: oneclientDebAssets(version, ["focal"]),
+          endNote:
+            "We recommend to use the Installation Script instead of manually installing DEB packages.",
+        },
+      ],
     },
     onedatarestfs: {
       tab: { key: "onedatarestfs", icon: LibraryBig, label: "OnedataRestFS" },
@@ -241,11 +279,23 @@ function oneclientDebPackage(
   };
 }
 
-function oneclientInstallOneliner(majorVersion: MajorVersion) {
+function oneclientScriptUrl(majorVersion: MajorVersion) {
   const suffix = isLegacyMajorVersion(majorVersion)
     ? `-${majorVersion.replace(".", "")}`
     : "";
-  return `curl -sS http://${onedataRepoDomain}/oneclient${suffix}.sh | bash`;
+  return `http://${onedataRepoDomain}/oneclient${suffix}.sh`;
+}
+
+function oneclientInstallOneliner(majorVersion: MajorVersion) {
+  return `curl -sS ${oneclientScriptUrl(majorVersion)} | bash`;
+}
+
+function onedatafsInstallOneliner(majorVersion: MajorVersion) {
+  return [
+    `curl -sSO ${oneclientScriptUrl(majorVersion)}`,
+    "pip3 install fs",
+    "sh oneclient.sh python3-fs-plugin-onedatafs",
+  ].join(" && ");
 }
 
 function isLegacyMajorVersion(majorVersion: MajorVersion) {
