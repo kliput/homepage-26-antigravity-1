@@ -49,16 +49,6 @@ const releasesCollection = defineCollection({
       }),
     ),
     upgradeNotes: z.array(z.string()), // upgrade note bullet points
-    assets: z
-      .array(
-        z.object({
-          label: z.string(),
-          url: z.string(),
-        }),
-      )
-      .optional(),
-    installUrl: z.string().optional(),
-    upgradeUrl: z.string().optional(),
     changelog: z.array(
       z.object({
         issue: z.string(),
