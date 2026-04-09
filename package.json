@@ -13,6 +13,7 @@
     "deps": "npm install && npm run sync"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.8",
     "@astrojs/mdx": "^4.3.14",
     "@astrojs/react": "^5.0.0",
     "@astrojs/sitemap": "^3.7.0",
@@ -37,7 +38,8 @@
     "remark-flexible-containers": "^1.5.3",
     "remark-toc": "^9.0.0",
     "tailwindcss": "^3.4.19",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",

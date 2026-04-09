@@ -8,6 +8,7 @@ import { getStaticPaths } from "../../../../utils/api/get-static-paths.ts";
 import ApiSchemaTable from "../../../../components/ApiSchemaTable.astro";
 import ApiHttpResponseCode from "../../../../components/ApiHttpResponseCode.astro";
 import ApiBodyTag from "../../../../components/ApiBodyTag.astro";
+import ApiRequestExamples from "../../../../components/ApiRequestExamples.astro";
 import { type ApiProductString } from "../../../../utils/types.ts";
 
 export { getStaticPaths };
@@ -224,24 +225,7 @@ const overviewHtml =
           })()}
 
         {/* Request Examples */}
-        {operation.details["x-code-samples"] &&
-          operation.details["x-code-samples"].length > 0 && (
-            <div class="api-section mt-12">
-              <h2>Request Examples</h2>
-              <div class="mt-4 space-y-6">
-                {operation.details["x-code-samples"].map((sample: any) => (
-                  <div class="overflow-hidden rounded-xl border border-[#2d2d2d] bg-[#1e1e1e]">
-                    <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 text-xs font-bold text-gray-300">
-                      {sample.lang}
-                    </div>
-                    <div class="overflow-x-auto break-all p-4 text-sm">
-                      <code class="text-gray-300">{sample.source}</code>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        <ApiRequestExamples operation={operation} swaggerData={swaggerData} />
 
         {/* Responses */}
         {operation.details.responses &&
@@ -370,7 +354,7 @@ const overviewHtml =
   }
 </ApiLayout>
 
-<style>
+<style is:global>
   .api-description {
     font-size: 1.1rem;
     line-height: 1.6;
