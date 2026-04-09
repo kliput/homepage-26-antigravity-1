@@ -8,10 +8,22 @@ import { getStaticPaths } from "../../../../utils/api/get-static-paths.ts";
 import ApiSchemaTable from "../../../../components/ApiSchemaTable.astro";
 import ApiHttpResponseCode from "../../../../components/ApiHttpResponseCode.astro";
 import ApiBodyTag from "../../../../components/ApiBodyTag.astro";
+import { type ApiProductString } from "../../../../utils/types.ts";
 
 export { getStaticPaths };
 
-const { version, product, operation, swaggerData, redirectDestination } = Astro.props;
+const { version, operation, swaggerData, redirectDestination } = Astro.props;
+
+const product = Astro.props.product as ApiProductString;
+const products: readonly ApiProductString[] = Object.freeze([
+  "onezone",
+  "oneprovider",
+  "onepanel",
+]);
+
+if (!products.includes(product)) {
+  throw new Error(`Unknown product in API page: ${product}`);
+}
 
 if (redirectDestination) {
   return Astro.redirect(redirectDestination);
@@ -43,6 +55,34 @@ const sidebarGroups = Array.from(groupsMap.values());
 const pageTitle = operation
   ? `${operation.summary} | API Reference`
   : `${product.toUpperCase()} API Reference`;
+
+// FIXME: lepiej byłoby to rozbić na dwa osobne komponenty, gdzie jest operation
+// i overview (lub więcej, jeśli będzie taka potrzeba)
+
+// FIXME: globalnie użyć sanitizera wyjścia marked np. DOMPurify.sanitize, albo przejść
+// na parser używany przez astro
+
+function swaggerUrl(product: ApiProductString, version: string) {
+  return `https://get.onedata.org/api/${version}/${product}.json`;
+}
+
+function descriptionMarkdownToHtml(
+  markdownContent: string,
+  product: ApiProductString,
+  version: string,
+): string {
+  let finalMarkdownContent = markdownContent;
+  finalMarkdownContent = finalMarkdownContent.replace(
+    "../../../swagger/onezone/swagger.json",
+    swaggerUrl(product, version),
+  );
+  return marked.parse(finalMarkdownContent, { async: false });
+}
+
+const overviewHtml =
+  !operation &&
+  swaggerData?.info?.description &&
+  descriptionMarkdownToHtml(swaggerData.info.description, product, version);
 ---
 
 <ApiLayout
@@ -280,10 +320,10 @@ const pageTitle = operation
         {/* <h1 class="api-endpoint-title" style="text-transform: capitalize;">
           {product} API Reference
         </h1> */}
-        {swaggerData?.info?.description && (
+        {overviewHtml && (
           <div
             class="prose mb-12 max-w-none dark:prose-invert"
-            set:html={marked.parse(swaggerData.info.description)}
+            set:html={overviewHtml}
           />
         )}
 
