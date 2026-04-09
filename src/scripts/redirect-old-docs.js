@@ -169,6 +169,32 @@ function legacyDocsMatcher(hash) {
 }
 
 /**
+ * These are old links used in API endpoints description.
+ * Example: "#operation/create_temporary_token_for_current_user" - it was a hash-only
+ * link that was probably working in old homepage.
+ * @param {string} hash
+ * @returns {string | undefined}
+ */
+function apiLegacyOperationLinkMatcher(hash) {
+  const match = hash.match(/^#operation\/(?<operation>.*)$/);
+  if (!match) {
+    return;
+  }
+  const { operation } = match.groups;
+  const currentPath = window.location.pathname;
+  const currentLocationMatch = currentPath.match(
+    /\/api\/(?<version>.*?)\/(?<product>.*?)\/.*/,
+  );
+  if (currentLocationMatch) {
+    const { product, version } = currentLocationMatch.groups;
+    return `/api/${version}/${product}/operation/${operation}`;
+  } else {
+    // We don't know what the product is, fallback to the generic API page.
+    return "/api";
+  }
+}
+
+/**
  * @param {string} hash
  * @returns {string | undefined}
  */
@@ -182,6 +208,7 @@ function convertHash(hash) {
     homeContactMatcher,
     homeVersionsMatcher,
     legacyDocsMatcher,
+    apiLegacyOperationLinkMatcher,
   ];
   for (const fun of matchers) {
     const redirectUrl = fun(hash);
