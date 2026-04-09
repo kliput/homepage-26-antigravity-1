@@ -33,7 +33,8 @@ import Logo from "./Logo.astro";
         </ul>
       </div> -->
 
-      <div class="footer-group">
+      <!-- FIXME: uncomment when there will be more than 1 group -->
+      <!-- <div class="footer-group">
         <h3 class="footer-heading">RESOURCES</h3>
         <ul class="footer-list">
           <li><a href="/quick-start">Quick Start</a></li>
@@ -41,7 +42,7 @@ import Logo from "./Logo.astro";
           <li><a href="/api">API</a></li>
           <li><a href="/blog">Blog</a></li>
           <li><a href="/publications">Publications</a></li>
-          <!-- <li><a href="/about">About</a></li> -->
+          <li><a href="/about">About</a></li>
           <li><a href="/contact">Contact</a></li>
           <li>
             <a
@@ -50,8 +51,21 @@ import Logo from "./Logo.astro";
               rel="noopener noreferrer">GitHub</a
             >
           </li>
-        </ul>
-      </div>
+        </ul> -->
+
+      <ul class="footer-list simple-inline-footer">
+        <li><a href="/quick-start">Quick Start</a></li>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/api">API</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li>
+          <a
+            href="https://github.com/onedata"
+            target="_blank"
+            rel="noopener noreferrer">GitHub</a
+          >
+        </li>
+      </ul>
     </div>
   </div>
 </footer>
@@ -131,6 +145,18 @@ import Logo from "./Logo.astro";
     color: var(--primary);
     opacity: 1;
     text-decoration: none;
+  }
+
+  .footer-list.simple-inline-footer {
+    flex-direction: row;
+    gap: 2rem;
+  }
+
+  @media (max-width: 450px) {
+    .footer-list.simple-inline-footer {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
   }
 </style>
 
