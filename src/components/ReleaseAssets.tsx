@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import stripVersion, { type MajorVersion } from "../utils/strip-version.js";
 import type {
+  AssetSection,
   AssetTab,
   AssetsCollection,
   ProductId,
@@ -22,7 +23,7 @@ import type {
 import { Tab } from "./ReleaseAssets/Tab.js";
 import { Section } from "./ReleaseAssets/Section.js";
 import { upperFirst } from "../utils/string.js";
-import { semversionize } from "../utils/version.mjs";
+import { semversionize, compareVersions } from "../utils/version.mjs";
 
 const onedataRepoDomain = "get.onedata.org";
 
@@ -128,54 +129,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
     },
     oneclient: {
       tab: { key: "oneclient", icon: SquareTerminal, label: "Oneclient" },
-      sections: [
-        {
-          icon: Ship,
-          title: "Docker Images (containerized)",
-          assets: [
-            createAsset(
-              `onedata/oneclient:${version}`,
-              docsUrl(
-                majorVersion,
-                "user-guide/interfaces/oneclient/#using-oneclient-from-docker",
-              ),
-              "Oneclient Docker image",
-              { secondaryIcon: BookMarked, copyable: true },
-            ),
-          ],
-        },
-        {
-          icon: SquareTerminal,
-          title: "Installation Script (native packages)",
-          assets: [
-            createAsset(
-              oneclientInstallOneliner(majorVersion),
-              docsUrl(majorVersion, "user-guide/interfaces/oneclient#packages"),
-              "The command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which provide the updates.",
-              { copyable: true, secondaryIcon: BookMarked },
-            ),
-          ],
-        },
-        {
-          icon: Package,
-          title: "Conda Packages",
-          assets: [
-            createAsset(
-              `onedata::oneclient=${version}`,
-              `https://anaconda.org/channels/onedata/packages/oneclient/files?file_q=${version}`,
-              "Oneclient Conda package",
-              { copyable: true },
-            ),
-          ],
-        },
-        {
-          icon: Package,
-          title: "DEB Packages",
-          assets: oneclientDebAssets(version),
-          endNote:
-            "We recommend to use the Installation Script instead of manually installing DEB packages.",
-        },
-      ],
+      sections: generateOneclientSections(version),
     },
     onedatafs: {
       tab: { key: "onedatafs", icon: LibraryBig, label: "OnedataFS" },
@@ -309,6 +263,62 @@ function generateAssetsCollection(version: string): AssetsCollection {
       ],
     },
   };
+}
+
+function generateOneclientSections(version: string): AssetSection[] {
+  const majorVersion = stripVersion(version);
+  const dockerImages: AssetSection = {
+    icon: Ship,
+    title: "Docker Images (containerized)",
+    assets: [
+      createAsset(
+        `onedata/oneclient:${version}`,
+        docsUrl(
+          majorVersion,
+          "user-guide/interfaces/oneclient/#using-oneclient-from-docker",
+        ),
+        "Oneclient Docker image",
+        { secondaryIcon: BookMarked, copyable: true },
+      ),
+    ],
+  };
+  const installationScripts: AssetSection = {
+    icon: SquareTerminal,
+    title: "Installation Script (native packages)",
+    assets: [
+      createAsset(
+        oneclientInstallOneliner(majorVersion),
+        docsUrl(majorVersion, "user-guide/interfaces/oneclient#packages"),
+        "The command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which provide the updates.",
+        { copyable: true, secondaryIcon: BookMarked },
+      ),
+    ],
+  };
+  const condaPackages: AssetSection = {
+    icon: Package,
+    title: "Conda Packages",
+    assets: [
+      createAsset(
+        `onedata::oneclient=${version}`,
+        `https://anaconda.org/channels/onedata/packages/oneclient/files?file_q=${version}`,
+        "Oneclient Conda package",
+        { copyable: true },
+      ),
+    ],
+  };
+  const debPackages: AssetSection = {
+    icon: Package,
+    title: "DEB Packages",
+    assets: oneclientDebAssets(version),
+    endNote:
+      "We recommend to use the Installation Script instead of manually installing DEB packages.",
+  };
+  return [
+    dockerImages,
+    ...(compareVersions(version, "25.0") < 0 ? [installationScripts] : []),
+    condaPackages,
+    debPackages,
+  ];
 }
 
 function docsUrl(majorVersion: MajorVersion, path: string) {
