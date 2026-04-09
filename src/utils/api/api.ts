@@ -1,11 +1,15 @@
 import path from "node:path";
 import fs from "node:fs";
+import { compareVersions } from "../version.mjs";
 
 export function getApiDir() {
   return path.join(process.cwd(), "src/content/api");
 }
 
-export function getAvailableVersions() {
+/**
+ * @returns Versions sorted from newest to oldest.
+ */
+export function getAvailableVersions(): string[] {
   const apiDir = getApiDir();
   if (!fs.existsSync(apiDir)) {
     console.warn("API root directory not found");
@@ -14,7 +18,7 @@ export function getAvailableVersions() {
   return fs
     .readdirSync(apiDir)
     .filter((f) => fs.statSync(path.join(apiDir, f)).isDirectory())
-    .sort((a, b) => b.localeCompare(a));
+    .sort((a, b) => -compareVersions(a, b));
 }
 
 export class ApiVersionManager {
