@@ -1,14 +1,8 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import QuickStartPaths from "../components/QuickStartPaths.astro";
-import {
-  ArrowRight,
-  BookOpen,
-  Database,
-  Server,
-  Globe,
-  Key,
-} from "lucide-astro";
+import { ArrowRight, Database, Server, Globe, Key } from "lucide-astro";
+import HeroSection from "../components/HeroSection.astro";
 
 const concepts = [
   {
@@ -37,20 +31,11 @@ const concepts = [
   description="Get up and running with Onedata in minutes."
 >
   <div class="quick-start-page">
-    <!-- Hero -->
-    <section class="hero-section">
-      <div class="hero-glow"></div>
-      <div class="container max-w-3xl text-center">
-        <div class="hero-badge">
-          <BookOpen class="badge-icon" /> Getting Started
-        </div>
-        <h1 class="hero-title">Quick Start</h1>
-        <p class="hero-desc">
-          Get up and running with Onedata in minutes — from logging in to
-          accessing and managing your research data.
-        </p>
-      </div>
-    </section>
+    <!-- FIXME: original design: badgeIcon={BookOpenCheck} badgeText="Getting Started" -->
+    <HeroSection
+      title="Quick Start"
+      description="Get up and running with Onedata in minutes — from logging in to accessing and managing your research data."
+    />
 
     <!-- Basic Concepts -->
     <section class="concepts-section">
@@ -178,74 +163,6 @@ const concepts = [
   }
   .max-w-2xl {
     max-width: 42rem;
-  }
-
-  /* Hero */
-  .hero-section {
-    position: relative;
-    padding: 8rem 0 5rem;
-    overflow: hidden;
-    background-image:
-      linear-gradient(var(--od-glow, rgba(0, 0, 0, 0.02)) 1px, transparent 1px),
-      linear-gradient(
-        90deg,
-        var(--od-glow, rgba(0, 0, 0, 0.02)) 1px,
-        transparent 1px
-      );
-    background-size: 60px 60px;
-  }
-
-  html[data-theme="dark"] .hero-section {
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  }
-
-  .hero-glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 400px;
-    border-radius: 9999px;
-    background: var(--accent);
-    opacity: 0.1;
-    filter: blur(120px);
-    pointer-events: none;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: 1px solid var(--od-glow-strong);
-    background: var(--od-glow);
-    color: var(--od-accent-3);
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    margin-bottom: 1.5rem;
-  }
-
-  .badge-icon {
-    width: 0.875rem;
-    height: 0.875rem;
-  }
-
-  .hero-title {
-    font-size: clamp(2.5rem, 8vw, 4rem);
-    font-weight: 800;
-    margin-bottom: 1rem;
-    line-height: 1.1;
-    color: var(--text);
-  }
-
-  .hero-desc {
-    font-size: clamp(1.125rem, 3vw, 1.25rem);
-    color: var(--text-muted);
-    line-height: 1.6;
   }
 
   /* Section Styles */
