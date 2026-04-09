@@ -9,6 +9,7 @@ import ApiSchemaTable from "../../../../components/ApiSchemaTable.astro";
 import ApiHttpResponseCode from "../../../../components/ApiHttpResponseCode.astro";
 import ApiBodyTag from "../../../../components/ApiBodyTag.astro";
 import ApiRequestExamples from "../../../../components/ApiRequestExamples.astro";
+import ApiResponseExamples from "../../../../components/ApiResponseExamples.astro";
 import { type ApiProductString } from "../../../../utils/types.ts";
 
 export { getStaticPaths };
@@ -268,29 +269,7 @@ const overviewHtml =
                         />
                       )}
 
-                      {response.examples && (
-                        <div class="mt-4">
-                          <h4 class="mb-2 text-sm font-semibold text-[var(--od-text-muted)]">
-                            Examples
-                          </h4>
-                          {Object.entries(response.examples).map(
-                            ([mime, example]) => (
-                              <div class="mt-2 overflow-hidden rounded-xl border border-[#2d2d2d] bg-[#1e1e1e]">
-                                <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 font-mono text-xs text-gray-300">
-                                  {mime}
-                                </div>
-                                <div class="overflow-x-auto p-4 text-sm text-gray-300">
-                                  <code>
-                                    {typeof example === "string"
-                                      ? example
-                                      : JSON.stringify(example, null, 2)}
-                                  </code>
-                                </div>
-                              </div>
-                            ),
-                          )}
-                        </div>
-                      )}
+                      <ApiResponseExamples response={response} swaggerData={swaggerData} />
                     </div>
                   ),
                 )}

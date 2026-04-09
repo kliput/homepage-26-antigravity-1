@@ -1,0 +1,61 @@
+---
+import { resolveSchemaRef } from "../utils/openapi";
+
+const { response, swaggerData } = Astro.props;
+
+let examplesToRender: {
+  mime: string;
+  example: string;
+}[] = [];
+
+function stringifyExample(example: any): string {
+  return JSON.stringify(example, null, 2).trim();
+}
+
+if (response.examples && Object.keys(response.examples).length > 0) {
+  for (const [mime, example] of Object.entries(response.examples)) {
+    examplesToRender.push({
+      mime,
+      example: stringifyExample(example),
+    });
+  }
+} else if (response.schema) {
+  const resolvedSchema = resolveSchemaRef(response.schema, swaggerData);
+  let exampleObj = resolvedSchema?.example;
+  if (!exampleObj && response.schema.example) {
+    exampleObj = response.schema.example;
+  }
+
+  if (exampleObj) {
+    examplesToRender.push({
+      mime: "application/json",
+      example: stringifyExample(exampleObj),
+    });
+  }
+}
+
+const shouldRender = examplesToRender.length > 0;
+
+const title = examplesToRender.length > 1 ? "Examples" : "Example";
+---
+
+{
+  shouldRender && (
+    <div class="mt-4">
+      <h4 class="mb-2 text-sm font-semibold text-[var(--od-text-muted)]">
+        {title}
+      </h4>
+      {examplesToRender.map(({ mime, example }) => (
+        <div class="mt-2 overflow-hidden rounded-xl border border-[#2d2d2d] bg-[#1e1e1e]">
+          <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 font-mono text-xs text-gray-300">
+            {mime}
+          </div>
+          <div class="overflow-x-auto p-4 text-sm text-gray-300">
+            {/* prettier-ignore */}
+            <pre><code>{example}</code></pre>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
