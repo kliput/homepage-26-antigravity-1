@@ -69,7 +69,7 @@ export default function LandingHowItWorks() {
                 className={`flex flex-col items-start gap-6 md:flex-row md:items-center ${i % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
               >
                 <div
-                  className={`flex flex-1 flex-col ${i % 2 !== 0 ? "items-end md:text-right" : ""}`}
+                  className={`flex flex-1 flex-col ${i % 2 !== 0 ? "md:items-end md:text-right" : ""}`}
                 >
                   <div className="od-accent-text mb-1 font-mono text-xs font-bold">
                     {step.number}
