@@ -1,0 +1,23 @@
+<script>
+  // Control sidebar height
+
+  import { viewportOffsetTop } from "../utils/offset.mjs";
+
+  const sidebar = document.querySelector(".sidebar-nav") as HTMLElement;
+
+  function computeSidebarHeight() {
+    const viewportHeight = window.innerHeight;
+    const sidebarTop = viewportOffsetTop(sidebar);
+    const sidebarHeight = viewportHeight - sidebarTop;
+    sidebar.style.height = `${sidebarHeight}px`;
+  }
+
+  window.addEventListener("load", computeSidebarHeight);
+  window.addEventListener("scroll", computeSidebarHeight);
+  const docsPage = document.querySelector(".docs-page") as HTMLElement;
+  if (docsPage) {
+    new ResizeObserver(computeSidebarHeight).observe(docsPage);
+  } else {
+    window.addEventListener("resize", computeSidebarHeight);
+  }
+</script>

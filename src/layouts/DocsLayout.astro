@@ -7,6 +7,7 @@ import type {
   SidebarNode,
   SidebarTree,
 } from "../pages/docs/[version]/[chapter]/[...slug].astro";
+import SidebarHeightController from "../components/SidebarHeightController.astro";
 
 interface Props {
   title: string;
@@ -177,7 +178,7 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
           <div class="docs-sidebar-sticky-container">
             <nav
               data-overlayscrollbars-initialize
-              class="sidebar-nav overlayscrollbar-element overflow-y-scroll"
+              class="sidebar-nav overlayscrollbar-element"
             >
               <ul class="sidebar-root-list">
                 {
@@ -265,27 +266,9 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
     window.addEventListener("hashchange", updateActiveAnchor);
     updateActiveAnchor();
   });
-
-  // Control sidebar height
-
-  const sidebar = document.querySelector(".sidebar-nav") as HTMLElement;
-
-  function computeSidebarHeight() {
-    const viewportHeight = window.innerHeight;
-    const sidebarTop = viewportOffsetTop(sidebar);
-    const sidebarHeight = viewportHeight - sidebarTop;
-    sidebar.style.height = `${sidebarHeight}px`;
-  }
-
-  window.addEventListener("load", computeSidebarHeight);
-  window.addEventListener("scroll", computeSidebarHeight);
-  const docsPage = document.querySelector(".docs-page") as HTMLElement;
-  if (docsPage) {
-    new ResizeObserver(computeSidebarHeight).observe(docsPage);
-  } else {
-    window.addEventListener("resize", computeSidebarHeight);
-  }
 </script>
+
+<SidebarHeightController />
 
 <style is:global>
   /* Release sidebar section styles */
@@ -318,19 +301,5 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
   .sidebar-heading-list li a {
     padding-left: 0;
     padding-bottom: 0;
-  }
-
-  .docs-sidebar {
-    margin-top: calc(var(--docs-body-padding-top) * -1);
-  }
-
-  .docs-sidebar-sticky-container {
-    position: sticky;
-    top: calc(var(--site-header-height) + var(--docs-tabs-height));
-  }
-
-  .sidebar-nav {
-    padding-top: calc(var(--docs-body-padding-top) + 1rem);
-    padding-bottom: var(--docs-body-padding-bottom);
   }
 </style>

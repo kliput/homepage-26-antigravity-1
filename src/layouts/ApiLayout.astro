@@ -4,6 +4,7 @@ import ApiSidebarItem from "../components/ApiSidebarItem.astro";
 import MainLayout from "./MainLayout.astro";
 import { Globe, Database, Settings, ChevronDown } from "lucide-astro";
 import { ApiVersionManager } from "../utils/api/api";
+import SidebarHeightController from "../components/SidebarHeightController.astro";
 
 interface Props {
   title: string;
@@ -90,8 +91,11 @@ export function isActivePath(href: string, currentPath: string) {
       <div class="docs-body-row">
         {/* Desktop sidebar */}
         <aside class="docs-sidebar api-sidebar">
-          <div class="sticky top-32">
-            <nav class="sidebar-nav pt-4">
+          <div class="docs-sidebar-sticky-container">
+            <nav
+              data-overlayscrollbars-initialize
+              class="sidebar-nav overlayscrollbar-element"
+            >
               <ul class="sidebar-root-list">
                 <li class="mb-2">
                   <a
@@ -236,3 +240,5 @@ export function isActivePath(href: string, currentPath: string) {
     });
   });
 </script>
+
+<SidebarHeightController />

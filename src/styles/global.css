@@ -292,6 +292,21 @@ h6 {
 
 /* === Docs/API === */
 
+.docs-sidebar {
+  margin-top: calc(var(--docs-body-padding-top) * -1);
+}
+
+.docs-sidebar-sticky-container {
+  position: sticky;
+  top: calc(var(--site-header-height) + var(--docs-tabs-height));
+}
+
+.sidebar-nav {
+  padding-top: calc(var(--docs-body-padding-top) + 1rem);
+  padding-bottom: var(--docs-body-padding-bottom);
+  overflow-y: scroll;
+}
+
 .docs-page {
   background-color: var(--od-bg);
   min-height: 100vh;
