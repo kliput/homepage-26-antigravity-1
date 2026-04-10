@@ -1,12 +1,12 @@
 ---
 import { Moon, Sun } from "lucide-astro";
-import GitHub from "./icons/GitHub.tsx";
+import Github from "./icons/GitHub.tsx";
 import Logo from "./Logo.astro";
 import {
   getLatestReleaseSlug,
   getLatestReleaseVersion,
 } from "../utils/releases";
-import { MobileMenu } from "./MobileMenu.tsx";
+import MobileMenu from "./MobileMenu.astro";
 
 const { pathname } = Astro.url;
 
@@ -395,7 +395,7 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
       <a href={latestReleaseSlug} class="version-badge">{latestReleaseString}</a
       >
 
-      <MobileMenu client:only />
+      <MobileMenu />
 
       <a
         href="https://github.com/onedata"
@@ -404,7 +404,7 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
         class="social-link"
         aria-label="GitHub"
       >
-        <GitHub />
+        <Github />
       </a>
 
       <button
@@ -643,13 +643,19 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
 
   .social-link {
     color: var(--header-text-color);
-    display: flex;
+    display: none;
     align-items: center;
     transition: color 0.2s;
   }
 
   .social-link:hover {
     color: var(--od-text);
+  }
+
+  @media (min-width: 768px) {
+    .social-link {
+      display: flex;
+    }
   }
 
   /* Theme toggle SVG display logic */
@@ -692,10 +698,6 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
       display: none;
     }
   }
-  .mobile-menu-container {
-    padding-left: var(--header-horizontal-padding);
-    padding-right: var(--header-horizontal-padding);
-  }
   .mobile-menu-item {
     color: var(--header-text-color);
     font-size: 0.875rem; /* text-sm */
@@ -703,8 +705,8 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.5rem 0;
+    gap: 0.5rem;
+    padding: 0.5rem var(--header-horizontal-padding);
     transition: color 0.2s;
   }
   .mobile-menu-item:hover {

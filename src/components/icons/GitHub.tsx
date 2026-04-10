@@ -1,4 +1,4 @@
-export default function GitHubIcon() {
+export default function GitHub() {
   return (
     <svg
       viewBox="0 0 24 24"

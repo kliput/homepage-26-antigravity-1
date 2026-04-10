@@ -1,0 +1,118 @@
+---
+import XCross from "./icons/XCross.tsx";
+import Hamburger from "./icons/Hamburger.tsx";
+import GitHub from "./icons/GitHub.tsx";
+import type { ReactElement } from "react";
+
+const { pathname } = Astro.url;
+
+const isActive = (href: string) => {
+  if (href === "/") return pathname === "/";
+  if (href.startsWith("/#")) return false;
+  return pathname === href || pathname.startsWith(href + "/");
+};
+
+const links = [
+  { href: "/#how-it-works", label: "How it works" },
+  { href: "/quick-start", label: "Quick Start" },
+  { href: "/docs", label: "Docs" },
+  { href: "/api", label: "API" },
+  { href: "/", label: "GitHub", icon: GitHub, external: true },
+];
+---
+
+<button
+  class="mobile-menu-toggle"
+  aria-label="Menu"
+  id="mobile-menu-button"
+  aria-expanded="false"
+>
+  <span class="hamburger-icon"><Hamburger /></span>
+  <span class="cross-icon hidden"><XCross /></span>
+</button>
+
+<div
+  id="mobile-menu-content"
+  class="mobile-menu-container od-bg-card od-border od-text-muted absolute left-0 right-0 top-full hidden flex-col gap-3 border-t py-4 text-sm shadow-xl md:hidden"
+>
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        class:list={[
+          "mobile-menu-item",
+          { active: !link.external && isActive(link.href) },
+        ]}
+        target={link.external ? "_blank" : "_self"}
+        rel={link.external ? "noopener noreferrer" : ""}
+      >
+        {link.icon && <link.icon />}
+        {link.label}
+      </a>
+    ))
+  }
+</div>
+
+<script>
+  function initMobileMenu() {
+    const button = document.getElementById("mobile-menu-button");
+    const menu = document.getElementById("mobile-menu-content");
+    const hamburgerIcon = button?.querySelector(".hamburger-icon");
+    const crossIcon = button?.querySelector(".cross-icon");
+    const menuItems = menu?.querySelectorAll(".mobile-menu-item");
+
+    function setMenuState(isOpen: boolean) {
+      menu?.classList.toggle("open", isOpen);
+      menu?.classList.toggle("hidden", !isOpen);
+      hamburgerIcon?.classList.toggle("hidden", isOpen);
+      crossIcon?.classList.toggle("hidden", !isOpen);
+      button?.setAttribute("aria-expanded", isOpen.toString());
+    }
+
+    function toggleMenu() {
+      const isOpen = !menu?.classList.contains("open");
+      setMenuState(isOpen);
+    }
+
+    button?.addEventListener("click", toggleMenu);
+
+    menuItems?.forEach((item) => {
+      item.addEventListener("click", () => {
+        setMenuState(false);
+      });
+    });
+
+    // Handle "How it works" hash link active state
+    function updateActiveLinks() {
+      const hash = window.location.hash;
+      const howItWorksLink = document.querySelector(
+        'a.mobile-menu-item[href="/#how-it-works"]',
+      );
+      howItWorksLink?.classList.toggle("active", hash === "#how-it-works");
+    }
+
+    window.addEventListener("hashchange", updateActiveLinks);
+    updateActiveLinks();
+  }
+
+  // Initialize on page load
+  initMobileMenu();
+
+  // Re-initialize on View Transitions if used
+  document.addEventListener("astro:after-swap", initMobileMenu);
+</script>
+
+<style>
+  .mobile-menu-container.open {
+    display: flex !important;
+  }
+
+  .mobile-menu-item.active {
+    color: var(--od-accent) !important;
+    font-weight: 600;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+</style>
