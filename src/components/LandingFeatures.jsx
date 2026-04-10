@@ -89,7 +89,7 @@ export default function LandingFeatures() {
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
-              <div class="feature-container">
+              <div className="feature-container">
                 <motion.div
                   custom={i}
                   variants={cardVariants}
