@@ -66,10 +66,10 @@ export default function LandingHowItWorks() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`flex flex-col items-start gap-6 md:flex-row md:items-center ${i % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
+                className={`flex flex-col gap-6 md:flex-row md:items-center ${i % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
               >
                 <div
-                  className={`flex flex-1 flex-col ${i % 2 !== 0 ? "md:items-end md:text-right" : ""}`}
+                  className={`flex flex-1 flex-col ${i % 2 !== 0 ? "items-end text-right" : ""}`}
                 >
                   <div className="od-accent-text mb-1 font-mono text-xs font-bold">
                     {step.number}

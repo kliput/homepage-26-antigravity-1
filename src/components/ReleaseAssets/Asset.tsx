@@ -30,7 +30,7 @@ export function Asset({ asset }: { asset: ReleaseAsset }) {
       >
         <div>
           <p
-            className={`od-text group-hover:od-accent-text text-sm transition-colors ${asset.monospaced ? "font-mono" : ""}`}
+            className={`od-text group-hover:od-accent-text text-sm transition-colors ${asset.monospaced ? "break-all font-mono" : ""}`}
           >
             {asset.name}
           </p>
