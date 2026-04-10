@@ -361,9 +361,14 @@ h6 {
   gap: 1rem;
 }
 
+:root {
+  --docs-body-padding-top: 2rem;
+  --docs-body-padding-bottom: 3rem;
+}
+
 .docs-body {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
+  padding-top: var(--docs-body-padding-top);
+  padding-bottom: var(--docs-body-padding-bottom);
 }
 
 .docs-body-row {
