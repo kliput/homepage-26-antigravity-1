@@ -175,7 +175,10 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
         {/* Desktop sidebar */}
         <aside class="docs-sidebar">
           <div class="docs-sidebar-sticky-container">
-            <nav class="sidebar-nav overflow-y-scroll">
+            <nav
+              data-overlayscrollbars-initialize
+              class="sidebar-nav overlayscrollbar-element overflow-y-scroll"
+            >
               <ul class="sidebar-root-list">
                 {
                   sidebarNodes.map((node) => (

@@ -67,6 +67,19 @@
     --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
   }
 
+  .os-scrollbar.os-theme-custom {
+    --os-size: 10px;
+    --os-padding-perpendicular: 2px;
+    --os-padding-axis: 2px;
+    --os-track-border-radius: 10px;
+    --os-handle-interactive-area-offset: 4px;
+    --os-handle-border-radius: 10px;
+
+    --os-handle-bg: rgba(0, 0, 0, 0.44);
+    --os-handle-bg-hover: rgba(0, 0, 0, 0.55);
+    --os-handle-bg-active: rgba(0, 0, 0, 0.66);
+  }
+
   [data-theme="dark"] {
     --od-bg: #050a14;
     --od-bg-2: #070d1a;
@@ -118,6 +131,12 @@
     --sidebar-accent-foreground: hsl(240, 4.8%, 95.9%);
     --sidebar-border: hsl(240, 3.7%, 15.9%);
     --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+  }
+
+  [data-theme="dark"] .os-scrollbar.os-theme-custom {
+    --os-handle-bg: rgba(255, 255, 255, 0.44);
+    --os-handle-bg-hover: rgba(255, 255, 255, 0.55);
+    --os-handle-bg-active: rgba(255, 255, 255, 0.66);
   }
 
   ul {
