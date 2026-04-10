@@ -83,38 +83,48 @@ const data = isRelease ? releaseEntry!.data : blogEntry!.data;
             </div>
           </div>
           <h1 class="post-title">{data.title}</h1>
-          <div class="text-muted leading-relaxed mb-8">{data.description}</div>
+          <div class="mb-8 leading-relaxed text-muted">{data.description}</div>
         </header>
 
-        {isRelease && releaseEntry && (
-          <div class="release-info-box">
-             <ReleaseVersionCard
-              version={releaseEntry.data.version}
-              releaseDate={releaseEntry.data.releaseDate}
-              minOneprovider={releaseEntry.data.minOneprovider}
-            />
+        {
+          isRelease && releaseEntry && (
+            <div class="release-info-box">
+              <ReleaseVersionCard
+                version={releaseEntry.data.version}
+                releaseDate={releaseEntry.data.releaseDate}
+                minOneprovider={releaseEntry.data.minOneprovider}
+              />
 
-            {releaseEntry.data.highlights && releaseEntry.data.highlights.length > 0 && (
-              <section class="release-section">
-                <h2 class="release-section-heading">What's New in Onedata {releaseEntry.data.version}</h2>
-                <ul class="release-bullets">
-                  {releaseEntry.data.highlights.map((h: string) => <li>{h}</li>)}
-                </ul>
-              </section>
-            )}
+              {releaseEntry.data.highlights &&
+                releaseEntry.data.highlights.length > 0 && (
+                  <section class="release-section">
+                    <h2 class="release-section-heading">
+                      What's New in Onedata {releaseEntry.data.version}
+                    </h2>
+                    <ul class="release-bullets">
+                      {releaseEntry.data.highlights.map((h: string) => (
+                        <li>{h}</li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
 
-            {releaseEntry.data.upgradeNotes && releaseEntry.data.upgradeNotes.length > 0 && (
-              <section class="release-section">
-                <h2 class="release-section-heading">Upgrade Notes</h2>
-                <ul class="release-bullets">
-                  {releaseEntry.data.upgradeNotes.map((n: string) => <li>{n}</li>)}
-                </ul>
-              </section>
-            )}
-            
-            <h2 class="release-section-heading">Full Changelog</h2>
-          </div>
-        )}
+              {releaseEntry.data.upgradeNotes &&
+                releaseEntry.data.upgradeNotes.length > 0 && (
+                  <section class="release-section">
+                    <h2 class="release-section-heading">Upgrade Notes</h2>
+                    <ul class="release-bullets">
+                      {releaseEntry.data.upgradeNotes.map((n: string) => (
+                        <li>{n}</li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+              <h2 class="release-section-heading">Full Changelog</h2>
+            </div>
+          )
+        }
 
         <Content />
 
@@ -122,7 +132,8 @@ const data = isRelease ? releaseEntry!.data : blogEntry!.data;
           !isRelease && blogEntry && blogEntry.data.citationBibtex && (
             <>
               <h2>Citation</h2>
-              <pre class="citation rounded-xl">{blogEntry.data.citationBibtex}</pre>
+              {/* prettier-ignore */}
+              <pre class="citation rounded-xl">{blogEntry.data.citationBibtex.trim()}</pre>
             </>
           )
         }

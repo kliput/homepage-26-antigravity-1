@@ -139,14 +139,17 @@ const { Content } = await render(post);
                 Copy
               </button>
             </div>
-            <div class="citation-content">
-              <pre id="bibtex-content" class="tab-content active">
-                {post.data.citationBibtex}
-              </pre>
-              <pre id="plaintext-content" class="tab-content">
-                {post.data.citationPlain}
-              </pre>
-            </div>
+            {post.data.citationBibtex ||
+              (post.data.citationPlain && (
+                <div class="citation-content">
+                  {post.data.citationBibtex &&
+                    /* prettier-ignore */
+                    <pre id="bibtex-content" class="tab-content active">{post.data.citationBibtex.trim()}</pre>}
+                  {post.data.citationPlain &&
+                    /* prettier-ignore */
+                    <pre id="plaintext-content" class="tab-content">{post.data.citationPlain}</pre>}
+                </div>
+              ))}
           </div>
         </div>
       )

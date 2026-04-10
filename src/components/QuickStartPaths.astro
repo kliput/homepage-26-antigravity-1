@@ -268,11 +268,9 @@ const paths = [
                     </div>
                   )}
 
-                  {step.code && (
-                    <pre class="step-code">
-                      <code>{step.code}</code>
-                    </pre>
-                  )}
+                  {step.code &&
+                    /* prettier-ignore */
+                    <pre class="step-code"><code>{step.code.trim()}</code></pre>}
 
                   {step.note && (
                     <div class="step-alert step-note">
@@ -319,7 +317,7 @@ const paths = [
       if (activeView) activeView.classList.add("active");
 
       // Disable idle state globally once interacted
-      document.querySelector(".quick-start-paths").classList.add("interacted");
+      document.querySelector(".quick-start-paths")?.classList.add("interacted");
     });
   });
 </script>
