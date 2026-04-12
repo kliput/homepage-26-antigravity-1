@@ -1,0 +1,136 @@
+<script>
+  function initSidebar() {
+    const sidebar = document.querySelector(".sidebar-nav") as HTMLElement;
+    const sidebarContainer = document.querySelector(
+      ".docs-sidebar",
+    ) as HTMLElement;
+    const docsBodyRow = document.querySelector(".docs-body-row") as HTMLElement;
+    const docsBody = document.querySelector(".docs-body") as HTMLElement;
+
+    if (!sidebar || !sidebarContainer || !docsBodyRow || !docsBody) return;
+
+    function setSidebarHeight() {
+      const availableHeight = Math.min(
+        window.innerHeight,
+        docsBody.getBoundingClientRect().bottom,
+      );
+      const sidebarTop = sidebar.getBoundingClientRect().top;
+      const targetSidebarHeight = availableHeight - sidebarTop;
+      sidebar.style.maxHeight = `${targetSidebarHeight}px`;
+    }
+
+    function setSidebarTop() {
+      const tabsBar = document.querySelector(".docs-tabs-bar") as HTMLElement;
+      if (!tabsBar) return;
+      const tabsBarBottom = tabsBar.getBoundingClientRect().bottom;
+      sidebarContainer.style.top = `${tabsBarBottom}px`;
+    }
+
+    function setSidebarLeft() {
+      const sidebarLeft = docsBodyRow.getBoundingClientRect().left;
+      sidebarContainer.style.left = `${sidebarLeft}px`;
+    }
+
+    function setSidebarPosition() {
+      if (window.innerWidth < 768) {
+        sidebarContainer.classList.remove("docs-sidebar-initial");
+        // Clear desktop-specific styles on mobile
+        sidebarContainer.style.top = "";
+        sidebarContainer.style.left = "";
+        sidebar.style.maxHeight = "";
+        return;
+      }
+      setSidebarTop();
+      setSidebarHeight();
+      setSidebarLeft();
+      sidebarContainer.classList.remove("docs-sidebar-initial");
+    }
+
+    // Initialize position and height
+    setSidebarPosition();
+
+    // Event listeners for position/height
+    window.addEventListener("scroll", setSidebarPosition);
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 768) {
+        setSidebarPosition();
+      } else {
+        sidebar.style.maxHeight = "";
+      }
+    });
+
+    const docsPage = document.querySelector(".docs-page") as HTMLElement;
+    if (docsPage) {
+      new ResizeObserver(setSidebarPosition).observe(docsPage);
+    }
+
+    // --- Folder toggling ---
+    const folders = document.querySelectorAll(".folder-toggle");
+    folders.forEach((folder) => {
+      // Avoid multiple listeners if called multiple times (though astro:after-swap should be fine)
+      if (folder.getAttribute("data-init") === "true") return;
+      folder.setAttribute("data-init", "true");
+
+      folder.addEventListener("click", (e: Event) => {
+        const target = e.currentTarget as HTMLElement;
+        if (!target) return;
+        const li = target.parentElement;
+        if (!li) return;
+        const ul = li.querySelector(".folder-contents") as HTMLElement;
+        if (!ul) return;
+
+        if (li.classList.contains("expanded")) {
+          li.classList.remove("expanded");
+          ul.style.display = "none";
+        } else {
+          li.classList.add("expanded");
+          ul.style.display = "block";
+        }
+      });
+    });
+
+    // --- Mobile menu toggling ---
+    const toggleBtn = document.getElementById("mobile-sidebar-toggle");
+    const backdrop = document.getElementById("mobile-sidebar-backdrop");
+
+    function setMobileMenuState(isOpen: boolean) {
+      if (!toggleBtn || !sidebarContainer || !backdrop) return;
+
+      sidebarContainer.classList.toggle("mobile-open", isOpen);
+      backdrop.classList.toggle("active", isOpen);
+      document.body.classList.toggle("mobile-sidebar-open", isOpen);
+    }
+
+    if (toggleBtn && toggleBtn.getAttribute("data-init") !== "true") {
+      toggleBtn.setAttribute("data-init", "true");
+      toggleBtn.addEventListener("click", () => {
+        const isOpen = sidebarContainer?.classList.contains("mobile-open");
+        setMobileMenuState(!isOpen);
+      });
+    }
+
+    if (backdrop && backdrop.getAttribute("data-init") !== "true") {
+      backdrop.setAttribute("data-init", "true");
+      backdrop.addEventListener("click", () => {
+        setMobileMenuState(false);
+      });
+    }
+
+    // Close on link click (for mobile)
+    const sidebarLinks = sidebarContainer?.querySelectorAll("a");
+    sidebarLinks?.forEach((link) => {
+      if (link.getAttribute("data-init") === "true") return;
+      link.setAttribute("data-init", "true");
+
+      link.addEventListener("click", () => {
+        if (window.innerWidth < 768) {
+          setMobileMenuState(false);
+        }
+      });
+    });
+  }
+
+  // Initialize on load and after transitions
+  document.addEventListener("DOMContentLoaded", initSidebar);
+  document.addEventListener("astro:after-swap", initSidebar);
+</script>

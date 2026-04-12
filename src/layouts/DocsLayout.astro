@@ -7,7 +7,7 @@ import type {
   SidebarNode,
   SidebarTree,
 } from "../pages/docs/[version]/[chapter]/[...slug].astro";
-import SidebarHeightController from "../components/SidebarHeightController.astro";
+import SidebarController from "../components/SidebarController.astro";
 
 interface Props {
   title: string;
@@ -116,6 +116,9 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
 
 <MainLayout title={title}>
   <div class="docs-page">
+    {/* Mobile Backdrop */}
+    <div id="mobile-sidebar-backdrop" class="docs-sidebar-backdrop"></div>
+
     {/* Hero bar */}
     <div class="docs-hero-bar">
       <div class="docs-inner docs-inner--pt">
@@ -209,30 +212,7 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
 </MainLayout>
 
 <script>
-  import { viewportOffsetTop } from "../utils/offset.mjs";
-
-  // Script for toggling folders
-  document.addEventListener("DOMContentLoaded", () => {
-    const folders = document.querySelectorAll(".folder-toggle");
-    folders.forEach((folder) => {
-      folder.addEventListener("click", (e: Event) => {
-        const target = e.currentTarget as HTMLElement;
-        if (!target) return;
-        const li = target.parentElement;
-        if (!li) return;
-        const ul = li.querySelector(".folder-contents") as HTMLElement;
-        if (!ul) return;
-
-        if (li.classList.contains("expanded")) {
-          li.classList.remove("expanded");
-          ul.style.display = "none";
-        } else {
-          li.classList.add("expanded");
-          ul.style.display = "block";
-        }
-      });
-    });
-
+  function initDocsLayout() {
     // Copy anchor link to clipboard on click
     document.addEventListener("click", (e: Event) => {
       const target = (e.target as HTMLElement).closest(
@@ -264,10 +244,13 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
 
     window.addEventListener("hashchange", updateActiveAnchor);
     updateActiveAnchor();
-  });
+  }
+
+  document.addEventListener("DOMContentLoaded", initDocsLayout);
+  document.addEventListener("astro:after-swap", initDocsLayout);
 </script>
 
-<SidebarHeightController />
+<SidebarController />
 
 <style is:global>
   /* Release sidebar section styles */

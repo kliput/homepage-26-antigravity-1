@@ -2,9 +2,9 @@
 import DocsVersionSelect from "../components/DocsVersionSelect.astro";
 import ApiSidebarItem from "../components/ApiSidebarItem.astro";
 import MainLayout from "./MainLayout.astro";
-import { Globe, Database, Settings, ChevronDown } from "lucide-astro";
+import { Globe, Database, Settings, ChevronDown, List } from "lucide-astro";
 import { ApiVersionManager } from "../utils/api/api";
-import SidebarHeightController from "../components/SidebarHeightController.astro";
+import SidebarController from "../components/SidebarController.astro";
 
 interface Props {
   title: string;
@@ -40,6 +40,9 @@ export function isActivePath(href: string, currentPath: string) {
 
 <MainLayout title={title}>
   <div class="docs-page">
+    {/* Mobile Backdrop */}
+    <div id="mobile-sidebar-backdrop" class="docs-sidebar-backdrop"></div>
+
     {/* Hero bar */}
     <div class="docs-hero-bar">
       <div class="docs-inner docs-inner--pt">
@@ -141,7 +144,8 @@ export function isActivePath(href: string, currentPath: string) {
         {/* Mobile toggle */}
         <div class="docs-mobile-toggle">
           <button id="mobile-sidebar-toggle" class="mobile-nav-btn">
-            Browse API Endpoints
+            <List />
+            <span class="browse-api-mobile-text">Browse API Endpoints</span>
           </button>
         </div>
 
@@ -215,28 +219,4 @@ export function isActivePath(href: string, currentPath: string) {
   }
 </style>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const folders = document.querySelectorAll(".folder-toggle");
-    folders.forEach((folder) => {
-      folder.addEventListener("click", (e: Event) => {
-        const target = e.currentTarget as HTMLElement;
-        if (!target) return;
-        const li = target.parentElement;
-        if (!li) return;
-        const ul = li.querySelector(".folder-contents") as HTMLElement;
-        if (!ul) return;
-
-        if (li.classList.contains("expanded")) {
-          li.classList.remove("expanded");
-          ul.style.display = "none";
-        } else {
-          li.classList.add("expanded");
-          ul.style.display = "block";
-        }
-      });
-    });
-  });
-</script>
-
-<SidebarHeightController />
+<SidebarController />
