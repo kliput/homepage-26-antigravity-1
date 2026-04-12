@@ -174,23 +174,22 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
     <div class="docs-inner docs-body">
       <div class="docs-body-row">
         {/* Desktop sidebar */}
-        <aside class="docs-sidebar">
-          <div class="docs-sidebar-sticky-container">
-            <nav
-              data-overlayscrollbars-initialize
-              class="sidebar-nav overlayscrollbar-element"
-            >
-              <ul class="sidebar-root-list">
-                {
-                  sidebarNodes.map((node) => (
-                    <Fragment
-                      set:html={renderSidebarNode(node, Astro.url.pathname)}
-                    />
-                  ))
-                }
-              </ul>
-            </nav>
-          </div>
+        <aside class="docs-sidebar docs-sidebar-initial">
+          <nav
+            data-overlayscrollbars-initialize
+            class="sidebar-nav overlayscrollbar-element"
+          >
+            <ul class="sidebar-root-list">
+              {
+                sidebarNodes.map((node) => (
+                  <Fragment
+                    set:html={renderSidebarNode(node, Astro.url.pathname)}
+                  />
+                ))
+              }
+            </ul>
+          </nav>
+          <!-- </div> -->
         </aside>
 
         {/* Mobile sidebar toggle */}

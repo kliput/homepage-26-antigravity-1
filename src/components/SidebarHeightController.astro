@@ -1,23 +1,48 @@
 <script>
   // Control sidebar height
-
-  import { viewportOffsetTop } from "../utils/offset.mjs";
-
   const sidebar = document.querySelector(".sidebar-nav") as HTMLElement;
+  const sidebarContainer = document.querySelector(
+    ".docs-sidebar",
+  ) as HTMLElement;
+  const docsBodyRow = document.querySelector(".docs-body-row") as HTMLElement;
+  const docsBody = document.querySelector(".docs-body") as HTMLElement;
 
-  function computeSidebarHeight() {
-    const viewportHeight = window.innerHeight;
-    const sidebarTop = viewportOffsetTop(sidebar);
-    const sidebarHeight = viewportHeight - sidebarTop;
-    sidebar.style.height = `${sidebarHeight}px`;
+  // FIXME: use offset utils instead of getbounding... albo usunąć ten util
+
+  function setSidebarHeight() {
+    const availableHeight = Math.min(
+      window.innerHeight,
+      docsBody.getBoundingClientRect().bottom,
+    );
+    const sidebarTop = sidebar.getBoundingClientRect().top;
+    const targetSidebarHeight = availableHeight - sidebarTop;
+    sidebar.style.maxHeight = `${targetSidebarHeight}px`;
   }
 
-  window.addEventListener("load", computeSidebarHeight);
-  window.addEventListener("scroll", computeSidebarHeight);
+  function setSidebarTop() {
+    const tabsBar = document.querySelector(".docs-tabs-bar") as HTMLElement;
+    const tabsBarBottom = tabsBar.getBoundingClientRect().bottom;
+    sidebarContainer.style.top = `${tabsBarBottom}px`;
+  }
+
+  function setSidebarLeft() {
+    const sidebarLeft = docsBodyRow.getBoundingClientRect().left;
+    sidebarContainer.style.left = `${sidebarLeft}px`;
+  }
+
+  function setSidebarPosition() {
+    setSidebarTop();
+    setSidebarHeight();
+    setSidebarLeft();
+    sidebarContainer.classList.remove("docs-sidebar-initial");
+  }
+
+  window.addEventListener("load", setSidebarPosition);
+  window.addEventListener("scroll", setSidebarPosition);
   const docsPage = document.querySelector(".docs-page") as HTMLElement;
   if (docsPage) {
-    new ResizeObserver(computeSidebarHeight).observe(docsPage);
+    new ResizeObserver(setSidebarPosition).observe(docsPage);
   } else {
-    window.addEventListener("resize", computeSidebarHeight);
+    window.addEventListener("resize", setSidebarHeight);
   }
 </script>

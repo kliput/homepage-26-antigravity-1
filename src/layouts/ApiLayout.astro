@@ -90,54 +90,52 @@ export function isActivePath(href: string, currentPath: string) {
     <div class="docs-inner docs-body">
       <div class="docs-body-row">
         {/* Desktop sidebar */}
-        <aside class="docs-sidebar api-sidebar">
-          <div class="docs-sidebar-sticky-container">
-            <nav
-              data-overlayscrollbars-initialize
-              class="sidebar-nav overlayscrollbar-element"
-            >
-              <ul class="sidebar-root-list">
-                <li class="mb-2">
-                  <a
-                    href={`/api/${version}/${activeProduct}/`}
-                    class={`api-method-link ${isActivePath(`/api/${version}/${activeProduct}`, currentPath) || isActivePath(`/api/${version}/${activeProduct}/`, currentPath) ? "active" : ""}`}
-                  >
-                    <span class="font-semibold" style="font-size: 0.95rem;">
-                      Overview & Authentication
-                    </span>
-                  </a>
-                </li>
-                {
-                  sidebarGroups.map((group) => {
-                    const isExpanded = group.operations.some((op: any) =>
-                      isActivePath(op.href, currentPath),
-                    );
-                    return (
-                      <li
-                        class={`sidebar-folder ${isExpanded ? "expanded" : ""}`}
+        <aside class="docs-sidebar docs-sidebar-initial api-sidebar">
+          <nav
+            data-overlayscrollbars-initialize
+            class="sidebar-nav overlayscrollbar-element"
+          >
+            <ul class="sidebar-root-list">
+              <li class="mb-2">
+                <a
+                  href={`/api/${version}/${activeProduct}/`}
+                  class={`api-method-link ${isActivePath(`/api/${version}/${activeProduct}`, currentPath) || isActivePath(`/api/${version}/${activeProduct}/`, currentPath) ? "active" : ""}`}
+                >
+                  <span class="font-semibold" style="font-size: 0.95rem;">
+                    Overview & Authentication
+                  </span>
+                </a>
+              </li>
+              {
+                sidebarGroups.map((group) => {
+                  const isExpanded = group.operations.some((op: any) =>
+                    isActivePath(op.href, currentPath),
+                  );
+                  return (
+                    <li
+                      class={`sidebar-folder ${isExpanded ? "expanded" : ""}`}
+                    >
+                      <button class="folder-toggle">
+                        {group.name}
+                        <ChevronDown class="chevron" />
+                      </button>
+                      <ul
+                        class="folder-contents"
+                        style={{ display: isExpanded ? "block" : "none" }}
                       >
-                        <button class="folder-toggle">
-                          {group.name}
-                          <ChevronDown class="chevron" />
-                        </button>
-                        <ul
-                          class="folder-contents"
-                          style={{ display: isExpanded ? "block" : "none" }}
-                        >
-                          {group.operations.map((operation: any) => (
-                            <ApiSidebarItem
-                              operation={operation}
-                              isActivePath={isActivePath}
-                            />
-                          ))}
-                        </ul>
-                      </li>
-                    );
-                  })
-                }
-              </ul>
-            </nav>
-          </div>
+                        {group.operations.map((operation: any) => (
+                          <ApiSidebarItem
+                            operation={operation}
+                            isActivePath={isActivePath}
+                          />
+                        ))}
+                      </ul>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </nav>
         </aside>
 
         {/* Mobile toggle */}
