@@ -69,7 +69,8 @@ export function isActivePath(href: string, currentPath: string) {
     {/* Product tabs bar */}
     <div class="docs-tabs-bar">
       <div class="docs-inner">
-        <div class="docs-tabs-row">
+        {/* Desktop Tabs */}
+        <div class="docs-tabs-row desktop-only">
           {
             products.map((product) => {
               const Icon = product.icon;
@@ -86,8 +87,44 @@ export function isActivePath(href: string, currentPath: string) {
             })
           }
         </div>
+
+        {/* Mobile Selectors */}
+        <div class="docs-mobile-selectors">
+          <div class="mobile-selector">
+            <select onchange="window.location.href=this.value">
+              {
+                products.map((product) => {
+                  const isActive = activeProduct === product.id;
+                  return (
+                    <option
+                      value={`/api/${version}/${product.id}/`}
+                      selected={isActive}
+                    >
+                      {product.label}
+                    </option>
+                  );
+                })
+              }
+            </select>
+          </div>
+          <div class="mobile-selector">
+            <select onchange="window.location.href=this.value">
+              {
+                availableVersions.map((v) => (
+                  <option
+                    value={`/api/${v}/onezone/`}
+                    selected={v === version}
+                  >
+                    Version: {v}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
+        </div>
       </div>
     </div>
+
 
     {/* Body: sidebar + content */}
     <div class="docs-inner docs-body">

@@ -147,7 +147,8 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
     {/* Section tabs bar */}
     <div class="docs-tabs-bar">
       <div class="docs-inner">
-        <div class="docs-tabs-row">
+        {/* Desktop Tabs */}
+        <div class="docs-tabs-row desktop-only">
           {
             chapters.map((chapter) => {
               const Icon = chapter.icon;
@@ -169,6 +170,42 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
               );
             })
           }
+        </div>
+
+        {/* Mobile Selectors */}
+        <div class="docs-mobile-selectors">
+          <div class="mobile-selector">
+            <select onchange="window.location.href=this.value">
+              {
+                chapters.map((chapter) => {
+                  const isActive = activeChapter === chapter.id;
+                  const href =
+                    chapter.id === "releases"
+                      ? "/docs/releases"
+                      : `/docs/${version ?? fallbackVersion}/${chapter.id}`;
+                  return (
+                    <option value={href} selected={isActive}>
+                      {chapter.label}
+                    </option>
+                  );
+                })
+              }
+            </select>
+          </div>
+          <div class="mobile-selector">
+            <select onchange="window.location.href=this.value">
+              {
+                availableVersions.map((v) => (
+                  <option
+                    value={`/docs/${v}/intro/overview`}
+                    selected={v === version}
+                  >
+                    Version: {v}
+                  </option>
+                ))
+              }
+            </select>
+          </div>
         </div>
       </div>
     </div>
