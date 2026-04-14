@@ -716,7 +716,7 @@ access, as they will be able to access any Onedata volume created on this host.
 
 <!-- references -->
 
-[fuse]: https://github.com/libfuse/libfuse
+[Fuse]: https://github.com/libfuse/libfuse
 
 [anaconda]: https://anaconda.org
 

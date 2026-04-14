@@ -86,7 +86,7 @@ The result of the above request will contain a list of storage backend IDs:
 
 <!-- references -->
 
-[quickstart guide]: ../../../../../../user-guide/tokens.md#access-token-quickstart
+[quickstart guide]: ../../../user-guide/tokens.md#access-token-quickstart
 
 [api-authentication]: https://onedata.org/#/home/api/latest/onepanel?anchor=section/Overview/Authentication
 

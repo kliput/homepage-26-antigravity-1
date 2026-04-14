@@ -138,7 +138,7 @@ examples.
 | Get space support details | [API][api-get-space-details]   |
 | Modify space support      | [API][api-modify-space]        |
 
-[user-guide-space-support]: ../../../../../../user-guide/spaces.md#space-support
+[user-guide-space-support]: ../../../user-guide/spaces.md#space-support
 
 [storage-import]: storage-import.md
 

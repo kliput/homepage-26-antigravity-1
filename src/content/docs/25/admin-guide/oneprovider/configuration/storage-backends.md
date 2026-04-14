@@ -170,9 +170,9 @@ Refer to the linked API documentation for detailed information and examples.
 
 [17]: storage-import.md#storage-configuration-for-auto-import
 
-[18]: ../../../../../../user-guide/interfaces/oneclient.md#direct-io-and-proxy-io-modes
+[18]: ../../../user-guide/interfaces/oneclient.md#direct-io-and-proxy-io-modes
 
-[19]: ../../../../../../user-guide/interfaces/oneclient.md#overriding-storage-helper-parameters
+[19]: ../../../user-guide/interfaces/oneclient.md#overriding-storage-helper-parameters
 
 [20]: luma.md
 

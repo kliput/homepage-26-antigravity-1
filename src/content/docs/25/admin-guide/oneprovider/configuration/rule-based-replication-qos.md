@@ -78,13 +78,13 @@ curl -H "${AUTH_HEADER}" -H "${CT}" -X PATCH {$PANEL_API}/provider/storages/$STO
 
 <!-- references -->
 
-[replica distribution]: ../../../../../../user-guide/data-distribution-and-metrics.md
+[replica distribution]: ../../../user-guide/data-distribution-and-metrics.md
 
-[providers]: ../../../../../../user-guide/providers.md
+[providers]: ../../../user-guide/providers.md
 
-[space]: ../../../../../../user-guide/spaces.md
+[space]: ../../../user-guide/spaces.md
 
-[users-qos]: ../../../../../../user-guide/rule-based-replication-qos.md#Basics
+[users-qos]: ../../../user-guide/rule-based-replication-qos.md#Basics
 
 [Web GUI]: ../../administration-panel.md
 

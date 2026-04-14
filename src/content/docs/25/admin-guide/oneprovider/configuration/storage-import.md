@@ -150,7 +150,7 @@ It is possible to change the time resolution of the charts in the upper right co
 
 [auto]: #auto-storage-import
 
-[registered manually]: ../../../../../../user-guide/file-registration.md
+[registered manually]: ../../../user-guide/file-registration.md
 
 [6]: storage-backends.md#storage-path-type
 

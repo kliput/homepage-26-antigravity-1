@@ -76,9 +76,9 @@ collaboration between different ecosystems.
 
 [user interfaces]: #user-interfaces
 
-[Spaces]: user-guide/spaces.md
+[Spaces]: ../user-guide/spaces.md
 
-[Groups]: user-guide/groups.md
+[Groups]: ../user-guide/groups.md
 
 [demo.onedata.org]: https://demo.onedata.org
 
@@ -86,7 +86,7 @@ collaboration between different ecosystems.
 
 [fuse]: https://github.com/libfuse/libfuse
 
-[interfaces]: user-guide/interfaces/overview.md
+[interfaces]: ../user-guide/interfaces/overview.md
 
 [image-onezone]: ../images/intro/onezone.png
 

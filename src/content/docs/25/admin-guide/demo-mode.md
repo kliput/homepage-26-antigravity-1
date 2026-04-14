@@ -200,7 +200,7 @@ Onedata provides few interfaces to access its virtual file system from Python, n
 In this section we'll present how to set up and use the [OnedataRESTFS][] library, which is
 recommended for ease of installation and use.
 
-#### Installation
+### Installation
 
 The installation includes creation of temporary `venv` environment for Python dependencies:
 
@@ -220,7 +220,7 @@ export ACCESS_TOKEN=$(docker exec op_test1 demo-access-token)
 python3
 ```
 
-#### Usage
+### Usage
 
 Since this deployment does not have trusted SSL certificates, we have to mute the SSL
 warnings:

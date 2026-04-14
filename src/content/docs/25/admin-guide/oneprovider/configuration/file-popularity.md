@@ -167,15 +167,15 @@ Refer to the linked API documentation for detailed information and examples.
 
 <!-- references -->
 
-[2]: ../../../../../../user-guide/views.md
+[2]: ../../../user-guide/views.md
 
 [3]: #the-popularity-function
 
 [4]: #rest-api
 
-[6]: ../../../../../../user-guide/views.md#rest-api
+[6]: ../../../user-guide/views.md#rest-api
 
-[7]: ../../../../../../user-guide/views.md#file-popularity-model
+[7]: ../../../user-guide/views.md#file-popularity-model
 
 [8]: https://onedata.org/#/home/api/latest/onepanel?anchor=operation/get_file_popularity_configuration
 

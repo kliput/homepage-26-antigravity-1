@@ -62,13 +62,17 @@ described in a [dedicated chapter][interfaces].
 
 [REST interface]: https://onedata.org/#/home/api
 
-[rich graphical interface]: user-guide/interfaces/web-file-browser.md
+[Fuse]: https://github.com/libfuse/libfuse
 
-[Oneclient]: user-guide/interfaces/oneclient.md
+[rich graphical interface]: ../user-guide/interfaces/web-file-browser.md
 
-[op-panel-gui]: admin-guide/oneprovider/administration-panel.md
+[Oneclient]: ../user-guide/interfaces/oneclient.md
 
-[oz-panel-gui]: admin-guide/onezone/administration-panel.md
+[op-panel-gui]: ../admin-guide/oneprovider/administration-panel.md
+
+[oz-panel-gui]: ../admin-guide/onezone/administration-panel.md
+
+[interfaces]: ../user-guide/interfaces
 
 [screen-web-gui-example]: ../images/intro/web-gui-example.png
 

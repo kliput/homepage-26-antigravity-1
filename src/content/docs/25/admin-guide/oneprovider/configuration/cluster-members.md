@@ -176,9 +176,9 @@ examples.
 | List cluster's effective groups           | [API][api-list-cluster-effective-groups]           |
 | List effective group's cluster privileges | [API][api-list-effective-group-cluster-privileges] |
 
-[access-via-emergency-interface]: ../../administration-panel.md#access-via-emergency-interface
+[access-via-emergency-interface]: ../administration-panel.md#access-via-emergency-interface
 
-[consuming-invite-tokens]: ../../../../../../user-guide/tokens.md#consuming-invite-tokens
+[consuming-invite-tokens]: ../../../user-guide/tokens.md#consuming-invite-tokens
 
 [inviting users]: #inviting-users
 
