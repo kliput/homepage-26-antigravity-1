@@ -159,3 +159,11 @@ function compileVersionString(major, minor, patch, tagVersion) {
   }
   return resultVersion;
 }
+
+/**
+ * @param {string} version
+ * @returns {boolean}
+ */
+export function isStableVersion(version) {
+  return !semversionize(version).includes("-");
+}

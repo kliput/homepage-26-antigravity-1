@@ -16,9 +16,14 @@ export default function stripVersion(version: string): MajorVersion {
     return String(firstNumber) as `${number}`;
   } else {
     const legacyMatch = version.match(/^\d+\.\d+/);
-    if (legacyMatch?.[0] === "20.02" || legacyMatch?.[0] === "21.02") {
+    if (
+      legacyMatch?.[0] === "20.02" ||
+      legacyMatch?.[0] === "21.02" ||
+      legacyMatch?.[0] === "19.02" ||
+      legacyMatch?.[0] === "18.02"
+    ) {
       return legacyMatch[0];
     }
-    throw new Error("Unsupported version '${version}' (stripping to major)");
+    throw new Error(`Unsupported version "${version}" (stripping to major)`);
   }
 }
