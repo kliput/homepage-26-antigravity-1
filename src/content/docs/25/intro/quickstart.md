@@ -18,7 +18,7 @@ or the relevant chapter for [Onezone][] or [Oneprovider][] service.
 
 <!-- references -->
 
-[glossary]: ../glossary/glossary.md
+[glossary]: ../glossary/index.md
 
 [user quickstart]: ../user-guide/quickstart.md
 
