@@ -361,6 +361,20 @@ h6 {
 
 .mobile-selector {
   min-width: 0;
+  flex-grow: 1;
+}
+
+.mobile-version-label {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .mobile-selector {
+    flex-grow: 0;
+  }
+  .mobile-version-label {
+    display: inline;
+  }
 }
 
 .mobile-selector select {
@@ -492,39 +506,6 @@ h6 {
   margin-bottom: 0;
 }
 
-.version-select-wrap {
-  display: none;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-@media (min-width: 768px) {
-  .version-select-wrap {
-    display: flex;
-  }
-}
-
-.version-label {
-  font-size: 0.75rem;
-  color: var(--od-text-muted);
-}
-
-.version-select {
-  padding: 0.4rem 2rem 0.4rem 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--od-text);
-  background-color: var(--od-bg-input);
-  border: 1px solid var(--od-border);
-  border-radius: 0.5rem;
-  appearance: none;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 14px;
-}
-
 .chapter-tab {
   display: flex;
   align-items: center;
@@ -652,26 +633,6 @@ h6 {
   margin: 0.25rem 0 0.5rem 0.75rem;
   border-left: 1px solid var(--od-border);
   display: none;
-}
-
-.mobile-nav-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.75rem;
-  background: var(--od-bg-card);
-  border: 1px solid var(--od-border);
-  color: var(--od-text);
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
-  width: 100%;
-}
-
-.mobile-nav-btn .browse-api-mobile-text {
-  /* some adjustments to align with icon */
-  padding-top: 0.1rem;
 }
 
 /* Mobile sidebar styles */

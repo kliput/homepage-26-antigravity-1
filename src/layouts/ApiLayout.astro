@@ -5,6 +5,7 @@ import MainLayout from "./MainLayout.astro";
 import { Globe, Database, Settings, ChevronDown, List } from "lucide-astro";
 import { ApiVersionManager } from "../utils/api/api";
 import SidebarController from "../components/SidebarController.astro";
+import DocsMobileMenu from "../components/DocsMobileMenu.astro";
 
 interface Props {
   title: string;
@@ -61,6 +62,7 @@ export function isActivePath(href: string, currentPath: string) {
             latestVersion={latestVersion}
             pathPrefix="/api"
             pathSuffix="onezone/"
+            className="hidden md:flex"
           />
         </div>
       </div>
@@ -107,24 +109,22 @@ export function isActivePath(href: string, currentPath: string) {
               }
             </select>
           </div>
+          <DocsMobileMenu label="Browse API Endpoints" />
           <div class="mobile-selector">
-            <select onchange="window.location.href=this.value">
-              {
-                availableVersions.map((v) => (
-                  <option
-                    value={`/api/${v}/onezone/`}
-                    selected={v === version}
-                  >
-                    Version: {v}
-                  </option>
-                ))
-              }
-            </select>
+            <DocsVersionSelect
+              selectorId="api-version-select"
+              version={version}
+              availableVersions={availableVersions}
+              stableVersion={stableVersion}
+              latestVersion={latestVersion}
+              pathPrefix="/api"
+              pathSuffix="onezone/"
+              className="label-hidden"
+            />
           </div>
         </div>
       </div>
     </div>
-
 
     {/* Body: sidebar + content */}
     <div class="docs-inner docs-body">
@@ -177,14 +177,6 @@ export function isActivePath(href: string, currentPath: string) {
             </ul>
           </nav>
         </aside>
-
-        {/* Mobile toggle */}
-        <div class="docs-mobile-toggle">
-          <button id="mobile-sidebar-toggle" class="mobile-nav-btn">
-            <List />
-            <span class="browse-api-mobile-text">Browse API Endpoints</span>
-          </button>
-        </div>
 
         {/* Main content */}
         <main class="docs-main-content od-card od-card-main">

@@ -8,6 +8,7 @@ import type {
   SidebarTree,
 } from "../pages/docs/[version]/[chapter]/[...slug].astro";
 import SidebarController from "../components/SidebarController.astro";
+import DocsMobileMenu from "../components/DocsMobileMenu.astro";
 
 interface Props {
   title: string;
@@ -137,6 +138,7 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
                 availableVersions={availableVersions}
                 pathPrefix="/docs"
                 pathSuffix="intro/overview"
+                className="hidden md:flex"
               />
             )
           }
@@ -192,19 +194,16 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
               }
             </select>
           </div>
+          <DocsMobileMenu label="Browse Topics" />
           <div class="mobile-selector">
-            <select onchange="window.location.href=this.value">
-              {
-                availableVersions.map((v) => (
-                  <option
-                    value={`/docs/${v}/intro/overview`}
-                    selected={v === version}
-                  >
-                    Version: {v}
-                  </option>
-                ))
-              }
-            </select>
+            <DocsVersionSelect
+              selectorId="docs-version-select"
+              version={version}
+              availableVersions={availableVersions}
+              pathPrefix="/docs"
+              pathSuffix="intro/overview"
+              className="label-hidden"
+            />
           </div>
         </div>
       </div>
@@ -231,13 +230,6 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
           </nav>
           <!-- </div> -->
         </aside>
-
-        {/* Mobile sidebar toggle */}
-        <div class="docs-mobile-toggle">
-          <button id="mobile-sidebar-toggle" class="mobile-nav-btn">
-            <List class="h-5 w-5" /> Browse Topics
-          </button>
-        </div>
 
         {/* Main content */}
         <main class="docs-main-content od-card od-card-main">

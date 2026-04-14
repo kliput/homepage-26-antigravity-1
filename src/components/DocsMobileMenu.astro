@@ -1,0 +1,42 @@
+---
+import { List } from "lucide-astro";
+const { label } = Astro.props;
+---
+
+<button id="mobile-sidebar-toggle" class="mobile-nav-btn">
+  <List class="h-5 w-5" />
+  <span class="mobile-btn-label">{label}</span>
+</button>
+
+<style>
+  .mobile-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    margin-right: auto;
+    color: var(--od-text);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background-color: var(--od-bg-input);
+    border: 1px solid var(--od-border);
+    border-radius: 0.5rem;
+  }
+
+  .mobile-nav-btn:hover {
+    border-color: var(--od-border-hover);
+    background-color: var(--od-bg-input);
+  }
+
+  @media (max-width: 480px) {
+    .mobile-btn-label {
+      display: none;
+    }
+    .mobile-nav-btn {
+      padding: 0.4rem 0.6rem;
+    }
+  }
+</style>
