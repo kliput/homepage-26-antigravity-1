@@ -6,13 +6,14 @@
     ) as HTMLElement;
     const docsBodyRow = document.querySelector(".docs-body-row") as HTMLElement;
     const docsBody = document.querySelector(".docs-body") as HTMLElement;
+    const siteFooter = document.querySelector(".site-footer") as HTMLElement;
 
     if (!sidebar || !sidebarContainer || !docsBodyRow || !docsBody) return;
 
     function setSidebarHeight() {
       const availableHeight = Math.min(
         window.innerHeight,
-        docsBody.getBoundingClientRect().bottom,
+        siteFooter.getBoundingClientRect().top,
       );
       const sidebarTop = sidebar.getBoundingClientRect().top;
       const targetSidebarHeight = availableHeight - sidebarTop;
