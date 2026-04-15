@@ -14,7 +14,6 @@ import { useState } from "react";
 import stripVersion, { type MajorVersion } from "../utils/strip-version.js";
 import type {
   AssetSection,
-  AssetTab,
   AssetsCollection,
   ProductId,
   ReleaseAsset,
@@ -26,6 +25,11 @@ import { upperFirst } from "../utils/string.js";
 import { semversionize, compareVersions } from "../utils/version.mjs";
 
 const onedataRepoDomain = "get.onedata.org";
+
+const onedataRestFsPublishedVersions: Record<string, string> = Object.freeze({
+  "25.0": "25.0.0",
+  "21.02.5": "21.2.5.2",
+});
 
 function createAsset(
   name: string,
@@ -65,6 +69,10 @@ function createAsset(
       : ExternalLink;
   }
   return result as ReleaseAsset;
+}
+
+function isOnepanelScriptShown(version: string): boolean {
+  return compareVersions(version, "25.0") < 0;
 }
 
 function generateAssetsCollection(version: string): AssetsCollection {
@@ -146,25 +154,29 @@ function generateAssetsCollection(version: string): AssetsCollection {
             ),
           ],
         },
-        {
-          icon: SquareTerminal,
-          title: "Installation Script (native packages in Ubuntu 20.04)",
-          assets: [
-            createAsset(
-              onedatafsInstallOneliner(majorVersion),
-              `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#ubuntu`,
-              "The command installs OnedataFS packages in Ubuntu 20.04 (Focal), automatically adding the required repositories to the system, which provide the updates.",
-              { copyable: true, secondaryIcon: BookMarked },
-            ),
-          ],
-        },
+        ...(isOnepanelScriptShown(version)
+          ? [
+              {
+                icon: SquareTerminal,
+                title: "Installation Script (native packages in Ubuntu 20.04)",
+                assets: [
+                  createAsset(
+                    onedatafsInstallOneliner(majorVersion),
+                    `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#ubuntu`,
+                    "The command installs OnedataFS packages on Ubuntu 20.04 (Focal), automatically adding the required repositories to the system to provide updates.",
+                    { copyable: true, secondaryIcon: BookMarked },
+                  ),
+                ],
+              },
+            ]
+          : []),
         {
           icon: Package,
           title: "Conda Packages",
           assets: [
             createAsset(
               `onedata::onedatafs=${version}`,
-              `https://anaconda.org/channels/onedata/packages/onedatafs/files?file_q=${version}`,
+              `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#anaconda`,
               "OnedataFS Conda package",
               { copyable: true },
             ),
@@ -174,41 +186,15 @@ function generateAssetsCollection(version: string): AssetsCollection {
           icon: Package,
           title: "DEB Packages",
           assets: oneclientDebAssets(version, ["focal"]),
-          endNote:
-            "We recommend to use the Installation Script instead of manually installing DEB packages.",
+          endNote: isOnepanelScriptShown(version)
+            ? "We recommend to use the Installation Script instead of manually installing DEB packages."
+            : "",
         },
       ],
     },
     onedatarestfs: {
       tab: { key: "onedatarestfs", icon: LibraryBig, label: "OnedataRestFS" },
-      sections: [
-        {
-          icon: LibraryBig,
-          title: "Python Libraries",
-          assets: [
-            createAsset(
-              `fs.onedatarestfs==${semversion}`,
-              `https://pypi.org/project/fs.onedatarestfs/${semversion}`,
-              "Onedata REST-based filesystem for PyFilesystem",
-              { copyable: true },
-            ),
-          ],
-        },
-        {
-          icon: BookMarked,
-          title: "Documentation",
-          assets: [
-            createAsset(
-              "Installation Guide",
-              docsUrl(
-                majorVersion,
-                "user-guide/interfaces/onedata-rest-fs#installation",
-              ),
-              "OnedataRestFS installation guide",
-            ),
-          ],
-        },
-      ],
+      sections: generateOnedataRestFsSections(version),
     },
     onedatafilerestclient: {
       tab: {
@@ -224,7 +210,7 @@ function generateAssetsCollection(version: string): AssetsCollection {
             createAsset(
               `fs.onedatafilerestclient==${semversion}`,
               `https://pypi.org/project/fs.onedatafilerestclient/${semversion}`,
-              "Onedata REST-based filesystem for PyFilesystem",
+              "Python client to the Onedata file REST API, offering basic operations on files as a concise, low-level library. Used behind the scenes in OnedataRestFS.",
               { copyable: true },
             ),
           ],
@@ -289,7 +275,7 @@ function generateOneclientSections(version: string): AssetSection[] {
       createAsset(
         oneclientInstallOneliner(majorVersion),
         docsUrl(majorVersion, "user-guide/interfaces/oneclient#packages"),
-        "The command installs Oneclient packages in Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system, which provide the updates.",
+        "The command installs Oneclient packages on Ubuntu, Fedora, or CentOS/Rocky, automatically adding the required repositories to the system to provide updates.",
         { copyable: true, secondaryIcon: BookMarked },
       ),
     ],
@@ -300,7 +286,7 @@ function generateOneclientSections(version: string): AssetSection[] {
     assets: [
       createAsset(
         `onedata::oneclient=${version}`,
-        `https://anaconda.org/channels/onedata/packages/oneclient/files?file_q=${version}`,
+        `/docs/${majorVersion}/user-guide/interfaces/oneclient#anaconda`,
         "Oneclient Conda package",
         { copyable: true },
       ),
@@ -310,15 +296,53 @@ function generateOneclientSections(version: string): AssetSection[] {
     icon: Package,
     title: "DEB Packages",
     assets: oneclientDebAssets(version),
-    endNote:
-      "We recommend to use the Installation Script instead of manually installing DEB packages.",
+    endNote: isOnepanelScriptShown(version)
+      ? "We recommend to use the Installation Script instead of manually installing DEB packages."
+      : "",
   };
   return [
     dockerImages,
-    ...(compareVersions(version, "25.0") < 0 ? [installationScripts] : []),
+    ...(isOnepanelScriptShown(version) ? [installationScripts] : []),
     condaPackages,
     debPackages,
   ];
+}
+
+function generateOnedataRestFsSections(version: string): AssetSection[] {
+  const sections = [];
+  const libVersion = onedataRestFsPublishedVersions[version];
+  if (libVersion) {
+    const libraries = {
+      icon: LibraryBig,
+      title: "Python Libraries",
+      assets: [
+        createAsset(
+          `fs.onedatarestfs==${libVersion}`,
+          `https://pypi.org/project/fs.onedatarestfs/${libVersion}`,
+          "Onedata REST-based implementation of the PyFilesystem2 interface for data access natively in Python.",
+          { copyable: true },
+        ),
+      ],
+    };
+    sections.push(libraries);
+  }
+  const majorVersion = stripVersion(version);
+  const documentation = {
+    icon: BookMarked,
+    title: "Documentation",
+    assets: [
+      createAsset(
+        "Installation Guide",
+        docsUrl(
+          majorVersion,
+          "user-guide/interfaces/onedata-rest-fs#installation",
+        ),
+        "OnedataRestFS installation guide",
+      ),
+    ],
+  };
+  sections.push(documentation);
+  return sections;
 }
 
 function docsUrl(majorVersion: MajorVersion, path: string) {
