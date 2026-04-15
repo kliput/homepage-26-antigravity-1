@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     /* FIXME: użyć raczej TW Typography? */
     --font-family-sans: "Inter", system-ui, sans-serif;
     --font-family-mono: "JetBrains Mono", monospace;
@@ -27,7 +28,10 @@
     --od-glow: rgba(230, 52, 26, 0.08);
     --od-glow-strong: rgba(230, 52, 26, 0.18);
 
+    --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
     /* Colors used in Tailwind config */
+
 
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(0, 0%, 3.9%);
@@ -81,6 +85,7 @@
   }
 
   [data-theme="dark"] {
+    color-scheme: dark;
     --od-bg: #050a14;
     --od-bg-2: #070d1a;
     --od-bg-card: #0a1628;
@@ -96,6 +101,9 @@
     --od-accent-3: #ff9070;
     --od-glow: rgba(230, 52, 26, 0.15);
     --od-glow-strong: rgba(230, 52, 26, 0.25);
+
+    --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
 
     /* Colors used in Tailwind config */
 
@@ -157,6 +165,33 @@ body {
 a {
   color: var(--od-accent);
   text-decoration: none;
+}
+
+select {
+  appearance: none;
+  background-color: var(--od-bg-input);
+  border: 1px solid var(--od-border);
+  border-radius: 0.5rem;
+  color: var(--od-text);
+  padding: 0.4rem 2rem 0.4rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-image: var(--select-arrow);
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 12px;
+}
+
+select:hover {
+  border-color: var(--od-border-hover);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--od-accent);
+  box-shadow: 0 0 0 2px var(--od-glow);
 }
 
 .a-btn:hover {
@@ -379,19 +414,6 @@ h6 {
 
 .mobile-selector select {
   width: 100%;
-  padding: 0.4rem 2rem 0.4rem 0.75rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--od-text);
-  background-color: var(--od-bg-input);
-  border: 1px solid var(--od-border);
-  border-radius: 0.5rem;
-  appearance: none;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
