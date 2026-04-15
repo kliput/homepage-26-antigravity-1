@@ -2,8 +2,23 @@ import { motion } from "motion/react";
 import { Check } from "lucide-react";
 import { isStableVersion } from "../utils/version.mjs";
 import "../styles/compatibility-table.css";
-import { useState } from "react";
+import { useState, useRef, type MouseEventHandler } from "react";
 import { filterLatestMinors } from "../utils/filter-latest-minor.ts";
+
+type CompatibilityTableParam = {
+  rows: string[];
+  columns: string[];
+  rowProduct: string;
+  columnProduct: string;
+  compatibility: Record<string, string[]>;
+};
+
+type CompatibilityTableState = {
+  filteredByLatest: boolean;
+  filteredByStable: boolean;
+  versionRows: string[];
+  versionColumns: string[];
+};
 
 export default function CompatibilityTable({
   rows,
@@ -11,8 +26,14 @@ export default function CompatibilityTable({
   rowProduct,
   columnProduct,
   compatibility,
-}) {
-  function computeState({ filteredByLatest, filteredByStable }) {
+}: CompatibilityTableParam) {
+  function computeState({
+    filteredByLatest,
+    filteredByStable,
+  }: {
+    filteredByLatest: boolean;
+    filteredByStable: boolean;
+  }): CompatibilityTableState {
     let effRows = [...rows];
     let effColumns = [...columns];
     if (filteredByStable) {
@@ -31,16 +52,16 @@ export default function CompatibilityTable({
     };
   }
 
+  const tableScrollContainerRef = useRef(null);
+
   let [state, setState] = useState(
     computeState({
       filteredByLatest: true,
       filteredByStable: true,
-      versionRows: rows,
-      versionColumns: columns,
     }),
   );
 
-  function toggleLatestFilter(value) {
+  function toggleLatestFilter(value: boolean) {
     const effValue =
       typeof value === "boolean" ? value : !state.filteredByLatest;
     setState(
@@ -50,7 +71,7 @@ export default function CompatibilityTable({
       }),
     );
   }
-  function toggleStableFilter(value) {
+  function toggleStableFilter(value: boolean) {
     const effValue =
       typeof value === "boolean" ? value : !state.filteredByStable;
     setState(
@@ -61,14 +82,79 @@ export default function CompatibilityTable({
     );
   }
 
-  /**
-   * @param {MouseEvent} event
-   */
-  function optionClicked(event) {
-    if (event.target.type === "checkbox") {
+  function optionClicked(event: MouseEvent) {
+    if (
+      !event.target ||
+      !event.currentTarget ||
+      (event.target instanceof HTMLInputElement &&
+        event.target.type === "checkbox")
+    ) {
       return;
     }
-    event.currentTarget.querySelector("input[type=checkbox]").click();
+    (
+      (event.currentTarget as HTMLDivElement)?.querySelector(
+        "input[type=checkbox]",
+      ) as HTMLInputElement
+    )?.click();
+  }
+
+  let grabPosition = {
+    left: 0,
+    top: 0,
+    x: 0,
+    y: 0,
+  };
+
+  function onMouseMove(event: MouseEvent) {
+    const scrollContainer = event.currentTarget;
+    if (!scrollContainer || !(scrollContainer instanceof HTMLElement)) {
+      return;
+    }
+
+    const dx = event.clientX - grabPosition.x;
+    const dy = event.clientY - grabPosition.y;
+    scrollContainer.scrollTop = grabPosition.top - dy;
+    scrollContainer.scrollLeft = grabPosition.left - dx;
+  }
+
+  function onMouseUp(event: MouseEvent) {
+    const scrollContainer = event.currentTarget;
+    if (!scrollContainer || !(scrollContainer instanceof HTMLElement)) {
+      return;
+    }
+    scrollContainer.style.cursor = "grab";
+    scrollContainer.style.removeProperty("user-select");
+    scrollContainer.removeEventListener("mousemove", onMouseMove);
+    scrollContainer.removeEventListener("mouseup", onMouseUp);
+  }
+
+  function onMouseDown(event: React.MouseEvent) {
+    const scrollContainer = event.currentTarget;
+    if (!scrollContainer || !(scrollContainer instanceof HTMLElement)) {
+      return;
+    }
+    scrollContainer.style.cursor = "grabbing";
+    scrollContainer.style.userSelect = "none";
+    grabPosition = {
+      left: scrollContainer.scrollLeft,
+      top: scrollContainer.scrollTop,
+      x: event.clientX,
+      y: event.clientY,
+    };
+
+    scrollContainer.addEventListener("mousemove", onMouseMove);
+    scrollContainer.addEventListener("mouseup", onMouseUp);
+  }
+
+  function onMouseLeave(event: React.MouseEvent) {
+    const scrollContainer = event.currentTarget;
+    if (!scrollContainer || !(scrollContainer instanceof HTMLElement)) {
+      return;
+    }
+    scrollContainer.style.cursor = "grab";
+    scrollContainer.style.removeProperty("userSelect");
+    scrollContainer.removeEventListener("mousemove", onMouseMove);
+    scrollContainer.removeEventListener("mouseup", onMouseUp);
   }
 
   const { filteredByLatest, filteredByStable, versionRows, versionColumns } =
@@ -107,7 +193,12 @@ export default function CompatibilityTable({
       </div>
 
       <div className="table-container od-card overflow-hidden rounded-lg">
-        <div className="overflow-x-auto">
+        <div
+          className="table-scroll-container"
+          ref={tableScrollContainerRef}
+          onMouseDown={onMouseDown}
+          onMouseLeave={onMouseLeave}
+        >
           <table className="m-0 w-full border-collapse">
             <thead>
               <tr className="od-border z-20 border-b">
