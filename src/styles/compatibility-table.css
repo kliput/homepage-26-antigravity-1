@@ -15,6 +15,10 @@
 .compatibility-table-option * {
   cursor: pointer;
 }
+.table-scroll-container {
+  overflow: auto;
+  max-height: 30rem;
+}
 @media (max-width: 370px) {
   .compatibility-table-options {
     justify-content: flex-start;
