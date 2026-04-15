@@ -6,6 +6,16 @@ const typoHeadingConfig = {
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
+    screens: {
+      // NOTE: we use these values also in media queries in CSS, but using literal values
+      // because of CSS limitations. When changing the breakpoint, search also for
+      // values lesser by 1px, e.g. 768px -> 767px in global.css.
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
     extend: {
       borderRadius: {
         lg: "var(--radius-lg)",
