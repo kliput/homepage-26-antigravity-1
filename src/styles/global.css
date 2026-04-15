@@ -32,7 +32,6 @@
 
     /* Colors used in Tailwind config */
 
-
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(0, 0%, 3.9%);
     --card: hsl(0, 0%, 100%);
@@ -103,7 +102,6 @@
     --od-glow-strong: rgba(230, 52, 26, 0.25);
 
     --select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-
 
     /* Colors used in Tailwind config */
 
@@ -332,6 +330,22 @@ h6 {
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+/* Mobile-last approach */
+@media (max-width: 767px) {
+  .docs-body.docs-inner {
+    padding: 0;
+  }
+
+  .docs-main-content {
+    padding: var(--header-vertical-padding) var(--header-horizontal-padding);
+  }
+
+  .docs-main-content.od-card-main.od-card {
+    border-radius: 0;
+    border: none;
+  }
 }
 
 @media (min-width: 768px) {

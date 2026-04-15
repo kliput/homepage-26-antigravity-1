@@ -195,16 +195,20 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
             </select>
           </div>
           <DocsMobileMenu label="Browse Topics" />
-          <div class="mobile-selector">
-            <DocsVersionSelect
-              selectorId="docs-version-select"
-              version={version}
-              availableVersions={availableVersions}
-              pathPrefix="/docs"
-              pathSuffix="intro/overview"
-              className="label-hidden"
-            />
-          </div>
+          {
+            showVersionSelector && (
+              <div class="mobile-selector">
+                <DocsVersionSelect
+                  selectorId="docs-version-select"
+                  version={version}
+                  availableVersions={availableVersions}
+                  pathPrefix="/docs"
+                  pathSuffix="intro/overview"
+                  className="label-hidden"
+                />
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
