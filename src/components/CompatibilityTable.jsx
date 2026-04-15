@@ -61,6 +61,16 @@ export default function CompatibilityTable({
     );
   }
 
+  /**
+   * @param {MouseEvent} event
+   */
+  function optionClicked(event) {
+    if (event.target.type === "checkbox") {
+      return;
+    }
+    event.currentTarget.querySelector("input[type=checkbox]").click();
+  }
+
   const { filteredByLatest, filteredByStable, versionRows, versionColumns } =
     state;
 
@@ -72,7 +82,10 @@ export default function CompatibilityTable({
       className="mb-16"
     >
       <div className="compatibility-table-options">
-        <div className="compatibility-table-option">
+        <div
+          className="compatibility-table-option"
+          onClick={(e) => optionClicked(e, "latest")}
+        >
           <input
             type="checkbox"
             checked={filteredByLatest}
@@ -80,7 +93,10 @@ export default function CompatibilityTable({
           />
           <label>Show only the latest minor versions</label>
         </div>
-        <div className="compatibility-table-option">
+        <div
+          className="compatibility-table-option"
+          onClick={(e) => optionClicked(e, "stable")}
+        >
           <input
             type="checkbox"
             checked={filteredByStable}
