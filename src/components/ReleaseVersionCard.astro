@@ -5,6 +5,7 @@ interface Props {
   minOneprovider?: string;
 }
 const { version, releaseDate, minOneprovider } = Astro.props;
+// FIXME: maybe remove this file? or use react component
 ---
 
 <div class="release-version-card">
@@ -17,12 +18,14 @@ const { version, releaseDate, minOneprovider } = Astro.props;
       <dt>Released</dt>
       <dd>{releaseDate}</dd>
     </div>
-    {minOneprovider && (
-      <div class="card-row">
-        <dt>Min. Oneprovider</dt>
-        <dd>{minOneprovider}</dd>
-      </div>
-    )}
+    {
+      minOneprovider && (
+        <div class="card-row">
+          <dt>Min. Oneprovider</dt>
+          <dd>{minOneprovider}</dd>
+        </div>
+      )
+    }
   </dl>
 </div>
 
