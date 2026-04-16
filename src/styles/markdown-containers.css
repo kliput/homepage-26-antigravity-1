@@ -104,3 +104,13 @@
 .remark-container.details > .remark-container-content {
   @apply px-6 pb-4 pt-1;
 }
+
+/* Blockquote styles that should look similar to markdown-containers */
+
+blockquote {
+  @apply remark-container;
+}
+
+[data-theme="dark"] blockquote {
+  @apply remark-container;
+}

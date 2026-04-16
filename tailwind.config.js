@@ -1,3 +1,5 @@
+// Refer to: https://github.com/tailwindlabs/tailwindcss-typography/blob/main/src/styles.js
+
 const typoHeadingConfig = {
   color: "var(--od-text-strong)",
 };
@@ -109,8 +111,14 @@ export default {
               },
             },
             blockquote: {
-              color: "var(--od-text)",
+              // blockquote styles should be similar to markdown-containers
               fontWeight: "normal",
+              fontStyle: "normal",
+              color: "var(--od-text)",
+              borderInlineStartWidth: "6px",
+              borderInlineStartColor: "var(--od-border)",
+              backgroundColor: "var(--od-bg-input)",
+              quotes: "",
               "p::before": {
                 content: "none",
               },
