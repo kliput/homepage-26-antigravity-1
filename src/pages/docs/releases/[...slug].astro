@@ -7,6 +7,7 @@ import yaml from "js-yaml";
 import type { CollectionEntry } from "astro:content";
 import ReleaseAssets from "../../../components/ReleaseAssets.tsx";
 import ChangelogEntry from "../../../components/ChangelogEntry.astro";
+import { compareVersions } from "../../../utils/version.mjs";
 
 export type SidebarTree = SidebarNode[];
 export type SidebarNode = {
@@ -307,7 +308,7 @@ changelogEntries.sort(
                   {release.data.highlights.map(
                     ({ title, shortDescription }) => (
                       <li>
-                        <strong>{title}</strong> — {shortDescription}
+                        <strong>{title}</strong> — {shortDescription}.
                       </li>
                     ),
                   )}

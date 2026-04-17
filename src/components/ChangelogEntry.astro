@@ -11,8 +11,12 @@ const { changelogEntry } = Astro.props;
 
 <li>
   <strong>{changelogEntry.issue}</strong>{" "}
-  {changelogEntry.products && <em>({changelogEntry.products.join(", ")})</em>}{
-    " "
-  }
+  {
+    changelogEntry.products?.length ? (
+      <em>({changelogEntry.products.join(", ")})</em>
+    ) : (
+      ""
+    )
+  }{" "}
   {changelogEntry.description}
 </li>

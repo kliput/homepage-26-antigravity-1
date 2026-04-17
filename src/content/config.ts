@@ -44,7 +44,6 @@ const releasesCollection = defineCollection({
   schema: z.object({
     version: z.string(), // e.g. "25.0"
     codename: z.string().optional(),
-    releaseDate: z.string(), // e.g. "Q1 2025" (human-readable) FIXME: redundany, compute
     date: z.date(), // for chronological sorting with blog posts
     minOneprovider: z.string().optional(), // e.g. "20.02.8"
     title: z.string(), // blog post / release page title
@@ -56,7 +55,7 @@ const releasesCollection = defineCollection({
         shortDescription: z.string(),
       }),
     ),
-    upgradeNotes: z.array(z.string()), // upgrade note bullet points
+    upgradeNotes: z.array(z.string()).optional(), // upgrade note bullet points
     changelog: z.array(ChangelogEntrySchema),
   }),
 });
