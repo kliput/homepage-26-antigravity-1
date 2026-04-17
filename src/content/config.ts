@@ -31,12 +31,20 @@ const docsCollection = defineCollection({
   }),
 });
 
+export const ChangelogEntrySchema = z.object({
+  issue: z.string(),
+  products: z.array(z.string()).optional(),
+  description: z.string(),
+});
+
+export type ChangelogEntryType = z.infer<typeof ChangelogEntrySchema>;
+
 const releasesCollection = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/releases" }),
   schema: z.object({
     version: z.string(), // e.g. "25.0"
     codename: z.string().optional(),
-    releaseDate: z.string(), // e.g. "Q1 2025" (human-readable)
+    releaseDate: z.string(), // e.g. "Q1 2025" (human-readable) FIXME: redundany, compute
     date: z.date(), // for chronological sorting with blog posts
     minOneprovider: z.string().optional(), // e.g. "20.02.8"
     title: z.string(), // blog post / release page title
@@ -49,13 +57,7 @@ const releasesCollection = defineCollection({
       }),
     ),
     upgradeNotes: z.array(z.string()), // upgrade note bullet points
-    changelog: z.array(
-      z.object({
-        issue: z.string(),
-        products: z.string(),
-        description: z.string(),
-      }),
-    ),
+    changelog: z.array(ChangelogEntrySchema),
   }),
 });
 

@@ -1,0 +1,18 @@
+---
+import type { ChangelogEntryType } from "../content/config.ts";
+
+interface Props {
+  changelogEntry: ChangelogEntryType;
+}
+
+const { changelogEntry } = Astro.props;
+// FIXME: można by to rozwiązać ładniej graficznie, np. tagi produktów na końcu wpisu, żeby tak się nie zlewało
+---
+
+<li>
+  <strong>{changelogEntry.issue}</strong>{" "}
+  {changelogEntry.products && <em>({changelogEntry.products.join(", ")})</em>}{
+    " "
+  }
+  {changelogEntry.description}
+</li>
