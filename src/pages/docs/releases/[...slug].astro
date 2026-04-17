@@ -6,6 +6,7 @@ import path from "node:path";
 import yaml from "js-yaml";
 import type { CollectionEntry } from "astro:content";
 import ReleaseAssets from "../../../components/ReleaseAssets.tsx";
+import ChangelogEntry from "../../../components/ChangelogEntry.astro";
 
 export type SidebarTree = SidebarNode[];
 export type SidebarNode = {
@@ -254,6 +255,14 @@ const title = props.isRelease
     : "Redirecting…";
 
 const release = props.isRelease ? props.release : null;
+
+// FIXME: zoptymalizować, żeby cachowało int wersji
+const changelogEntries = [...(release?.data.changelog ?? [])];
+changelogEntries.sort(
+  (a, b) =>
+    (parseInt(a.issue.replace("VFS-", "")) || 0) -
+    (parseInt(b.issue.replace("VFS-", "")) || 0),
+);
 ---
 
 {
@@ -293,7 +302,7 @@ const release = props.isRelease ? props.release : null;
           <div class="prose">
             {release.data.highlights && release.data.highlights.length > 0 && (
               <section class="release-section">
-                <h2>Highlights</h2>
+                <h2>Release Highlights</h2>
                 <ul>
                   {release.data.highlights.map(
                     ({ title, shortDescription }) => (
@@ -321,12 +330,8 @@ const release = props.isRelease ? props.release : null;
             <section class="release-section">
               <h2>Full Changelog</h2>
               <ul class="release-bullets">
-                {release.data.changelog.map((changelogEntry) => (
-                  <li>
-                    <strong>{changelogEntry.issue}</strong>{" "}
-                    <em>({changelogEntry.products})</em>{" "}
-                    {changelogEntry.description}
-                  </li>
+                {changelogEntries.map((changelogEntry) => (
+                  <ChangelogEntry changelogEntry={changelogEntry} />
                 ))}
               </ul>
             </section>

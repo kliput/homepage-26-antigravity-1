@@ -9,7 +9,7 @@ const bodyParam = operation.details.parameters?.find(
 );
 
 let payloadExampleHTML: string | null = null;
-let hasPayloadExample = false;
+let hasJsonPayloadExample = false;
 
 if (bodyParam && bodyParam.schema) {
   const schema = resolveSchemaRef(bodyParam.schema, swaggerData);
@@ -21,7 +21,7 @@ if (bodyParam && bodyParam.schema) {
   }
 
   if (exampleObj) {
-    hasPayloadExample = true;
+    hasJsonPayloadExample = true;
     payloadExampleHTML =
       typeof exampleObj === "string"
         ? exampleObj
@@ -30,7 +30,8 @@ if (bodyParam && bodyParam.schema) {
   }
 }
 
-const shouldRender = codeSamples.length > 0 || hasPayloadExample;
+const hasShellExample = codeSamples.length > 0;
+const shouldRender = hasShellExample || hasJsonPayloadExample;
 ---
 
 {
@@ -40,32 +41,55 @@ const shouldRender = codeSamples.length > 0 || hasPayloadExample;
 
       <api-request-examples class="mt-4 block">
         <div class="mb-4 flex gap-2 border-b border-[var(--od-border)]">
-          {codeSamples.length > 0 && (
-            <button
-              class="tab-btn active border-b-2 border-[var(--od-accent)] px-4 py-2 text-sm font-semibold text-[var(--od-text)] transition-colors hover:text-[var(--od-accent)]"
-              data-target="shell-examples"
-            >
-              Shell
-            </button>
-          )}
-          {hasPayloadExample && (
+          {hasJsonPayloadExample && (
             <button
               class:list={[
-                "tab-btn px-4 py-2 text-sm font-semibold transition-colors hover:text-[var(--od-accent)]",
-                codeSamples.length === 0
-                  ? "active border-b-2 border-[var(--od-accent)] text-[var(--od-text)]"
-                  : "border-b-2 border-transparent text-[var(--od-text-muted)]",
+                "tab-btn border-b-2 px-4 py-2 text-sm font-semibold transition-colors hover:text-[var(--od-accent)]",
+                "active border-[var(--od-accent)] text-[var(--od-text)]",
               ]}
               data-target="payload-example"
             >
               JSON Payload
             </button>
           )}
+          {hasShellExample && (
+            <button
+              class:list={[
+                "tab-btn border-b-2 px-4 py-2 text-sm font-semibold transition-colors hover:text-[var(--od-accent)]",
+                !hasJsonPayloadExample
+                  ? "active border-[var(--od-accent)] text-[var(--od-text)]"
+                  : "border-transparent text-[var(--od-text-muted)]",
+              ]}
+              data-target="shell-examples"
+            >
+              Shell
+            </button>
+          )}
         </div>
 
         <div class="tab-contents relative">
-          {codeSamples.length > 0 && (
-            <div class="tab-pane active space-y-6" id="shell-examples">
+          {hasJsonPayloadExample && (
+            <div class="tab-pane active space-y-6" id="payload-example">
+              <div class="overflow-hidden rounded-xl border border-[#2d2d2d] bg-[#1e1e1e]">
+                <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 font-mono text-xs text-gray-300">
+                  application/json
+                </div>
+                <div class="overflow-x-auto p-4 text-sm text-gray-300">
+                  {/* prettier-ignore */}
+                  <pre><code>{payloadExampleHTML}</code></pre>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {hasShellExample && (
+            <div
+              class:list={[
+                "tab-pane space-y-6",
+                !hasJsonPayloadExample ? "active" : "hidden",
+              ]}
+              id="shell-examples"
+            >
               {codeSamples.map((sample: any) => (
                 <div class="overflow-hidden rounded-xl border border-[#2d2d2d] bg-[#1e1e1e]">
                   <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 text-xs font-bold text-gray-300">
@@ -76,26 +100,6 @@ const shouldRender = codeSamples.length > 0 || hasPayloadExample;
                   </div>
                 </div>
               ))}
-            </div>
-          )}
-
-          {hasPayloadExample && (
-            <div
-              class:list={[
-                "tab-pane space-y-6",
-                codeSamples.length === 0 ? "active" : "hidden",
-              ]}
-              id="payload-example"
-            >
-              <div class="overflow-hidden rounded-xl border border-[#2d2d2d] bg-[#1e1e1e]">
-                <div class="border-b border-[#404040] bg-[#2d2d2d] px-4 py-2 font-mono text-xs text-gray-300">
-                  application/json
-                </div>
-                <div class="overflow-x-auto p-4 text-sm text-gray-300">
-                  {/* prettier-ignore */}
-                  <pre><code>{payloadExampleHTML}</code></pre>
-                </div>
-              </div>
             </div>
           )}
         </div>
