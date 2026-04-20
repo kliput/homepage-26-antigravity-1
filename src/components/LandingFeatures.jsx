@@ -20,11 +20,19 @@ const features = [
   },
   {
     icon: Globe,
-    title: "Hybrid Cloud Ready",
+    title: "Hybrid Cloud Support",
     description:
       "Seamlessly span on-premises HPC clusters, AWS, GCP, Azure, and institutional storage in one unified environment.",
     color: "from-orange-500 to-amber-500",
     page: "FeatureHybridCloud",
+  },
+  {
+    icon: Layers,
+    title: "Transfers & Replication Policies",
+    description:
+      "Control replica placement through rule-based or manual transfers. Automatically cache popular files based on local demand.",
+    color: "from-red-500 to-rose-600",
+    page: "FeatureSpaceReplication",
   },
   {
     icon: HardDrive,
@@ -41,14 +49,6 @@ const features = [
       "SSO integrated multi-level access control from single file to whole data space. Built for multi-organization research collaborations.",
     color: "from-rose-600 to-pink-500",
     page: "FeatureFineGrained",
-  },
-  {
-    icon: Layers,
-    title: "Space & Replication Policies",
-    description:
-      "Define exactly where and how many replicas of your data exist. Auto-balance storage across federated providers.",
-    color: "from-red-500 to-rose-600",
-    page: "FeatureSpaceReplication",
   },
 ];
 

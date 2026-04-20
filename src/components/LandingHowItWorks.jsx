@@ -3,24 +3,30 @@ import { motion } from "motion/react";
 const steps = [
   {
     number: "01",
+    title: "Deploy effortlessly",
+    description:
+      "Quickly launch your environment in a containerized manner using Helm charts, Docker Compose, or convenient wizards for bare VMs. No complex infrastructure needed.",
+  },
+  {
+    number: "02",
     title: "Connect your storage",
     description:
       "Register any storage backend — cloud buckets, HPC storage, institutional repositories — via simple configuration. No data movement required.",
   },
   {
-    number: "02",
+    number: "03",
     title: "Define your data spaces",
     description:
       "Create virtual Spaces that aggregate multiple storage resources. Set replication, caching, and access policies per dataset.",
   },
   {
-    number: "03",
+    number: "04",
     title: "Access from anywhere",
     description:
       "Use POSIX, REST API, CDMI, or our Python/R SDKs. Your AI pipeline sees a single filesystem regardless of where data lives.",
   },
   {
-    number: "04",
+    number: "05",
     title: "Collaborate & govern",
     description:
       "Invite institutions, share datasets, and track provenance. Full audit logs and fine-grained permissions across the federation.",

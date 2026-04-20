@@ -34,7 +34,7 @@ const cases = [
     page: "UseCaseLife",
     icon: Microscope,
     label: "Life Sciences",
-    title: "Share genomics and proteomics data across institutions",
+    title: "Share genomics data across institutions",
     description:
       "Research consortia use Onedata to comply with data governance policies while enabling cross-institutional data sharing for large-scale biological studies.",
     tags: ["FAIR Data", "GDPR", "Open Science"],
