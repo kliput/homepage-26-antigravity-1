@@ -91,6 +91,7 @@ export default function LandingFeatures() {
             return (
               <div className="feature-container">
                 <motion.div
+                  key={feature.title}
                   custom={i}
                   variants={cardVariants}
                   initial="hidden"

@@ -7,7 +7,7 @@ import {
   getLatestReleaseVersion,
 } from "../utils/releases";
 
-const latestReleaseString = `v${await getLatestReleaseVersion()}`;
+const latestReleaseString = await getLatestReleaseVersion();
 const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
 ---
 
@@ -28,7 +28,7 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
       client:visible
     >
       <PulseDot />
-      Open-source &middot; Trusted by 100+ research institutions worldwide
+      Open-source &middot; Trusted by research institutions worldwide
     </motion.div>
 
     <motion.h1
@@ -52,7 +52,7 @@ const latestReleaseSlug = `/docs/releases/${await getLatestReleaseSlug()}`;
     >
       Onedata unifies your storage resources across HPC clusters, cloud
       providers, and institutional repositories — giving researchers a single,
-      high-performance data layer for any AI pipeline.
+      high-performance data layer.
     </motion.p>
 
     <motion.div
