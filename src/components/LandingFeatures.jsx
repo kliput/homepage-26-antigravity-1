@@ -6,7 +6,7 @@ const features = [
     icon: Database,
     title: "Unified Virtual Filesystem",
     description:
-      "Mount any storage backend — S3, POSIX, Ceph, NFS — as a single global namespace. No data migration needed.",
+      "Mount any storage backend, e.g., S3, Lustre, GPFS, Ceph, NFS, POSIX, into a single global namespace. No data migration needed.",
     color: "from-red-500 to-orange-500",
     page: "FeatureUnifiedFS",
   },
@@ -28,9 +28,9 @@ const features = [
   },
   {
     icon: HardDrive,
-    title: "S3 & POSIX Hybrid Access",
+    title: "S3 & POSIX Flexible Access",
     description:
-      "Access the same dataset via a fully S3-compatible API or mount it as a native POSIX filesystem — no duplication, no trade-offs. Ideal for cloud-native pipelines and HPC workloads alike.",
+      "Access the data via S3 API or mount it as a POSIX filesystem. Ideal for cloud-native pipelines and HPC workloads alike.",
     color: "from-red-600 to-rose-400",
     page: "FeatureS3POSIX",
   },
@@ -38,7 +38,7 @@ const features = [
     icon: Lock,
     title: "Fine-Grained Access Control",
     description:
-      "Attribute-based access control per dataset, file, or directory. Built for multi-organization research collaborations.",
+      "SSO integrated multi-level access control from single file to whole data space. Built for multi-organization research collaborations.",
     color: "from-rose-600 to-pink-500",
     page: "FeatureFineGrained",
   },
