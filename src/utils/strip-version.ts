@@ -7,12 +7,12 @@
  * @license This software is released under the MIT license cited in 'LICENSE.txt'.
  */
 
-type LegacyMajorVersion = "18.02" | "19.02" | "20.02" | "21.02";
+type LegacyMajorVersion = "17.06" | "18.02" | "19.02" | "20.02" | "21.02";
 export type MajorVersion = LegacyMajorVersion | `${number}`;
 
 export default function stripVersion(version: string): MajorVersion {
   const firstNumber = Number(version.split(".")[0]);
-  if (firstNumber > 21) {
+  if (firstNumber > 21 || firstNumber === 3) {
     return String(firstNumber) as `${number}`;
   } else {
     const legacyMatch = version.match(/^\d+\.\d+/);
@@ -20,7 +20,8 @@ export default function stripVersion(version: string): MajorVersion {
       legacyMatch?.[0] === "20.02" ||
       legacyMatch?.[0] === "21.02" ||
       legacyMatch?.[0] === "19.02" ||
-      legacyMatch?.[0] === "18.02"
+      legacyMatch?.[0] === "18.02" ||
+      legacyMatch?.[0] === "17.06"
     ) {
       return legacyMatch[0];
     }
