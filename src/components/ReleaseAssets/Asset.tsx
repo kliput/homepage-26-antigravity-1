@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { type ReleaseAsset } from "./types.js";
+import { Tooltip } from "react-tooltip";
 
 export function Asset({ asset }: { asset: ReleaseAsset }) {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -16,6 +17,8 @@ export function Asset({ asset }: { asset: ReleaseAsset }) {
       });
     }
   };
+
+  const clipboardTooltipId = `asset-clipboard-tooltip-${asset.name}`;
 
   const twoSided = Boolean(SecondaryIcon);
 
@@ -38,13 +41,19 @@ export function Asset({ asset }: { asset: ReleaseAsset }) {
         </div>
         <div className="ml-3 flex items-center gap-3">
           {PrimaryIcon && (
-            <div className="relative flex items-center justify-center">
-              {showTooltip && (
-                <div className="tooltip-up absolute bottom-full z-10 mb-2 whitespace-nowrap rounded bg-slate-800 px-2.5 py-1 text-[10px] font-semibold text-white shadow-lg ring-1 ring-white/10">
-                  Copied!
-                  <div className="tooltip-arrow absolute left-1/2 top-full -translate-x-1/2 border-x-[5px] border-t-[5px] border-x-transparent border-t-slate-800"></div>
-                </div>
-              )}
+            <div
+              className="data- relative flex items-center justify-center"
+              data-tooltip-id={clipboardTooltipId}
+            >
+              <Tooltip
+                id={clipboardTooltipId}
+                content="Copied!"
+                place="top"
+                isOpen={showTooltip}
+                openEvents={{ mouseover: false, focus: false }}
+                closeEvents={{ mouseout: false, blur: false }}
+                style={{ zIndex: 1 }}
+              />
               <PrimaryIcon
                 className={`release-asset-primary-icon od-text-faint group-hover:od-accent-text h-4 w-4 flex-shrink-0 transition-colors`}
               />
