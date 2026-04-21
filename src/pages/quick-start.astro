@@ -1,7 +1,14 @@
 ---
 import MainLayout from "../layouts/MainLayout.astro";
 import QuickStartPaths from "../components/QuickStartPaths.astro";
-import { ArrowRight, Database, Server, Globe, Key } from "lucide-astro";
+import {
+  ArrowRight,
+  Database,
+  Server,
+  Globe,
+  Key,
+  ClipboardCopy,
+} from "lucide-astro";
 import HeroSection from "../components/HeroSection.astro";
 
 const concepts = [
@@ -9,19 +16,19 @@ const concepts = [
     icon: Database,
     title: "Spaces",
     description:
-      "Virtual directories distributed across multiple storage providers. Every file lives in a Space.",
+      "Distributed virtual volumes, where users can organize their data.",
   },
   {
     icon: Server,
     title: "Providers",
     description:
-      "Institutions or individuals who contribute storage resources to the network via Oneprovider services.",
+      "Entities who support user spaces with actual storage resources exposed via Oneprovider services.",
   },
   {
     icon: Globe,
     title: "Zones",
     description:
-      "Independent Onedata ecosystems federating multiple providers, coordinated by a Onezone service.",
+      "Federations of providers that enable the creation of closed or interconnected communities, managed by Onezone services.",
   },
 ];
 ---
@@ -76,32 +83,6 @@ const concepts = [
       </div>
     </section>
 
-    <!-- Sandbox token -->
-    <section class="token-section">
-      <div class="container max-w-3xl">
-        <div class="token-card">
-          <div class="token-icon-wrap">
-            <Key class="token-icon" />
-          </div>
-          <div class="token-content">
-            <h3 class="token-title">Can't see the Sandbox Space?</h3>
-            <p class="token-desc">
-              If you've logged in to <a
-                href="https://demo.onedata.org"
-                target="_blank"
-                rel="noreferrer">demo.onedata.org</a
-              > but don't see the Sandbox in the DATA tab, consume this invite token
-              to join the <strong>All users</strong> group:
-            </p>
-            <div class="token-code" id="sandbox-token">
-              MDAxZWxvY2F00aW9uIGRlbW8ub25lZGF00YS5vcmcKMDA3NmlkZW500aWZpZXIgMi9ubWQvdXNyLWMwNWU3M2EwZmE4NzQzOTI1NDE3ZGRjMDMzZTEwZWExY2g4NzQzL3VqZzphbGxfdXNlcnM6LzAyZDRmYTA3NGEwYTNlYTIzNTYwZDc00Yzg00YTA1Mjk1Y2gyYzE5CjAwMmZzaWduYXR1cmUgzFtuZQ5JPZ1KH1d8FhoNNy4bA1ToeILElN1F3FDwt0000K
-            </div>
-            <p class="token-hint">Click the code block to select it.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- CTA -->
     <section class="cta-section">
       <div class="container max-w-2xl text-center">
@@ -120,20 +101,6 @@ const concepts = [
     </section>
   </div>
 </MainLayout>
-
-<script>
-  // Select-all logic for the token
-  const tokenBlock = document.getElementById("sandbox-token");
-  if (tokenBlock) {
-    tokenBlock.addEventListener("click", () => {
-      const range = document.createRange();
-      range.selectNodeContents(tokenBlock);
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-    });
-  }
-</script>
 
 <style>
   .quick-start-page {
@@ -313,6 +280,7 @@ const concepts = [
   }
 
   .token-hint {
+    margin-top: -0.25rem;
     font-size: 0.75rem;
     color: var(--text-faint);
   }

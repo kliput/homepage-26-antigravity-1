@@ -3,11 +3,12 @@ import {
   Globe,
   Server,
   Box,
-  User,
   AlertTriangle,
   Info,
   CheckCircle,
   MousePointerClick,
+  Clipboard,
+  ClipboardCopy,
 } from "lucide-astro";
 import { marked } from "marked";
 
@@ -35,23 +36,26 @@ const paths = [
         number: "03",
         title: "Explore the Sandbox Space",
         description:
-          "All users logging in to demo.onedata.org you will have granted access to the Sandbox Space. It's a perfect place to play around with Onedata and test its features.",
+          "All users logging in to [demo.onedata.org](https://demo.onedata.org) are granted access to the Sandbox Space. It's a perfect place to play around with Onedata and test its features.",
+        note: `If you have logged in to [demo.onedata.org](https://demo.onedata.org) and you don't see the **Sandbox** space in the **DATA** tab, it's possible that you don't belong to the **All users group**. It may happen if you have opted-out of the group or logged into the system in the past, when the Sandbox was not set up yet. To fix it, join the group manually as described in <a href="/docs/25/user-guide/quickstart#sandbox" target="_blank">the documentation</a>.`,
         warning:
           "The Sandbox is a shared environment visible to all demo users. Do not store private, sensitive or production data there.",
       },
       {
         number: "04",
         title: "Create your own private directory",
-        description:
-          "Inside the Sandbox, navigate to Files → New Directory. Then open the directory's context menu → Edit permissions → ACL and restrict access to your user only. You now have an isolated workspace.",
+        description: `Navigate to the **DATA → Sandbox → Files** tab and create a new directory using the action in the top right corner or by invoking the right-click menu.
+          
+Right-click on the newly created directory and choose **Permissions** from the context menu. Switch to the **ACL** permission type and add a single entry, for yourself, allowing all operations.
+
+Hit **Save** and done — you now have your own directory in the Sandbox Space, to which no one else has access (<a class="no-external-icon" href="/docs/25/user-guide/data#access-control-lists" target="_blank">ACLs</a> implicitly deny access if there is no explicitly allowing entry). You may use this directory to <a class="no-external-icon" href="/docs/25/user-guide/interfaces/web-file-browser#uploading-data" target="_blank">upload some data</a> and test Onedata features. If you wish for others to see the fruits of your experiments, feel free to place your data in a non-ACL-secured location.`,
       },
       {
         number: "05",
         title: "Mount with Oneclient (optional)",
-        description:
-          "For POSIX access, install the Oneclient package on any Linux machine and run:",
+        description: `For POSIX access, <a class="no-external-icon" href="/docs/25/user-guide/interfaces/oneclient/#installation" target="_blank">install the Oneclient</a> on any Linux machine and run:`,
         code: "oneclient --host demo.onedata.org --token <your-access-token> ~/onedata",
-        note: "Generate an access token in the Onezone web interface under Tokens → Create new token → Access token.",
+        note: 'Generate an access token in the Onezone web interface choosing the **TOKENS → "plus" icon on the sidebar\'s top → Oneclient Access**.',
       },
     ],
   },
@@ -90,7 +94,7 @@ const paths = [
         description:
           "Onezone is the identity and coordination service. Pull and start it using the official Docker Compose recipe:",
         code: "git clone https://github.com/onedata/onezone-docker-compose\ncd onezone-docker-compose\n# Edit docker-compose.yml to set your hostname and TLS cert paths\ndocker compose up -d",
-        note: "Set ONEZONE_DOMAIN to your fully-qualified domain name. TLS is required — use Let's Encrypt or supply your own certificate.",
+        note: "Set `ONEZONE_DOMAIN` to your fully-qualified domain name. TLS is required — use Let's Encrypt or supply your own certificate.",
       },
       {
         number: "03",
@@ -254,16 +258,25 @@ const paths = [
                     </div>
                   )}
 
-                  {step.code &&
-                    /* prettier-ignore */
-                    <pre class="step-code"><code>{step.code.trim()}</code></pre>}
+                  {step.code && (
+                    <>
+                      {/* prettier-ignore */}
+                      <pre class="step-code"><code id={`code-${path.id}`}>{step.code.trim()}</code></pre>
+                      <div class="clipboard-btn-container">
+                        <div
+                          class="clipboard-btn transition-colors"
+                          data-clipboard-target={`#code-${path.id}`}
+                        >
+                          Copy to clipboard <ClipboardCopy class="h-4 w-4" />
+                        </div>
+                      </div>
+                    </>
+                  )}
 
                   {step.note && (
                     <div class="step-alert step-note">
                       <Info class="alert-icon" />
-                      <p>
-                        <strong>Note:</strong> {step.note}
-                      </p>
+                      <div set:html={marked.parse("**Note:** " + step.note)} />
                     </div>
                   )}
 
@@ -284,6 +297,11 @@ const paths = [
     }
   </div>
 </div>
+
+<script>
+  import ClipboardJS from "clipboard";
+  new ClipboardJS(".clipboard-btn");
+</script>
 
 <script>
   const tabs = document.querySelectorAll(".tab-btn");
@@ -627,6 +645,33 @@ const paths = [
     margin-bottom: 1rem;
   }
 
+  .step-desc :global(p + p) {
+    margin-top: 0.5rem;
+  }
+
+  .step-code,
+  .step-desc :global(pre) {
+    background: var(--bg-input);
+    border: 1px solid var(--tab-border);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-family: var(--font-family-mono);
+    color: var(--od-accent-3, #ff5533);
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  .step-code + .clipboard-btn-container {
+    margin-top: -0.75rem;
+  }
+
+  .step-desc :global(p + pre) {
+    margin-top: 1rem;
+  }
+
   .step-options {
     display: flex;
     flex-direction: column;
@@ -664,20 +709,6 @@ const paths = [
 
   .opt-desc {
     color: var(--text-muted);
-  }
-
-  .step-code {
-    background: var(--bg-input);
-    border: 1px solid var(--tab-border);
-    border-radius: 0.75rem;
-    padding: 1rem;
-    font-size: 0.75rem;
-    font-family: var(--font-family-mono);
-    color: var(--od-accent-3, #ff5533);
-    overflow-x: auto;
-    margin-bottom: 1rem;
-    line-height: 1.6;
-    white-space: pre;
   }
 
   .step-alert {

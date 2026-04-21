@@ -873,3 +873,23 @@ code {
     transform: translateY(0);
   }
 }
+
+/* Clipboard copy */
+
+.clipboard-btn-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clipboard-btn {
+  display: inline-flex;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+.clipboard-btn:hover {
+  color: var(--od-text);
+}
