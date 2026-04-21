@@ -23,7 +23,7 @@ const paths = [
         number: "01",
         title: "Open the demo environment",
         description:
-          "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in [EGI](https://www.egi.eu/services/) or Google for that purpose. If you don't have one, contact [us](/contact) and we will create a test account for you.",
+          "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in [EGI](https://www.egi.eu/services/) or Google for that purpose. If you don't have one, [contact us](/contact) and we will create a test account for you.",
       },
       {
         number: "02",
@@ -38,8 +38,9 @@ const paths = [
         description:
           "All users logging in to [demo.onedata.org](https://demo.onedata.org) are granted access to the Sandbox Space. It's a perfect place to play around with Onedata and test its features.",
         note: `If you have logged in to [demo.onedata.org](https://demo.onedata.org) and you don't see the **Sandbox** space in the **DATA** tab, it's possible that you don't belong to the **All users group**. It may happen if you have opted-out of the group or logged into the system in the past, when the Sandbox was not set up yet. To fix it, join the group manually as described in <a href="/docs/25/user-guide/quickstart#sandbox" target="_blank">the documentation</a>.`,
-        warning:
-          "The Sandbox is a shared environment visible to all demo users. Do not store private, sensitive or production data there.",
+        warning: `The **Sandbox** space is intended to be a testing environment and comes with no guarantees. It is cleaned if it becomes cluttered.
+
+Do not store any private or sensitive data in the space, as it's available to all the logged-in users.`,
       },
       {
         number: "04",
@@ -237,7 +238,7 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
                 <div class="step-content">
                   <h3 class="step-title">{step.title}</h3>
                   <div
-                    class="step-desc"
+                    class="step-desc step-markdown"
                     set:html={marked.parse(step.description)}
                   />
 
@@ -274,18 +275,18 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
                   )}
 
                   {step.note && (
-                    <div class="step-alert step-note">
+                    <div class="step-alert step-note step-markdown">
                       <Info class="alert-icon" />
                       <div set:html={marked.parse("**Note:** " + step.note)} />
                     </div>
                   )}
 
                   {step.warning && (
-                    <div class="step-alert step-warning">
+                    <div class="step-alert step-warning step-markdown">
                       <AlertTriangle class="alert-icon" />
-                      <p>
-                        <strong>Warning:</strong> {step.warning}
-                      </p>
+                      <div
+                        set:html={marked.parse("**Warning:** " + step.warning)}
+                      />
                     </div>
                   )}
                 </div>
@@ -645,7 +646,7 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
     margin-bottom: 1rem;
   }
 
-  .step-desc :global(p + p) {
+  .step-markdown :global(p + p) {
     margin-top: 0.5rem;
   }
 
