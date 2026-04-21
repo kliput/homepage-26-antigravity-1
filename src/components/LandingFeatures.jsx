@@ -1,13 +1,25 @@
 import { motion } from "motion/react";
 import { Database, HardDrive, Lock, Zap, Globe, Layers } from "lucide-react";
 
+const gradients = [
+  "from-orange-500 to-amber-500",
+  "from-red-500 to-orange-500",
+  "from-rose-500 to-red-500",
+  "from-red-500 to-rose-600",
+  "from-red-600 to-rose-400",
+  "from-rose-600 to-pink-500",
+];
+
+function getGradientClassname(index) {
+  return gradients[index % gradients.length];
+}
+
 const features = [
   {
     icon: Database,
     title: "Unified Virtual Filesystem",
     description:
       "Mount any storage backend, e.g., S3, Lustre, GPFS, Ceph, NFS, POSIX, into a single global namespace. No data migration needed.",
-    color: "from-red-500 to-orange-500",
     page: "FeatureUnifiedFS",
   },
   {
@@ -15,7 +27,6 @@ const features = [
     title: "High-Performance Data Access",
     description:
       "Optimized for AI training workloads. Stream petabytes across WAN with minimal latency using our intelligent caching layer.",
-    color: "from-rose-500 to-red-500",
     page: "FeatureHighPerformance",
   },
   {
@@ -23,7 +34,6 @@ const features = [
     title: "Hybrid Cloud Support",
     description:
       "Seamlessly span on-premises HPC clusters, AWS, GCP, Azure, and institutional storage in one unified environment.",
-    color: "from-orange-500 to-amber-500",
     page: "FeatureHybridCloud",
   },
   {
@@ -31,7 +41,6 @@ const features = [
     title: "Transfers & Replication Policies",
     description:
       "Control replica placement through rule-based or manual transfers. Automatically cache popular files based on local demand.",
-    color: "from-red-500 to-rose-600",
     page: "FeatureSpaceReplication",
   },
   {
@@ -39,7 +48,6 @@ const features = [
     title: "S3 & POSIX Flexible Access",
     description:
       "Access the data via S3 API or mount it as a POSIX filesystem. Ideal for cloud-native pipelines and HPC workloads alike.",
-    color: "from-red-600 to-rose-400",
     page: "FeatureS3POSIX",
   },
   {
@@ -47,10 +55,13 @@ const features = [
     title: "Fine-Grained Access Control",
     description:
       "SSO integrated multi-level access control from single file to whole data space. Built for multi-organization research collaborations.",
-    color: "from-rose-600 to-pink-500",
     page: "FeatureFineGrained",
   },
 ];
+
+for (let i = 0; i < features.length; ++i) {
+  features[i].color = getGradientClassname(i);
+}
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -89,9 +100,8 @@ export default function LandingFeatures() {
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
-              <div className="feature-container">
+              <div className="feature-container" key={feature.title}>
                 <motion.div
-                  key={feature.title}
                   custom={i}
                   variants={cardVariants}
                   initial="hidden"
@@ -128,15 +138,6 @@ export default function LandingFeatures() {
                   <p className="od-text-muted text-sm leading-relaxed">
                     {feature.description}
                   </p>
-
-                  {/* Bottom accent line slides in on hover */}
-                  <motion.div
-                    className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-b-2xl bg-gradient-to-r ${feature.color}`}
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
-                    style={{ originX: 0 }}
-                  ></motion.div>
                 </motion.div>
               </div>
             );
