@@ -11,25 +11,25 @@ const steps = [
     number: "02",
     title: "Connect your storage",
     description:
-      "Register any storage backend — cloud buckets, HPC storage, institutional repositories — via simple configuration. No data movement required.",
+      "Register any storage backend — cloud buckets, HPC storage, or institutional repositories — via simple configuration. Import existing data without copying.",
   },
   {
     number: "03",
     title: "Define your data spaces",
     description:
-      "Create virtual Spaces that aggregate multiple storage resources. Set replication, caching, and access policies per dataset.",
+      "Create virtual spaces that aggregate multiple storage resources. Set replication, caching, and access policies per dataset.",
   },
   {
     number: "04",
     title: "Access from anywhere",
     description:
-      "Use POSIX, REST API, CDMI, or our Python/R SDKs. Your AI pipeline sees a single filesystem regardless of where data lives.",
+      "Use POSIX, S3, REST API, CDMI, or our Python-native libs. Your AI pipeline sees a unified filesystem regardless of where data lives.",
   },
   {
     number: "05",
     title: "Collaborate & govern",
     description:
-      "Invite institutions, share datasets, and track provenance. Full audit logs and fine-grained permissions across the federation.",
+      "Enable collaborative data sharing between users of different institutions. Integrate with SSO and apply fine-grained permissions across the federation.",
   },
 ];
 

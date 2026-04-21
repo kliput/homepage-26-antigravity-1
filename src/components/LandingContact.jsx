@@ -23,10 +23,9 @@ const demoHighlights = [
 ];
 
 const perks = [
-  "30-minute focused session",
+  "60-minute focused session",
   "Zoom / Meet video call",
   "Weekdays · CET timezone",
-  "Dedicated onboarding support during pilot",
 ];
 
 export default function LandingContact() {
@@ -44,12 +43,11 @@ export default function LandingContact() {
           </div>
           <h2 className="od-text mb-4 text-3xl font-bold leading-tight md:text-4xl">
             Get a demo tailored to{" "}
-            <span className="od-gradient-text">your organization</span>
+            <span className="od-gradient-text">your needs</span>
           </h2>
           <p className="od-text-muted mx-auto max-w-2xl">
             Onedata is a complex platform. That's why every demo is scoped to
-            your specific infrastructure, research domain, and data challenges —
-            so you leave with a clear path to getting started.
+            your specific infrastructure, research domain, and data challenges.
           </p>
         </motion.div>
 

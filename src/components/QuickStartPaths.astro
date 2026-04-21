@@ -4,12 +4,12 @@ import {
   Server,
   Box,
   User,
-  Terminal,
   AlertTriangle,
   Info,
   CheckCircle,
   MousePointerClick,
 } from "lucide-astro";
+import { marked } from "marked";
 
 const paths = [
   {
@@ -22,37 +22,20 @@ const paths = [
         number: "01",
         title: "Open the demo environment",
         description:
-          "Go to demo.onedata.org — a fully functional, publicly hosted Onedata instance maintained by the core team. No account registration is needed to start exploring.",
-        options: [
-          {
-            icon: User,
-            label: "Institutional user",
-            text: "Your institution may already operate a Onezone. Ask your IT department for the URL and log in with your institutional identity.",
-          },
-          {
-            icon: User,
-            label: "EGI / Check-In user",
-            text: "Use EGI DataHub at datahub.egi.eu — you'll automatically get access to the PLAYGROUND Space.",
-          },
-          {
-            icon: Globe,
-            label: "New user / Demo",
-            text: "Log in at demo.onedata.org using your Google, GitHub or ORCID account. The Sandbox space is immediately available.",
-          },
-        ],
+          "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in [EGI](https://www.egi.eu/services/) or Google for that purpose. If you don't have one, contact [us](/contact) and we will create a test account for you.",
       },
       {
         number: "02",
-        title: "Log in with your identity",
+        title: "Log in",
         description:
-          "Click Log In on the Onezone homepage and pick an Identity Provider. Onedata supports institutional IdPs, EGI Check-In, Google, GitHub and more.",
-        note: "The green key icon on the login page is for local administrator accounts only — regular users should always use social or institutional login.",
+          "Click on the selected identity provider and follow the steps to log in to Onedata. You will have to accept releasing your user information so that you can be authenticated by the Onezone service.",
+        note: "The green key icon is reserved for the login of administrators and special users created through the Onepanel administrative interface. Regular users should use social or institutional accounts to sign in.",
       },
       {
         number: "03",
         title: "Explore the Sandbox Space",
         description:
-          "After logging in, open the DATA tab. You will see a shared Sandbox Space pre-provisioned for testing. Browse files, upload data, and try the metadata editor.",
+          "All users logging in to demo.onedata.org you will have granted access to the Sandbox Space. It's a perfect place to play around with Onedata and test its features.",
         warning:
           "The Sandbox is a shared environment visible to all demo users. Do not store private, sensitive or production data there.",
       },
@@ -249,7 +232,10 @@ const paths = [
                 </div>
                 <div class="step-content">
                   <h3 class="step-title">{step.title}</h3>
-                  <p class="step-desc">{step.description}</p>
+                  <div
+                    class="step-desc"
+                    set:html={marked.parse(step.description)}
+                  />
 
                   {step.options && (
                     <div class="step-options">

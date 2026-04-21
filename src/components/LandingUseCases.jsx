@@ -4,7 +4,6 @@ import {
   FlaskConical,
   Satellite,
   Microscope,
-  ArrowRight,
 } from "lucide-react";
 
 const cases = [
@@ -14,10 +13,8 @@ const cases = [
     label: "AI / ML Research",
     title: "Train models on federated datasets without moving data",
     description:
-      "AI teams at universities and labs use Onedata to aggregate training data from multiple institutional repositories. Run distributed training jobs that access data in-place across continents.",
-    tags: ["PyTorch", "TensorFlow", "Hugging Face"],
-    image:
-      "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80",
+      "AI teams at universities and labs use Onedata to aggregate training data from multiple institutional repositories. Run parallel training jobs on geographically distributed resources.",
+    image: "../src/images/use-cases/ai.jpg",
   },
   {
     page: "UseCaseEarth",
@@ -26,9 +23,7 @@ const cases = [
     title: "Manage petabytes of satellite and sensor data",
     description:
       "Geoscience teams handle continuous data streams from global sensor networks and satellite imagery. Onedata provides a unified access layer for real-time and archival datasets.",
-    tags: ["NetCDF", "HDF5", "FITS"],
-    image:
-      "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&q=80",
+    image: "../src/images/use-cases/earth.jpg",
   },
   {
     page: "UseCaseLife",
@@ -37,9 +32,7 @@ const cases = [
     title: "Share genomics data across institutions",
     description:
       "Research consortia use Onedata to comply with data governance policies while enabling cross-institutional data sharing for large-scale biological studies.",
-    tags: ["FAIR Data", "GDPR", "Open Science"],
-    image:
-      "https://images.unsplash.com/photo-1628595351029-c2bf17511435?w=600&q=80",
+    image: "../src/images/use-cases/life.jpg",
   },
   {
     page: "UseCaseHPC",
@@ -47,10 +40,8 @@ const cases = [
     label: "Computational Science",
     title: "Accelerate HPC workflows with intelligent caching",
     description:
-      "HPC centers use Onedata to pre-stage simulation input data and checkpoint outputs automatically. Reduce I/O bottlenecks in large-scale physics and chemistry simulations.",
-    tags: ["MPI", "SLURM", "OpenMP"],
-    image:
-      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=600&q=80",
+      "HPC centers use Onedata to pre-stage simulation input data and checkpoint outputs automatically. Reduce I/O bottlenecks in large-scale simulations, e.g., in physics or chemistry.",
+    image: "../src/images/use-cases/hpc.jpg",
   },
 ];
 
@@ -68,12 +59,14 @@ export default function LandingUseCases() {
             USE CASES
           </div>
           <h2 className="od-text mb-4 text-3xl font-bold md:text-5xl">
-            Purpose-built for{" "}
-            <span className="od-gradient-text">every discipline</span>
+            Designed for{" "}
+            <span className="od-gradient-text">
+              AI and scientific pipelines
+            </span>
           </h2>
-          <p className="od-text-muted mx-auto max-w-xl">
-            From genomics to particle physics, Onedata adapts to the data needs
-            of any scientific discipline.
+          <p className="od-text-muted mx-auto max-w-2xl">
+            From genomics to particle physics, Onedata is useful in many
+            scientific disciplines.
           </p>
         </motion.div>
 
@@ -88,7 +81,7 @@ export default function LandingUseCases() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <div className="od-card group block flex h-full flex-col overflow-hidden rounded-2xl">
+                <div className="od-card group flex h-full flex-col overflow-hidden rounded-2xl">
                   <div className="h-40 overflow-hidden">
                     <img
                       src={c.image}
@@ -106,19 +99,9 @@ export default function LandingUseCases() {
                     <h3 className="od-text mb-2 text-lg font-semibold leading-snug">
                       {c.title}
                     </h3>
-                    <p className="od-text-muted mb-4 flex-1 text-sm leading-relaxed">
+                    <p className="od-text-muted mb-0 flex-1 text-sm leading-relaxed">
                       {c.description}
                     </p>
-                    <div className="flex flex-wrap gap-2">
-                      {c.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="od-text-faint od-border rounded-full border px-3 py-1 text-xs"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
                     {/* TODO: implement use case pages */}
                     {/* <div className="od-accent-text flex items-center gap-1 text-xs font-medium">
                       Learn more <ArrowRight className="h-3.5 w-3.5" />
