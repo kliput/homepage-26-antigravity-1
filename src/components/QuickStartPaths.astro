@@ -3,19 +3,42 @@ import {
   Globe,
   Server,
   Box,
-  AlertTriangle,
+  TriangleAlert,
   Info,
-  CheckCircle,
+  CircleCheckBig,
   MousePointerClick,
-  Clipboard,
   ClipboardCopy,
   PackageOpen,
-} from "lucide-astro";
+  type Icon as IconType,
+} from "@lucide/astro";
 import { marked } from "marked";
 
 // FIXME: change 25 docs links to stable when stable url will be available
 
-const paths = [
+type QuickStartStep = {
+  title: string;
+  description: string;
+  options?: QuickStartOption[];
+  code?: string;
+  note?: string;
+  warning?: string;
+};
+
+type QuickStartOption = {
+  icon: typeof IconType;
+  label: string;
+  text: string;
+};
+
+type QuickStartPath = {
+  id: string;
+  icon: typeof IconType;
+  label: string;
+  sublabel: string;
+  steps: QuickStartStep[];
+};
+
+const paths: QuickStartPath[] = [
   {
     id: "online",
     icon: Globe,
@@ -23,20 +46,17 @@ const paths = [
     sublabel: "No setup required",
     steps: [
       {
-        number: "01",
         title: "Open the demo environment",
         description:
           "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in [EGI](https://www.egi.eu/services/) or Google for that purpose. If you don't have one, [contact us](/contact) and we will create a test account for you.",
       },
       {
-        number: "02",
         title: "Log in",
         description:
           "Click on the selected identity provider and follow the steps to log in to Onedata. You will have to accept releasing your user information so that you can be authenticated by the Onezone service.",
         note: "The green key icon is reserved for the login of administrators and special users created through the Onepanel administrative interface. Regular users should use social or institutional accounts to sign in.",
       },
       {
-        number: "03",
         title: "Explore the Sandbox Space",
         description:
           "All users logging in to [demo.onedata.org](https://demo.onedata.org) are granted access to the Sandbox Space. It's a perfect place to play around with Onedata and test its features.",
@@ -46,7 +66,6 @@ const paths = [
 Do not store any private or sensitive data in the space, as it's available to all the logged-in users.`,
       },
       {
-        number: "04",
         title: "Create your own private directory",
         description: `Navigate to the **DATA → Sandbox → Files** tab and create a new directory using the action in the top right corner or by invoking the right-click menu.
           
@@ -55,7 +74,6 @@ Right-click on the newly created directory and choose **Permissions** from the c
 Hit **Save** and done — you now have your own directory in the Sandbox Space, to which no one else has access (<a class="no-external-icon" href="/docs/25/user-guide/data#access-control-lists" target="_blank">ACLs</a> implicitly deny access if there is no explicitly allowing entry). You may use this directory to <a class="no-external-icon" href="/docs/25/user-guide/interfaces/web-file-browser#uploading-data" target="_blank">upload some data</a> and test Onedata features. If you wish for others to see the fruits of your experiments, feel free to place your data in a non-ACL-secured location.`,
       },
       {
-        number: "05",
         title: "Mount with Oneclient (optional)",
         description: `For POSIX access, <a class="no-external-icon" href="/docs/25/user-guide/interfaces/oneclient/#installation" target="_blank">install the Oneclient</a> on any Linux machine and run:`,
         code: "oneclient --host demo.onedata.org --token <your-access-token> ~/onedata",
@@ -70,7 +88,6 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
     sublabel: "Full control on your own servers",
     steps: [
       {
-        number: "01",
         title: "Check system requirements",
         description:
           "Ensure your virtual machines meet the minimum requirements before proceeding.",
@@ -86,7 +103,7 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
             text: "4 vCPU, 16 GB RAM, 50 GB SSD disk + 8 MB per 1,000 files.",
           },
           {
-            icon: CheckCircle,
+            icon: CircleCheckBig,
             label: "OS",
             text: "Any Linux OS supporting Docker; however, the recommended choice is Ubuntu 20.04 LTS or newer, as it has been thoroughly tested.",
           },
@@ -98,20 +115,17 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
         ],
       },
       {
-        number: "02",
         title: "Get Onezone deployment scripts",
         description:
           "Pull the `onedata-deployments` repository containing ready-to-use templates to set up your own Onezone instance.",
         code: "git clone https://github.com/onedata/onedata-deployments.git",
       },
       {
-        number: "03",
         title: "Configure the Onezone deployment",
         description:
           "Navigate to the `onedata-deployments/onezone/examples/batch-mode` directory and examine the `ONEZONE_CONFIG` section of `docker-compose.yml`. Fill in the desired values (name, domain).",
       },
       {
-        number: "04",
         title: "Configure authorization methods",
         description: `Prepare and place your \`auth.config\` in \`onedata-deployments/onezone/examples/batch-mode/data/secret/auth.config\`. You can use the example below to setup a username & password sign-in.
  
@@ -134,47 +148,40 @@ For full reference, read [the Login methods documentation](/docs/25/admin-guide/
 }`,
       },
       {
-        number: "05",
         title: "Set the emergency password (optional)",
         description: `You can set a password of your choice for accessing the admin account before starting the deployment. Otherwise, the password will be generated automatically.
           
 In order to do that, create the \`onedata-deployments/onezone/examples/batch-mode/data/secret/emergency-passphrase.txt\` file with the password written as a plain text.`,
       },
       {
-        number: "06",
         title: "Deploy Onezone",
         description:
           "Run the Onezone Docker Compose installation script. The installation should happen automatically and might take a while (consult container logs for indication whether the installation was finished).",
         code: "./onezone.sh start",
       },
       {
-        number: "07",
         title: "Visit Onezone and prepare a space",
         description:
           "Open `https://<your-domain>` as configured in step 3 and log in using the `admin` user and the password found in `data/secret/emergency-passphrase.txt`. Next, create a new space using the **Create a space** action on the welcome screen.",
       },
       {
-        number: "08",
         title: "Generate the Onedatify one-liner",
         description: `Navigate to the **Data > *Space name* > Providers** view. Click on the **Add support** button in the main view.
 
 Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
       },
       {
-        number: "09",
         title: "Deploy Oneprovider",
         description:
           "Paste the one-liner in the terminal on the Oneprovider machine (as superuser or as a user with sudo privileges). Follow the instructions in the wizard — during the installation, the wizard will ask you several questions and suggest default settings to help you through the process.",
       },
       {
-        number: "10",
         title: "Watch Oneprovider deployment progress (optional)",
         description:
           "The progress can be monitored on a separate terminal using the following command:",
         code: "journalctl -u onedatify.service -f",
       },
       {
-        number: "11",
         title: "Visit the supported space",
         description:
           "Navigate to the **Data > *Space name* > Providers** view in web GUI of Onezone. Now you should see a file browser backed up by a storage provided by your Oneprovider. Now it's time to play around with Onedata and test its features! Refer to [the user guide](/docs/25/user-guide) for more.",
@@ -188,36 +195,33 @@ Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
     sublabel: "Cloud-native, scalable setup",
     steps: [
       {
-        number: "01",
         title: "Prepare your cluster",
         description:
           "Make sure your Kubernetes cluster meets the prerequisites before installing Onedata Helm charts.",
         options: [
           {
-            icon: CheckCircle,
+            icon: CircleCheckBig,
             label: "Kubernetes",
             text: "Version ≥ 1.24. Tested with GKE, EKS, AKS and bare-metal kubeadm clusters.",
           },
           {
-            icon: CheckCircle,
+            icon: CircleCheckBig,
             label: "Helm",
             text: "Helm 3.x must be installed and configured to reach your cluster.",
           },
           {
-            icon: CheckCircle,
+            icon: CircleCheckBig,
             label: "Ingress & TLS",
             text: "An Ingress controller (e.g. nginx-ingress) and a cert-manager ClusterIssuer for automatic TLS are required.",
           },
         ],
       },
       {
-        number: "02",
         title: "Add the Onedata Helm repository",
         description: "Add the official chart repository and update it:",
         code: "helm repo add onedata https://onedata.github.io/charts\nhelm repo update",
       },
       {
-        number: "03",
         title: "Install Onezone",
         description:
           "Create a values file for Onezone and deploy it to your cluster:",
@@ -225,14 +229,12 @@ Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
         note: "The domain must resolve to your Ingress controller's external IP before installation.",
       },
       {
-        number: "04",
         title: "Install Oneprovider",
         description:
           "Deploy one or more Oneprovider instances, pointing them at your Onezone:",
         code: "# oneprovider-values.yaml\noneprovider:\n  onezoneUrl: https://onezone.example.com\n  domain: oneprovider.example.com\n  storage:\n    type: posix          # or s3, ceph, nfs …\n    path: /mnt/data\n\nhelm install oneprovider onedata/oneprovider \\\n  -f oneprovider-values.yaml \\\n  --namespace onedata",
       },
       {
-        number: "05",
         title: "Register, create a Space and go",
         description:
           "Open https://onezone.example.com, create an admin account, and follow the Oneprovider registration wizard. Then create a Space, support it from the Oneprovider panel, and invite your users.",
@@ -241,6 +243,13 @@ Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
     ],
   },
 ];
+
+for (const path of paths) {
+  for (let i = 0; i < path.steps.length; ++i) {
+    const step = path.steps[i];
+    step.number = String(i + 1).padStart(2, "0");
+  }
+}
 ---
 
 <div class="quick-start-paths">
@@ -345,7 +354,7 @@ Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
 
                   {step.warning && (
                     <div class="step-alert step-warning step-markdown">
-                      <AlertTriangle class="alert-icon" />
+                      <TriangleAlert class="alert-icon" />
                       <div
                         set:html={marked.parse("**Warning:** " + step.warning)}
                       />
