@@ -9,6 +9,7 @@ import {
   MousePointerClick,
   Clipboard,
   ClipboardCopy,
+  PackageOpen,
 } from "lucide-astro";
 import { marked } from "marked";
 
@@ -75,47 +76,85 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
           {
             icon: Server,
             label: "Onezone VM",
-            text: "2 vCPU, 4 GB RAM, 20 GB disk. Requires a publicly reachable IP and a valid DNS name.",
+            text: "4 vCPU, 12 GB RAM, 20 GB SSD disk. Requires a publicly reachable IP and a valid DNS name. Onezone communicates with external services or clients using ports 53, 80, 443 and 9443. All of these ports need to be publicly open except 9443 which is used for direct emergency access to the Onezone.",
           },
           {
             icon: Server,
             label: "Oneprovider VM",
-            text: "4 vCPU, 8 GB RAM, plus the storage volume you want to expose (local, NFS, Ceph, S3 …).",
+            text: "4 vCPU, 16 GB RAM, 50 GB SSD disk + 8 MB per 1,000 files.",
           },
           {
             icon: CheckCircle,
             label: "OS",
-            text: "Ubuntu 20.04 / 22.04 or CentOS 7/8. Docker Engine ≥ 20.10 and Docker Compose ≥ 2 must be installed.",
+            text: "Any Linux OS supporting Docker; however, the recommended choice is Ubuntu 20.04 LTS or newer, as it has been thoroughly tested.",
+          },
+          {
+            icon: PackageOpen,
+            label: "Software installed on VMs",
+            text: "Git, Docker, Docker Compose, Python + PyYAML",
           },
         ],
       },
       {
         number: "02",
-        title: "Deploy Onezone",
+        title: "Get Onezone deployment scripts",
         description:
-          "Onezone is the identity and coordination service. Pull and start it using the official Docker Compose recipe:",
-        code: "git clone https://github.com/onedata/onezone-docker-compose\ncd onezone-docker-compose\n# Edit docker-compose.yml to set your hostname and TLS cert paths\ndocker compose up -d",
-        note: "Set `ONEZONE_DOMAIN` to your fully-qualified domain name. TLS is required — use Let's Encrypt or supply your own certificate.",
+          "Pull the `onedata-deployments` repository containing ready-to-use templates to set up your own Onezone instance.",
+        code: "git clone https://github.com/onedata/onedata-deployments.git",
       },
       {
         number: "03",
-        title: "Deploy Oneprovider",
+        title: "Configure the Onezone deployment",
         description:
-          "Oneprovider manages the actual storage and data access. Run it on a separate VM (or the same one for small setups):",
-        code: "git clone https://github.com/onedata/oneprovider-docker-compose\ncd oneprovider-docker-compose\n# Edit docker-compose.yml: set ONEZONE_URL and storage backend\ndocker compose up -d",
+          "Navigate to the `onedata-deployments/onezone/examples/batch-mode` directory and examine the `ONEZONE_CONFIG` section of `docker-compose.yml`. Fill in the desired values (name, domain).",
       },
       {
         number: "04",
-        title: "Register Oneprovider with Onezone",
-        description:
-          "Open the Onezone web panel at https://your-onezone-domain. Create an admin account, then use the Oneprovider panel at https://your-oneprovider-domain to register it — paste the Onezone URL and follow the wizard.",
+        title: "Configure authorization methods",
+        description: `Prepare and place your \`auth.config\` in \`onedata-deployments/onezone/examples/batch-mode/data/secret/auth.config\`. You can use the example below to setup a username & password sign-in.
+ 
+For full reference, read [the Login methods documentation](/docs/25/admin-guide/onezone/configuration/oidc-saml).`,
+        code: `#{
+    version => 3,
+
+    % Allows to log in to Onezone using username & password.
+    basicAuthConfig => #{
+        enabled => true
+    },
+
+    supportedIdps => [
+        % basicAuth is a special IdP id reserved for signing in with username & password 
+        % and the only valid config entry using the basicAuth protocol.
+        {basicAuth, #{
+            protocol => basicAuth
+        }},
+    ]
+}`,
       },
       {
         number: "05",
-        title: "Create a Space and support it",
+        title: "Set the emergency password (optional)",
+        description: `You can set a password of your choice for accessing the emergency panel before starting the deployment. Otherwise, it will be generated automatically.
+          
+In order to do that, create the \`onedata-deployments/onezone/examples/batch-mode/data/secret/emergency-passphrase.txt\` file with the password written as a plain text.`,
+      },
+      {
+        number: "06",
+        title: "Deploy Onezone",
         description:
-          "In Onezone, go to DATA → Spaces → Create Space. Then in the Oneprovider panel, choose that Space and click Support — allocate the desired storage quota. Your space is now live and accessible to invited users.",
-        note: "You can support the same Space from multiple Oneproviders for redundancy and geographic distribution.",
+          "Run the Onezone Docker Compose installation script. The installation should happen automatically and might take a while (consult container logs for indication whether the installation was finished).",
+        code: "./onezone.sh start",
+      },
+      {
+        number: "07",
+        title: "Visit Onezone in your browser",
+        description:
+          "Open `https://<your-domain>` as configured in step 3 and log in using the `admin` user and the password found in `data/secret/emergency-passphrase.txt`.",
+      },
+      {
+        number: "08",
+        title: "Add Oneprovider",
+        description: "Coming soon",
       },
     ],
   },
@@ -325,6 +364,13 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
       document.querySelector(".quick-start-paths")?.classList.add("interacted");
     });
   });
+</script>
+
+<!-- FIXME: remove -->
+<script>
+  setTimeout(() => {
+    document.querySelector('.tab-btn[data-idx="1"]')?.click();
+  }, 500);
 </script>
 
 <style>
