@@ -17,6 +17,7 @@ import { marked } from "marked";
 
 type QuickStartStep = {
   title: string;
+  number?: string;
   description: string;
   options?: QuickStartOption[];
   code?: string;
@@ -48,19 +49,20 @@ const paths: QuickStartPath[] = [
       {
         title: "Open the demo environment",
         description:
-          "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in [EGI](https://www.egi.eu/services/) or Google for that purpose. If you don't have one, [contact us](/contact) and we will create a test account for you.",
+          "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in Google or [EGI](https://www.egi.eu/services/) for that purpose. If you don't have one, [contact us](/contact) and we will create a test account for you.",
+        note: "There are many zones existing around the world. Check whether your institution is part of the Onedata ecosystem or if you have access to [EGI](https://www.egi.eu/services/) services, so that you will be able to log in to the [EGI DataHub](https://datahub.egi.eu/) Onezone.",
       },
       {
         title: "Log in",
         description:
-          "Click on the selected identity provider and follow the steps to log in to Onedata. You will have to accept releasing your user information so that you can be authenticated by the Onezone service.",
-        note: "The green key icon is reserved for the login of administrators and special users created through the Onepanel administrative interface. Regular users should use social or institutional accounts to sign in.",
+          "Click on the selected identity provider and follow the steps to log in to Onedata. You will have to accept sharing your user information, so that you can be authenticated by the Onezone service.",
+        note: "The “green key” icon is reserved for the login of administrators and special users created through the Onepanel administrative interface. Regular users should use social or institutional accounts to sign in.",
       },
       {
         title: "Explore the Sandbox Space",
         description:
-          "All users logging in to [demo.onedata.org](https://demo.onedata.org) are granted access to the Sandbox Space. It's a perfect place to play around with Onedata and test its features.",
-        note: `If you have logged in to [demo.onedata.org](https://demo.onedata.org) and you don't see the **Sandbox** space in the **DATA** tab, it's possible that you don't belong to the **All users group**. It may happen if you have opted-out of the group or logged into the system in the past, when the Sandbox was not set up yet. To fix it, join the group manually as described in <a href="/docs/25/user-guide/quickstart#sandbox" target="_blank">the documentation</a>.`,
+          "All users logging in to [demo.onedata.org](https://demo.onedata.org) are granted access to the **Sandbox**. It's a perfect place to play around with Onedata and test its features.",
+        note: `Cannot see the **Sandbox** space? Check [our docs](/docs/25/user-guide/quickstart#sandbox) for troubleshooting.`,
         warning: `The **Sandbox** space is intended to be a testing environment and comes with no guarantees. It is cleaned if it becomes cluttered.
 
 Do not store any private or sensitive data in the space, as it's available to all the logged-in users.`,
@@ -75,9 +77,37 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
       },
       {
         title: "Mount with Oneclient (optional)",
-        description: `For POSIX access, <a class="no-external-icon" href="/docs/25/user-guide/interfaces/oneclient/#installation" target="_blank">install the Oneclient</a> on any Linux machine and run:`,
-        code: "oneclient --host demo.onedata.org --token <your-access-token> ~/onedata",
-        note: 'Generate an access token in the Onezone web interface choosing the **TOKENS → "plus" icon on the sidebar\'s top → Oneclient Access**.',
+        description: `For POSIX access of your files, follow [the Oneclient guide](/docs/25/user-guide/interfaces/oneclient).`,
+      },
+    ],
+  },
+  {
+    id: "demo",
+    icon: Box,
+    label: "Deploy for testing",
+    sublabel: "Zero-config demo mode with Docker",
+    steps: [
+      {
+        title: "Prepare your cluster",
+        description:
+          "Make sure your Kubernetes cluster meets the prerequisites before installing Onedata Helm charts.",
+        options: [
+          {
+            icon: CircleCheckBig,
+            label: "Kubernetes",
+            text: "Version ≥ 1.24. Tested with GKE, EKS, AKS and bare-metal kubeadm clusters.",
+          },
+          {
+            icon: CircleCheckBig,
+            label: "Helm",
+            text: "Helm 3.x must be installed and configured to reach your cluster.",
+          },
+          {
+            icon: CircleCheckBig,
+            label: "Ingress & TLS",
+            text: "An Ingress controller (e.g. nginx-ingress) and a cert-manager ClusterIssuer for automatic TLS are required.",
+          },
+        ],
       },
     ],
   },
@@ -188,66 +218,14 @@ Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
       },
     ],
   },
-  {
-    id: "k8s",
-    icon: Box,
-    label: "Deploy on Kubernetes",
-    sublabel: "Cloud-native, scalable setup",
-    steps: [
-      {
-        title: "Prepare your cluster",
-        description:
-          "Make sure your Kubernetes cluster meets the prerequisites before installing Onedata Helm charts.",
-        options: [
-          {
-            icon: CircleCheckBig,
-            label: "Kubernetes",
-            text: "Version ≥ 1.24. Tested with GKE, EKS, AKS and bare-metal kubeadm clusters.",
-          },
-          {
-            icon: CircleCheckBig,
-            label: "Helm",
-            text: "Helm 3.x must be installed and configured to reach your cluster.",
-          },
-          {
-            icon: CircleCheckBig,
-            label: "Ingress & TLS",
-            text: "An Ingress controller (e.g. nginx-ingress) and a cert-manager ClusterIssuer for automatic TLS are required.",
-          },
-        ],
-      },
-      {
-        title: "Add the Onedata Helm repository",
-        description: "Add the official chart repository and update it:",
-        code: "helm repo add onedata https://onedata.github.io/charts\nhelm repo update",
-      },
-      {
-        title: "Install Onezone",
-        description:
-          "Create a values file for Onezone and deploy it to your cluster:",
-        code: "# onezone-values.yaml\nonezone:\n  domain: onezone.example.com\n  tls:\n    issuer: letsencrypt-prod\n\nhelm install onezone onedata/onezone \\\n  -f onezone-values.yaml \\\n  --namespace onedata --create-namespace",
-        note: "The domain must resolve to your Ingress controller's external IP before installation.",
-      },
-      {
-        title: "Install Oneprovider",
-        description:
-          "Deploy one or more Oneprovider instances, pointing them at your Onezone:",
-        code: "# oneprovider-values.yaml\noneprovider:\n  onezoneUrl: https://onezone.example.com\n  domain: oneprovider.example.com\n  storage:\n    type: posix          # or s3, ceph, nfs …\n    path: /mnt/data\n\nhelm install oneprovider onedata/oneprovider \\\n  -f oneprovider-values.yaml \\\n  --namespace onedata",
-      },
-      {
-        title: "Register, create a Space and go",
-        description:
-          "Open https://onezone.example.com, create an admin account, and follow the Oneprovider registration wizard. Then create a Space, support it from the Oneprovider panel, and invite your users.",
-        note: "For production workloads, configure a persistent StorageClass and resource requests/limits in your values files. See the Helm chart README for all available options.",
-      },
-    ],
-  },
 ];
 
 for (const path of paths) {
   for (let i = 0; i < path.steps.length; ++i) {
-    const step = path.steps[i];
-    step.number = String(i + 1).padStart(2, "0");
+    if (path.steps.length > 1) {
+      const step = path.steps[i];
+      step.number = String(i + 1).padStart(2, "0");
+    }
   }
 }
 ---
@@ -303,9 +281,11 @@ for (const path of paths) {
           <div class="steps-list">
             {path.steps.map((step) => (
               <div class="step-card">
-                <div class="step-number-wrap">
-                  <span class="step-number">{step.number}</span>
-                </div>
+                {step.number && (
+                  <div class="step-number-wrap">
+                    <span class="step-number">{step.number}</span>
+                  </div>
+                )}
                 <div class="step-content">
                   <h3 class="step-title">{step.title}</h3>
                   <div
@@ -399,11 +379,11 @@ for (const path of paths) {
 </script>
 
 <!-- FIXME: remove -->
-<!-- <script>
+<script>
   setTimeout(() => {
-    document.querySelector('.tab-btn[data-idx="1"]')?.click();
+    document.querySelector('.tab-btn[data-idx="0"]')?.click();
   }, 500);
-</script> -->
+</script>
 
 <style>
   .quick-start-paths {
@@ -736,7 +716,7 @@ for (const path of paths) {
     padding: 1rem;
     font-size: 0.75rem;
     font-family: var(--font-family-mono);
-    color: var(--od-accent-3, #ff5533);
+    color: var(--od-text);
     overflow-x: auto;
     margin-bottom: 1rem;
     line-height: 1.6;
@@ -807,9 +787,9 @@ for (const path of paths) {
   }
 
   .step-note {
-    background: var(--tab-active-bg);
-    border: 1px solid var(--od-glow-strong);
-    color: var(--od-accent-3);
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--od-text-muted);
   }
 
   .step-warning {
