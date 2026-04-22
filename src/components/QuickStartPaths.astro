@@ -13,6 +13,8 @@ import {
 } from "lucide-astro";
 import { marked } from "marked";
 
+// FIXME: change 25 docs links to stable when stable url will be available
+
 const paths = [
   {
     id: "online",
@@ -134,7 +136,7 @@ For full reference, read [the Login methods documentation](/docs/25/admin-guide/
       {
         number: "05",
         title: "Set the emergency password (optional)",
-        description: `You can set a password of your choice for accessing the emergency panel before starting the deployment. Otherwise, it will be generated automatically.
+        description: `You can set a password of your choice for accessing the admin account before starting the deployment. Otherwise, the password will be generated automatically.
           
 In order to do that, create the \`onedata-deployments/onezone/examples/batch-mode/data/secret/emergency-passphrase.txt\` file with the password written as a plain text.`,
       },
@@ -147,14 +149,35 @@ In order to do that, create the \`onedata-deployments/onezone/examples/batch-mod
       },
       {
         number: "07",
-        title: "Visit Onezone in your browser",
+        title: "Visit Onezone and prepare a space",
         description:
-          "Open `https://<your-domain>` as configured in step 3 and log in using the `admin` user and the password found in `data/secret/emergency-passphrase.txt`.",
+          "Open `https://<your-domain>` as configured in step 3 and log in using the `admin` user and the password found in `data/secret/emergency-passphrase.txt`. Next, create a new space using the **Create a space** action on the welcome screen.",
       },
       {
         number: "08",
-        title: "Add Oneprovider",
-        description: "Coming soon",
+        title: "Generate the Onedatify one-liner",
+        description: `Navigate to the **Data > *Space name* > Providers** view. Click on the **Add support** button in the main view.
+
+Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
+      },
+      {
+        number: "09",
+        title: "Deploy Oneprovider",
+        description:
+          "Paste the one-liner in the terminal on the Oneprovider machine (as superuser or as a user with sudo privileges). Follow the instructions in the wizard — during the installation, the wizard will ask you several questions and suggest default settings to help you through the process.",
+      },
+      {
+        number: "10",
+        title: "Watch Oneprovider deployment progress (optional)",
+        description:
+          "The progress can be monitored on a separate terminal using the following command:",
+        code: "journalctl -u onedatify.service -f",
+      },
+      {
+        number: "11",
+        title: "Visit the supported space",
+        description:
+          "Navigate to the **Data > *Space name* > Providers** view in web GUI of Onezone. Now you should see a file browser backed up by a storage provided by your Oneprovider. Now it's time to play around with Onedata and test its features! Refer to [the user guide](/docs/25/user-guide) for more.",
       },
     ],
   },
