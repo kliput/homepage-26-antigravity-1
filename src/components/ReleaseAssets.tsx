@@ -425,7 +425,7 @@ export default function ReleaseAssets({ version }: { version: string }) {
 
   return (
     <div className="od-border mb-8 overflow-hidden rounded-2xl border">
-      <div className="od-bg-2 px-5 pb-3 pt-5">
+      <div className="od-bg-2 px-5 pb-3 pt-3">
         <p className="od-text-faint mb-3 text-xs font-semibold uppercase tracking-wider">
           Release Assets
         </p>

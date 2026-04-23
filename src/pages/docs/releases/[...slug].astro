@@ -257,6 +257,8 @@ const title = props.isRelease
 
 const release = props.isRelease ? props.release : null;
 
+const assetsShown = Number(release?.data.version.split(".")[0]) >= 20;
+
 // FIXME: zoptymalizować, żeby cachowało int wersji
 const changelogEntries = [...(release?.data.changelog ?? [])];
 changelogEntries.sort(
@@ -298,7 +300,9 @@ changelogEntries.sort(
             </h1>
           </div>
 
-          <ReleaseAssets version={release.data.version} client:visible />
+          {assetsShown && (
+            <ReleaseAssets version={release.data.version} client:visible />
+          )}
 
           <div class="prose">
             {release.data.highlights && release.data.highlights.length > 0 && (
