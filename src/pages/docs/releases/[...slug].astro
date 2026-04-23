@@ -9,6 +9,7 @@ import ReleaseAssets from "../../../components/ReleaseAssets.tsx";
 import ChangelogEntry from "../../../components/ChangelogEntry.astro";
 import { compareVersions } from "../../../utils/version.mjs";
 import { getMissingDebs } from "../../../utils/missing-debs";
+import { Calendar } from "@lucide/astro";
 
 export type SidebarTree = SidebarNode[];
 export type SidebarNode = {
@@ -268,7 +269,7 @@ changelogEntries.sort(
     (parseInt(b.issue.replace("VFS-", "")) || 0),
 );
 
-const missingDebs = await getMissingDebs();
+const missingDebs = release ? await getMissingDebs(release.data.version) : null;
 ---
 
 {
@@ -297,10 +298,23 @@ const missingDebs = await getMissingDebs();
     >
       {release ? (
         <div class="release-page">
-          <div class="release-header mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div class="release-header mb-6 flex flex-wrap items-center justify-between gap-4">
             <h1 class="release-title od-text m-0 text-2xl font-bold">
               Release {release.data.version}
             </h1>
+            <div class="time-meta flex items-center gap-2 text-[var(--od-text-muted)]">
+              <Calendar class="h-4 w-4" />
+              <time
+                class="text-xs text-muted"
+                datetime={release.data.date.toISOString()}
+              >
+                {release.data.date.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
+            </div>
           </div>
 
           {assetsShown && (

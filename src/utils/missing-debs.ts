@@ -29,23 +29,29 @@ async function oneclientDebPackage(
   };
 }
 
-export async function getMissingDebs(): Promise<MissingDeb[]> {
-  const versions = (await readdir("./src/content/releases/"))
+async function getVersions() {
+  return (await readdir("./src/content/releases/"))
     .filter((doc) => doc.endsWith(".md"))
     .map((doc) => doc.slice(0, -3));
-  const distros = ["xenial", "bionic", "focal", "jammy"];
+}
 
+export async function getMissingDebs(version: string): Promise<MissingDeb[]> {
+  const distros = ["xenial", "bionic", "focal", "jammy"];
   const missing = [];
-  for (const version of versions) {
-    for (const distro of distros) {
-      const entry = await oneclientDebPackage(
-        version,
-        distro as UbuntuCodename,
-      );
-      if (!entry.works) {
-        missing.push({ version: entry.version, distro: entry.distro });
-      }
+  for (const distro of distros) {
+    const entry = await oneclientDebPackage(version, distro as UbuntuCodename);
+    if (!entry.works) {
+      missing.push({ version: entry.version, distro: entry.distro });
     }
+  }
+  return missing;
+}
+
+export async function getAllMissingDebs() {
+  const missing = [];
+  const versions = await getVersions();
+  for (const version of versions) {
+    missing.push(...(await getMissingDebs(version)));
   }
   return missing;
 }
