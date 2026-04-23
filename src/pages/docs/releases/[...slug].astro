@@ -108,7 +108,7 @@ export async function getStaticPaths() {
     }
 
     const sortedReleases = [...releases].sort(
-      (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+      (a, b) => -compareVersions(a.data.version, b.data.version),
     );
 
     // Append RELEASES section below regular items
