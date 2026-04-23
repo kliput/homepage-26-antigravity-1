@@ -23,6 +23,7 @@ import { Tab } from "./ReleaseAssets/Tab.js";
 import { Section } from "./ReleaseAssets/Section.js";
 import { upperFirst } from "../utils/string.js";
 import { semversionize, compareVersions } from "../utils/version.mjs";
+import type { MissingDeb } from "../utils/missing-debs.ts";
 
 const onedataRepoDomain = "get.onedata.org";
 
@@ -75,7 +76,10 @@ function isOnepanelScriptShown(version: string): boolean {
   return compareVersions(version, "25.0") < 0;
 }
 
-function generateAssetsCollection(version: string): AssetsCollection {
+function generateAssetsCollection(
+  version: string,
+  missingDebs: MissingDeb[],
+): AssetsCollection {
   const majorVersion = stripVersion(version);
   const semversion = semversionize(version);
   return {
@@ -137,60 +141,11 @@ function generateAssetsCollection(version: string): AssetsCollection {
     },
     oneclient: {
       tab: { key: "oneclient", icon: SquareTerminal, label: "Oneclient" },
-      sections: generateOneclientSections(version),
+      sections: generateOneclientSections(version, missingDebs),
     },
     onedatafs: {
       tab: { key: "onedatafs", icon: LibraryBig, label: "OnedataFS" },
-      sections: [
-        {
-          icon: Ship,
-          title: "Docker Images (containerized)",
-          assets: [
-            createAsset(
-              `onedata/oneclient:${version}`,
-              `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#installation`,
-              "The Oneclient Docker image provides OnedataFS Python packages and all necessary dependencies.",
-              { secondaryIcon: BookMarked, copyable: true },
-            ),
-          ],
-        },
-        ...(isOnepanelScriptShown(version)
-          ? [
-              {
-                icon: SquareTerminal,
-                title: "Installation Script (native packages in Ubuntu 20.04)",
-                assets: [
-                  createAsset(
-                    onedatafsInstallOneliner(majorVersion),
-                    `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#ubuntu`,
-                    "The command installs OnedataFS packages on Ubuntu 20.04 (Focal), automatically adding the required repositories to the system to provide updates.",
-                    { copyable: true, secondaryIcon: BookMarked },
-                  ),
-                ],
-              },
-            ]
-          : []),
-        {
-          icon: Package,
-          title: "Conda Packages",
-          assets: [
-            createAsset(
-              `onedata::onedatafs=${version}`,
-              `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#anaconda`,
-              "OnedataFS Conda package",
-              { copyable: true },
-            ),
-          ],
-        },
-        {
-          icon: Package,
-          title: "DEB Packages",
-          assets: oneclientDebAssets(version, ["focal"]),
-          endNote: isOnepanelScriptShown(version)
-            ? "We recommend to use the Installation Script instead of manually installing DEB packages."
-            : "",
-        },
-      ],
+      sections: generateOnedataFsSections(version, missingDebs),
     },
     onedatarestfs: {
       tab: { key: "onedatarestfs", icon: LibraryBig, label: "OnedataRestFS" },
@@ -251,7 +206,27 @@ function generateAssetsCollection(version: string): AssetsCollection {
   };
 }
 
-function generateOneclientSections(version: string): AssetSection[] {
+function generateOneclientDebSection(
+  debAssets: ReleaseAsset[],
+  version: string,
+) {
+  const endNote = debAssets.length
+    ? isOnepanelScriptShown(version)
+      ? "We recommend to use the Installation Script instead of manually installing DEB packages."
+      : ""
+    : "No DEB packages available";
+  return {
+    icon: Package,
+    title: "DEB Packages",
+    assets: debAssets,
+    endNote,
+  };
+}
+
+function generateOneclientSections(
+  version: string,
+  missingDebs: MissingDeb[],
+): AssetSection[] {
   const majorVersion = stripVersion(version);
   const dockerImages: AssetSection = {
     icon: Ship,
@@ -292,20 +267,67 @@ function generateOneclientSections(version: string): AssetSection[] {
       ),
     ],
   };
-  const debPackages: AssetSection = {
-    icon: Package,
-    title: "DEB Packages",
-    assets: oneclientDebAssets(version),
-    endNote: isOnepanelScriptShown(version)
-      ? "We recommend to use the Installation Script instead of manually installing DEB packages."
-      : "",
-  };
+  const debAssets = oneclientDebAssets(version, ubuntuCodenames, missingDebs);
+  let debPackages: AssetSection | undefined = undefined;
+  debPackages = generateOneclientDebSection(debAssets, version);
   return [
     dockerImages,
-    ...(isOnepanelScriptShown(version) ? [installationScripts] : []),
+    isOnepanelScriptShown(version) && installationScripts,
     condaPackages,
     debPackages,
-  ];
+  ].filter((section) => typeof section === "object");
+}
+
+function generateOnedataFsSections(
+  version: string,
+  missingDebs: MissingDeb[],
+): AssetSection[] {
+  const majorVersion = stripVersion(version);
+  const dockerImages = {
+    icon: Ship,
+    title: "Docker Images (containerized)",
+    assets: [
+      createAsset(
+        `onedata/oneclient:${version}`,
+        `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#installation`,
+        "The Oneclient Docker image provides OnedataFS Python packages and all necessary dependencies.",
+        { secondaryIcon: BookMarked, copyable: true },
+      ),
+    ],
+  };
+  const onepanelScript = {
+    icon: SquareTerminal,
+    title: "Installation Script (native packages in Ubuntu 20.04)",
+    assets: [
+      createAsset(
+        onedatafsInstallOneliner(majorVersion),
+        `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#ubuntu`,
+        "The command installs OnedataFS packages on Ubuntu 20.04 (Focal), automatically adding the required repositories to the system to provide updates.",
+        { copyable: true, secondaryIcon: BookMarked },
+      ),
+    ],
+  };
+  const condaPackages = {
+    icon: Package,
+    title: "Conda Packages",
+    assets: [
+      createAsset(
+        `onedata::onedatafs=${version}`,
+        `/docs/${majorVersion}/user-guide/interfaces/onedata-fs#anaconda`,
+        "OnedataFS Conda package",
+        { copyable: true },
+      ),
+    ],
+  };
+  const debAssets = oneclientDebAssets(version, ["focal"], missingDebs);
+  let debPackages: AssetSection | undefined = undefined;
+  debPackages = generateOneclientDebSection(debAssets, version);
+  return [
+    dockerImages,
+    isOnepanelScriptShown(version) && onepanelScript,
+    condaPackages,
+    debPackages,
+  ].filter((section) => typeof section === "object");
 }
 
 function generateOnedataRestFsSections(version: string): AssetSection[] {
@@ -363,20 +385,37 @@ const ubuntuVersions = {
   xenial: "16.04",
 } as const satisfies Record<UbuntuCodename, string>;
 
+function isMissingDeb(
+  missingDebs: MissingDeb[],
+  version: string,
+  distro: UbuntuCodename,
+) {
+  return missingDebs.find(
+    (missingDeb) =>
+      missingDeb.distro === distro && missingDeb.version === version,
+  );
+}
+
 // FIXME: stare wersje mogą nie mieć jammy
 function oneclientDebAssets(
   version: string,
   codenames: UbuntuCodename[] = ubuntuCodenames,
-) {
-  return codenames.map((codename) => {
-    const debPackage = oneclientDebPackage(version, codename);
-    return createAsset(
-      debPackage.filename,
-      debPackage.url,
-      `Ubuntu ${ubuntuVersions[codename]} (${upperFirst(codename)})`,
-      { copyable: false, primaryIcon: Download },
-    );
-  });
+  missingDebs: MissingDeb[] = [],
+): ReleaseAsset[] {
+  return codenames
+    .map((codename) => {
+      if (isMissingDeb(missingDebs, version, codename)) {
+        return null;
+      }
+      const debPackage = oneclientDebPackage(version, codename);
+      return createAsset(
+        debPackage.filename,
+        debPackage.url,
+        `Ubuntu ${ubuntuVersions[codename]} (${upperFirst(codename)})`,
+        { copyable: false, primaryIcon: Download },
+      );
+    })
+    .filter((asset) => asset !== null);
 }
 
 function oneclientDebPackage(
@@ -416,11 +455,22 @@ function isLegacyMajorVersion(majorVersion: MajorVersion) {
   return ["18.02", "19.02", "20.02", "21.02"].includes(majorVersion);
 }
 
-export default function ReleaseAssets({ version }: { version: string }) {
+type ReleaseAssetsParams = {
+  version: string;
+  missingDebs: MissingDeb[] | undefined;
+};
+
+export default function ReleaseAssets({
+  version,
+  missingDebs = [],
+}: ReleaseAssetsParams) {
   const [activeProductId, setActiveProductId] = useState<ProductId | null>(
     null,
   );
-  const assets: AssetsCollection = generateAssetsCollection(version);
+  const assets: AssetsCollection = generateAssetsCollection(
+    version,
+    missingDebs,
+  );
   const productsTabs = Object.values(assets).map(({ tab }) => tab);
 
   return (

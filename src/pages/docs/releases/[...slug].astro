@@ -8,6 +8,7 @@ import type { CollectionEntry } from "astro:content";
 import ReleaseAssets from "../../../components/ReleaseAssets.tsx";
 import ChangelogEntry from "../../../components/ChangelogEntry.astro";
 import { compareVersions } from "../../../utils/version.mjs";
+import { getMissingDebs } from "../../../utils/missing-debs";
 
 export type SidebarTree = SidebarNode[];
 export type SidebarNode = {
@@ -266,6 +267,8 @@ changelogEntries.sort(
     (parseInt(a.issue.replace("VFS-", "")) || 0) -
     (parseInt(b.issue.replace("VFS-", "")) || 0),
 );
+
+const missingDebs = await getMissingDebs();
 ---
 
 {
@@ -301,7 +304,11 @@ changelogEntries.sort(
           </div>
 
           {assetsShown && (
-            <ReleaseAssets version={release.data.version} client:visible />
+            <ReleaseAssets
+              version={release.data.version}
+              missingDebs={missingDebs}
+              client:visible
+            />
           )}
 
           <div class="prose">
@@ -352,10 +359,6 @@ changelogEntries.sort(
 <style>
   .release-title {
     margin-bottom: 0;
-  }
-
-  .release-page {
-    padding-bottom: 4rem;
   }
 
   .release-desc {
