@@ -77,7 +77,7 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
       },
       {
         title: "Mount with Oneclient (optional)",
-        description: `For POSIX access of your files, follow [the Oneclient guide](/docs/25/user-guide/interfaces/oneclient).`,
+        description: `For POSIX access to your files, follow [the Oneclient guide](/docs/25/user-guide/interfaces/oneclient).`,
       },
     ],
   },
@@ -88,26 +88,10 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
     sublabel: "Zero-config demo mode with Docker",
     steps: [
       {
-        title: "Prepare your cluster",
-        description:
-          "Make sure your Kubernetes cluster meets the prerequisites before installing Onedata Helm charts.",
-        options: [
-          {
-            icon: CircleCheckBig,
-            label: "Kubernetes",
-            text: "Version ≥ 1.24. Tested with GKE, EKS, AKS and bare-metal kubeadm clusters.",
-          },
-          {
-            icon: CircleCheckBig,
-            label: "Helm",
-            text: "Helm 3.x must be installed and configured to reach your cluster.",
-          },
-          {
-            icon: CircleCheckBig,
-            label: "Ingress & TLS",
-            text: "An Ingress controller (e.g. nginx-ingress) and a cert-manager ClusterIssuer for automatic TLS are required.",
-          },
-        ],
+        title: "Run Docker images in demo mode",
+        description: `Use the Docker images in demo mode to start Onedata services and components with a minimal, but fully functional config, providing a “hello world” deployment. You just need a Linux-based system with [Docker engine](https://docs.docker.com/engine/install) installed.
+
+Follow the steps described in the [demo mode documentation](docs/25/admin-guide/demo-mode).`,
       },
     ],
   },
@@ -118,103 +102,16 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
     sublabel: "Full control on your own servers",
     steps: [
       {
-        title: "Check system requirements",
-        description:
-          "Ensure your virtual machines meet the minimum requirements before proceeding.",
-        options: [
-          {
-            icon: Server,
-            label: "Onezone VM",
-            text: "4 vCPU, 12 GB RAM, 20 GB SSD disk. Requires a publicly reachable IP and a valid DNS name. Onezone communicates with external services or clients using ports 53, 80, 443 and 9443. All of these ports need to be publicly open except 9443 which is used for direct emergency access to the Onezone.",
-          },
-          {
-            icon: Server,
-            label: "Oneprovider VM",
-            text: "4 vCPU, 16 GB RAM, 50 GB SSD disk + 8 MB per 1,000 files.",
-          },
-          {
-            icon: CircleCheckBig,
-            label: "OS",
-            text: "Any Linux OS supporting Docker; however, the recommended choice is Ubuntu 20.04 LTS or newer, as it has been thoroughly tested.",
-          },
-          {
-            icon: PackageOpen,
-            label: "Software installed on VMs",
-            text: "Git, Docker, Docker Compose, Python + PyYAML",
-          },
-        ],
-      },
-      {
-        title: "Get Onezone deployment scripts",
-        description:
-          "Pull the `onedata-deployments` repository containing ready-to-use templates to set up your own Onezone instance.",
-        code: "git clone https://github.com/onedata/onedata-deployments.git",
-      },
-      {
-        title: "Configure the Onezone deployment",
-        description:
-          "Navigate to the `onedata-deployments/onezone/examples/batch-mode` directory and examine the `ONEZONE_CONFIG` section of `docker-compose.yml`. Fill in the desired values (name, domain).",
-      },
-      {
-        title: "Configure authorization methods",
-        description: `Prepare and place your \`auth.config\` in \`onedata-deployments/onezone/examples/batch-mode/data/secret/auth.config\`. You can use the example below to setup a username & password sign-in.
- 
-For full reference, read [the Login methods documentation](/docs/25/admin-guide/onezone/configuration/oidc-saml).`,
-        code: `#{
-    version => 3,
-
-    % Allows to log in to Onezone using username & password.
-    basicAuthConfig => #{
-        enabled => true
-    },
-
-    supportedIdps => [
-        % basicAuth is a special IdP id reserved for signing in with username & password 
-        % and the only valid config entry using the basicAuth protocol.
-        {basicAuth, #{
-            protocol => basicAuth
-        }},
-    ]
-}`,
-      },
-      {
-        title: "Set the emergency password (optional)",
-        description: `You can set a password of your choice for accessing the admin account before starting the deployment. Otherwise, the password will be generated automatically.
-          
-In order to do that, create the \`onedata-deployments/onezone/examples/batch-mode/data/secret/emergency-passphrase.txt\` file with the password written as a plain text.`,
-      },
-      {
         title: "Deploy Onezone",
-        description:
-          "Run the Onezone Docker Compose installation script. The installation should happen automatically and might take a while (consult container logs for indication whether the installation was finished).",
-        code: "./onezone.sh start",
-      },
-      {
-        title: "Visit Onezone and prepare a space",
-        description:
-          "Open `https://<your-domain>` as configured in step 3 and log in using the `admin` user and the password found in `data/secret/emergency-passphrase.txt`. Next, create a new space using the **Create a space** action on the welcome screen.",
-      },
-      {
-        title: "Generate the Onedatify one-liner",
-        description: `Navigate to the **Data > *Space name* > Providers** view. Click on the **Add support** button in the main view.
-
-Select the **Deploy your own Oneprovider** tab and copy the generated command.`,
+        description: `Deploy Onezone with the script utilizing our official [Docker images](https://hub.docker.com/r/onedata/onezone/) to run Onezone on any Linux OS supporting [Docker](https://docs.docker.com/engine/installation/#supported-platforms). This method involves [Docker Compose](https://docs.docker.com/compose/) under the hood.
+          
+Follow the steps described in the [Onezone installation guide](docs/25/admin-guide/onezone/installation#docker-based).`,
       },
       {
         title: "Deploy Oneprovider",
-        description:
-          "Paste the one-liner in the terminal on the Oneprovider machine (as superuser or as a user with sudo privileges). Follow the instructions in the wizard — during the installation, the wizard will ask you several questions and suggest default settings to help you through the process.",
-      },
-      {
-        title: "Watch Oneprovider deployment progress (optional)",
-        description:
-          "The progress can be monitored on a separate terminal using the following command:",
-        code: "journalctl -u onedatify.service -f",
-      },
-      {
-        title: "Visit the supported space",
-        description:
-          "Navigate to the **Data > *Space name* > Providers** view in web GUI of Onezone. Now you should see a file browser backed up by a storage provided by your Oneprovider. Now it's time to play around with Onedata and test its features! Refer to [the user guide](/docs/25/user-guide) for more.",
+        description: `Deploy Oneprovider with Onedatify — an easy-to-use wizard that sets up a Docker-based Oneprovider instance. The script automatically registers the deployed Oneprovider instance to a selected Onezone service and allows for interactive configuration of a storage backend and space support.
+
+Follow the steps described in the [Onedatify CLI wizard guide](/docs/25/admin-guide/oneprovider/installation/onedatify-cli).`,
       },
     ],
   },
@@ -379,11 +276,11 @@ for (const path of paths) {
 </script>
 
 <!-- FIXME: remove -->
-<script>
+<!-- <script>
   setTimeout(() => {
-    document.querySelector('.tab-btn[data-idx="0"]')?.click();
+    (document.querySelector('.tab-btn[data-idx="1"]') as HTMLElement)?.click();
   }, 500);
-</script>
+</script> -->
 
 <style>
   .quick-start-paths {
