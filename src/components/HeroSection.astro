@@ -5,8 +5,9 @@ const badgeShown = Boolean(badgeText);
 ---
 
 <section class="hero-section">
+  <div class="hero-grid fadeout-bottom"></div>
   <div
-    class="pointer-events-none absolute left-1/2 top-1/2 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10 blur-[120px]"
+    class="pointer-events-none absolute left-1/2 top-1/2 h-[200px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10 blur-[40px] sm:h-[400px] sm:w-[600px] sm:blur-[120px]"
     style="background: var(--od-accent);"
   >
   </div>
@@ -20,17 +21,47 @@ const badgeShown = Boolean(badgeText);
         </div>
       )
     }
-    <h1 class="hero-title relative z-10 mx-auto max-w-3xl text-center">
+    <h1
+      class="hero-title container relative z-10 mx-auto max-w-3xl text-center"
+    >
       {title}
     </h1>
-    {description && <p class="hero-desc">{description}</p>}
+    {description && <p class="hero-desc container">{description}</p>}
   </div>
 </section>
 
 <style>
   .hero-section {
+    --fade-size: 5rem;
     position: relative;
-    padding: 8rem 0 5rem;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 4rem;
+    padding-bottom: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-section {
+      padding-top: 7rem;
+      padding-bottom: 4rem;
+    }
+  }
+
+  /* https://www.frontend.fyi/recipes/components-and-css/fadeout-masks */
+  .fadeout-bottom {
+    mask-image: linear-gradient(
+      to top,
+      transparent,
+      black var(--fade-size, 5rem)
+    );
+  }
+
+  .hero-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-image:
       linear-gradient(var(--od-glow, rgba(0, 0, 0, 0.02)) 1px, transparent 1px),
       linear-gradient(

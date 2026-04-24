@@ -29,8 +29,9 @@ const perks = [
 ];
 
 export default function LandingContact() {
+  // FIXME: redundancy with other landing sections, make a component or something...
   return (
-    <section id="contact" className="od-bg-2 px-4 py-24">
+    <section id="contact" className="od-bg-2 px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

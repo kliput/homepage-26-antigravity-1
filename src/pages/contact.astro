@@ -1,4 +1,5 @@
 ---
+import { ArrowRight, CircleAlert, Code, Mail, Users } from "@lucide/astro";
 import HeroSection from "../components/HeroSection.astro";
 import MainLayout from "../layouts/MainLayout.astro";
 
@@ -11,7 +12,7 @@ const contactItems = [
     color: "from-red-500 to-orange-500",
     gradientStart: "#ef4444",
     gradientEnd: "#f97316",
-    icon: "mail",
+    icon: Mail,
   },
   {
     title: "Onedata source code",
@@ -21,7 +22,7 @@ const contactItems = [
     href: "https://github.com/onedata/onedata",
     gradientStart: "#f43f5e",
     gradientEnd: "#ef4444",
-    icon: "code",
+    icon: Code,
   },
   {
     title: "Bug reports and discussions",
@@ -31,7 +32,7 @@ const contactItems = [
     href: "https://github.com/onedata/onedata/issues",
     gradientStart: "#f97316",
     gradientEnd: "#f59e0b",
-    icon: "alert",
+    icon: CircleAlert,
   },
   {
     title: "Dedicated support",
@@ -41,7 +42,7 @@ const contactItems = [
     href: "mailto:info@onedata.org",
     gradientStart: "#dc2626",
     gradientEnd: "#fb7185",
-    icon: "users",
+    icon: Users,
   },
 ];
 ---
@@ -56,82 +57,16 @@ const contactItems = [
       description="Multiple ways to reach us and get the support you need."
     />
 
-    <div class="contact-inner">
+    <div class="contact-inner container">
       <div class="contact-list">
         {
           contactItems.map((item) => (
-            <div class="contact-card">
+            <div class="contact-card z-10">
               <div
                 class="contact-icon"
                 style={`background: linear-gradient(135deg, ${item.gradientStart}, ${item.gradientEnd})`}
               >
-                {item.icon === "mail" && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                )}
-                {item.icon === "code" && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <polyline points="16 18 22 12 16 6" />
-                    <polyline points="8 6 2 12 8 18" />
-                  </svg>
-                )}
-                {item.icon === "alert" && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                  </svg>
-                )}
-                {item.icon === "users" && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="white"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                )}
+                {<item.icon class="h-6 w-6 text-white" />}
               </div>
               <div class="contact-card-body">
                 <h3 class="contact-card-title">{item.title}</h3>
@@ -147,20 +82,7 @@ const contactItems = [
                   }
                 >
                   {item.action}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
+                  <ArrowRight class="h-4 w-4" />
                 </a>
               </div>
             </div>
@@ -180,8 +102,8 @@ const contactItems = [
   .contact-inner {
     max-width: 56rem;
     margin: 0 auto;
-    margin-top: 4rem;
     margin-bottom: 4rem;
+    margin-top: 1.5rem;
   }
 
   .contact-hero {

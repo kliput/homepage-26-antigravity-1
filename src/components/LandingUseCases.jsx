@@ -47,7 +47,7 @@ const cases = [
 
 export default function LandingUseCases() {
   return (
-    <section id="use-cases" className="od-bg px-4 py-24">
+    <section id="use-cases" className="od-bg px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

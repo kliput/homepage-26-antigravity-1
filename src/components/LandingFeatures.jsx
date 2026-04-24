@@ -74,7 +74,7 @@ const cardVariants = {
 
 export default function LandingFeatures() {
   return (
-    <section id="features" className="od-bg px-4 py-24">
+    <section id="features" className="od-bg px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,7 +108,7 @@ export default function LandingFeatures() {
                   whileInView="visible"
                   whileHover={{ y: -6, transition: { duration: 0.2 } }}
                   viewport={{ once: true, margin: "-60px" }}
-                  className="od-card group relative overflow-hidden rounded-2xl p-6"
+                  className="od-card group relative h-full overflow-hidden rounded-2xl p-6"
                   style={{ transition: "box-shadow 0.3s" }}
                 >
                   {/* Subtle glow on hover */}

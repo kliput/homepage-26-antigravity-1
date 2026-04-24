@@ -35,7 +35,7 @@ const steps = [
 
 export default function LandingHowItWorks() {
   return (
-    <section id="how-it-works" className="od-bg-2 px-4 py-24">
+    <section id="how-it-works" className="od-bg-2 px-4 py-16 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
