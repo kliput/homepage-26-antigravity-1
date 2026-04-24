@@ -214,7 +214,7 @@ function generateOneclientDebSection(
     ? isOnepanelScriptShown(version)
       ? "We recommend to use the Installation Script instead of manually installing DEB packages."
       : ""
-    : "No DEB packages available";
+    : "No DEB packages available.";
   return {
     icon: Package,
     title: "DEB Packages",

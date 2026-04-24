@@ -1,5 +1,6 @@
 import { type AssetSection } from "./types.js";
 import { Asset } from "./Asset.js";
+import NoAssets from "./NoAssets.js";
 
 export function Section({ section }: { section: AssetSection }) {
   const Icon = section.icon;
@@ -11,13 +12,19 @@ export function Section({ section }: { section: AssetSection }) {
           {section.title}
         </p>
       </div>
-      <div className="space-y-2">
-        {section.assets.map((asset) => (
-          <Asset key={asset.name} asset={asset} />
-        ))}
-      </div>
-      {section.endNote && (
-        <p className="od-text mt-3 text-xs">{section.endNote}</p>
+      {section.assets.length ? (
+        <>
+          <div className="space-y-2">
+            {section.assets.map((asset) => (
+              <Asset key={asset.name} asset={asset} />
+            ))}
+          </div>
+          {section.endNote && (
+            <p className="od-text mt-3 text-xs">{section.endNote}</p>
+          )}
+        </>
+      ) : (
+        <NoAssets text={section.endNote ?? "No assets."} />
       )}
     </div>
   );
