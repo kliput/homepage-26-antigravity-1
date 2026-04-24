@@ -139,9 +139,10 @@ function parseLegacyVersion(version) {
     return null;
   }
   const [, major, minor] = matchResult;
+  const effMinor = minor === "x" ? 0 : minor;
   return {
     major,
-    minor,
+    minor: effMinor,
   };
 }
 

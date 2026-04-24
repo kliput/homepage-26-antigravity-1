@@ -52,7 +52,7 @@ const releasesCollection = defineCollection({
     highlights: z.array(
       z.object({
         title: z.string(),
-        shortDescription: z.string(),
+        description: z.string(),
       }),
     ),
     upgradeNotes: z.array(z.string()).optional(), // upgrade note bullet points
