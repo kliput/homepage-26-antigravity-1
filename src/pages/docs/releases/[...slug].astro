@@ -251,6 +251,9 @@ const Content =
       ? (await render(props.release)).Content
       : null;
 
+// FIXME: refaktor: jeśli to jest release to osobny komponent, przyjmujący release, jeśli
+// nie, to odpowiednia strona, żeby uynikać release undefined
+
 const title = props.isRelease
   ? props.release.data.title
   : !props.isRedirect
@@ -269,7 +272,11 @@ changelogEntries.sort(
     (parseInt(b.issue.replace("VFS-", "")) || 0),
 );
 
-const missingDebs = release ? await getMissingDebs(release.data.version) : null;
+const missingDebs = release
+  ? await getMissingDebs(release.data.version)
+  : undefined;
+
+const highlights = release?.data.highlights;
 ---
 
 {
@@ -326,28 +333,31 @@ const missingDebs = release ? await getMissingDebs(release.data.version) : null;
           )}
 
           <div class="prose">
-            {release.data.highlights && release.data.highlights.length > 0 && (
-              <section class="release-section">
-                <h2>Release Highlights</h2>
+            <section class="release-section">
+              <h2>Release Highlights</h2>
+              {highlights?.length ? (
                 <ul>
-                  {release.data.highlights.map(
-                    ({ title, shortDescription }) => (
-                      <li>
-                        <strong>{title}</strong> — {shortDescription}.
-                      </li>
-                    ),
-                  )}
+                  {highlights.map(({ title, shortDescription }) => (
+                    <li>
+                      <strong>{title}</strong> — {shortDescription}.
+                    </li>
+                  ))}
                 </ul>
-              </section>
-            )}
+              ) : (
+                <p>
+                  Minor improvements and fixes — see the full changelog below.
+                </p>
+              )}
+            </section>
 
+            {/* TODO: show generic upgrade notes with links to upgrade docs when they will be merged */}
             {release.data.upgradeNotes &&
               release.data.upgradeNotes.length > 0 && (
                 <section class="release-section">
                   <h2>Upgrade Notes</h2>
                   <ul class="release-bullets">
-                    {release.data.upgradeNotes.map((n) => (
-                      <li>{n}</li>
+                    {release.data.upgradeNotes.map((note) => (
+                      <li>{note}</li>
                     ))}
                   </ul>
                 </section>
