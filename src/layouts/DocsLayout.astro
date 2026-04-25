@@ -221,6 +221,7 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
           <nav
             data-overlayscrollbars-initialize
             class="sidebar-nav overlayscrollbar-element"
+            data-sidebar-context={`${version}-${activeChapter}`}
           >
             <ul class="sidebar-root-list">
               {

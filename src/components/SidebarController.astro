@@ -117,13 +117,57 @@
       });
     }
 
-    // Close on link click (for mobile)
+    // Close on link click (for mobile) and save scroll position
     const sidebarLinks = sidebarContainer?.querySelectorAll("a");
+    const context = sidebar.getAttribute("data-sidebar-context");
+    const storageKey = context
+      ? `sidebar-scroll-${context}`
+      : "sidebar-scroll-default";
+
+    const ensureActiveLinkVisible = () => {
+      // Ensure active link is visible
+      const activeLink = sidebar.querySelector("a.active") as HTMLElement;
+      activeLink?.scrollIntoView({ block: "nearest", behavior: "auto" });
+    };
+
+    // Restore scroll position
+    let restoreAttemptsLeft = 10;
+    const savedScroll = sessionStorage.getItem(storageKey);
+    if (savedScroll) {
+      const restoreScroll = () => {
+        const scrollVal = parseInt(savedScroll, 10);
+        // sidebar.scrollTop = scrollVal;
+        const viewport = sidebar.querySelector(
+          "[data-overlayscrollbars-viewport]",
+        );
+        if (viewport) {
+          viewport.scrollTop = scrollVal;
+          setTimeout(ensureActiveLinkVisible, 0);
+        } else if (restoreAttemptsLeft > 0) {
+          restoreAttemptsLeft -= 1;
+          setTimeout(restoreScroll, 200);
+        } else {
+          setTimeout(ensureActiveLinkVisible, 0);
+        }
+      };
+      setTimeout(restoreScroll, 0);
+    } else {
+      setTimeout(ensureActiveLinkVisible, 0);
+    }
+
     sidebarLinks?.forEach((link) => {
       if (link.getAttribute("data-init") === "true") return;
       link.setAttribute("data-init", "true");
 
       link.addEventListener("click", () => {
+        // Save scroll position before navigating
+        const viewport = sidebar.querySelector(
+          "[data-overlayscrollbars-viewport]",
+        );
+        const currentScroll = viewport?.scrollTop;
+        if (typeof currentScroll === "number") {
+          sessionStorage.setItem(storageKey, currentScroll.toString());
+        }
         if (window.innerWidth < 768) {
           setMobileMenuState(false);
         }
