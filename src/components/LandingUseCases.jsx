@@ -14,7 +14,7 @@ const cases = [
     title: "Train models on federated datasets without moving data",
     description:
       "AI teams at universities and labs use Onedata to aggregate training data from multiple institutional repositories. Run parallel training jobs on geographically distributed resources.",
-    image: "../src/images/use-cases/ai.jpg",
+    image: "/images/use-cases/ai.jpg",
   },
   {
     page: "UseCaseEarth",
@@ -23,7 +23,7 @@ const cases = [
     title: "Manage petabytes of satellite and sensor data",
     description:
       "Geoscience teams handle continuous data streams from global sensor networks and satellite imagery. Onedata provides a unified access layer for real-time and archival datasets.",
-    image: "../src/images/use-cases/earth.jpg",
+    image: "/images/use-cases/earth.jpg",
   },
   {
     page: "UseCaseLife",
@@ -32,7 +32,7 @@ const cases = [
     title: "Share genomics data across institutions",
     description:
       "Research consortia use Onedata to comply with data governance policies while enabling cross-institutional data sharing for large-scale biological studies.",
-    image: "../src/images/use-cases/life.jpg",
+    image: "/images/use-cases/life.jpg",
   },
   {
     page: "UseCaseHPC",
@@ -41,7 +41,7 @@ const cases = [
     title: "Accelerate HPC workflows with intelligent caching",
     description:
       "HPC centers use Onedata to pre-stage simulation input data and checkpoint outputs automatically. Reduce I/O bottlenecks in large-scale simulations, e.g., in physics or chemistry.",
-    image: "../src/images/use-cases/hpc.jpg",
+    image: "/images/use-cases/hpc.jpg",
   },
 ];
 
