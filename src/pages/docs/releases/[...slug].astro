@@ -10,6 +10,8 @@ import ChangelogEntry from "../../../components/ChangelogEntry.astro";
 import { compareVersions } from "../../../utils/version.mjs";
 import { getMissingDebs } from "../../../utils/missing-debs";
 import { Calendar } from "@lucide/astro";
+import DateDisplay from "../../../components/DateDisplay.tsx";
+import DateRangeDisplay from "../../../components/DateRangeDisplay";
 
 export type SidebarTree = SidebarNode[];
 export type SidebarNode = {
@@ -309,19 +311,14 @@ const highlights = release?.data.highlights;
             <h1 class="release-title od-text m-0 text-2xl font-bold">
               Release {release.data.version}
             </h1>
-            <div class="time-meta flex items-center gap-2 text-[var(--od-text-muted)]">
-              <Calendar class="h-4 w-4" />
-              <time
-                class="text-xs text-muted"
-                datetime={release.data.date.toISOString()}
-              >
-                {release.data.date.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </time>
-            </div>
+            {release.data.beginDate ? (
+              <DateRangeDisplay
+                startDate={release.data.beginDate}
+                endDate={release.data.date}
+              />
+            ) : (
+              <DateDisplay date={release.data.date} />
+            )}
           </div>
 
           {assetsShown && (

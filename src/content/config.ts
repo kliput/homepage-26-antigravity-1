@@ -45,6 +45,9 @@ const releasesCollection = defineCollection({
     version: z.string(), // e.g. "25.0"
     codename: z.string().optional(),
     date: z.date(), // for chronological sorting with blog posts
+    // Provided for squashed release, e.g., 17.06.x, which summaries multiple legacy
+    // releases, is date of the first unstable release in this line.
+    beginDate: z.date().optional(),
     minOneprovider: z.string().optional(), // e.g. "20.02.8"
     title: z.string(), // blog post / release page title
     description: z.string(), // short description (card + full post header)
