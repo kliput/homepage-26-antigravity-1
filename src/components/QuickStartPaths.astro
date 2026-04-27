@@ -5,10 +5,8 @@ import {
   Box,
   TriangleAlert,
   Info,
-  CircleCheckBig,
   MousePointerClick,
   ClipboardCopy,
-  PackageOpen,
   type Icon as IconType,
 } from "@lucide/astro";
 import { marked } from "marked";
@@ -50,7 +48,7 @@ const paths: QuickStartPath[] = [
         title: "Open the demo environment",
         description:
           "Go to [demo.onedata.org](https://demo.onedata.org) — a publicly accessible zone, which you can use to familiarize yourself with the system if your don't have access to any Onedata services. You will need an account in Google or [EGI](https://www.egi.eu/services/) for that purpose. If you don't have one, [contact us](/contact) and we will create a test account for you.",
-        note: "There are many zones existing around the world. Check whether your institution is part of the Onedata ecosystem or if you have access to [EGI](https://www.egi.eu/services/) services, so that you will be able to log in to the [EGI DataHub](https://datahub.egi.eu/) Onezone.",
+        note: "There are many zones existing around the world. Check whether your institution is part of the Onedata ecosystem or if you have access to [EGI](https://www.egi.eu/services/) services — then you may cover the guide using the **PLAYGROUND** space in [EGI DataHub](https://datahub.egi.eu/).",
       },
       {
         title: "Log in",
@@ -74,6 +72,7 @@ Do not store any private or sensitive data in the space, as it's available to al
 Right-click on the newly created directory and choose **Permissions** from the context menu. Switch to the **ACL** permission type and add a single entry, for yourself, allowing all operations.
 
 Hit **Save** and done — you now have your own directory in the Sandbox Space, to which no one else has access (<a class="no-external-icon" href="/docs/25/user-guide/data#access-control-lists" target="_blank">ACLs</a> implicitly deny access if there is no explicitly allowing entry). You may use this directory to <a class="no-external-icon" href="/docs/25/user-guide/interfaces/web-file-browser#uploading-data" target="_blank">upload some data</a> and test Onedata features. If you wish for others to see the fruits of your experiments, feel free to place your data in a non-ACL-secured location.`,
+        note: "Instructions unclear and you are stuck? See the more detailed [visual guide](/docs/25/user-guide/quickstart/#create-your-own-directory-in-the-sandbox).",
       },
       {
         title: "Mount with Oneclient (optional)",
@@ -91,7 +90,7 @@ Hit **Save** and done — you now have your own directory in the Sandbox Space, 
         title: "Run Docker images in demo mode",
         description: `Use the Docker images in demo mode to start Onedata services and components with a minimal, but fully functional config, providing a “hello world” deployment. You just need a Linux-based system with [Docker engine](https://docs.docker.com/engine/install) installed.
 
-Follow the steps described in the [demo mode documentation](docs/25/admin-guide/demo-mode).`,
+Follow the steps described in the [demo mode documentation](/docs/25/admin-guide/demo-mode).`,
       },
     ],
   },
@@ -105,7 +104,7 @@ Follow the steps described in the [demo mode documentation](docs/25/admin-guide/
         title: "Deploy Onezone",
         description: `Deploy Onezone with the script utilizing our official [Docker images](https://hub.docker.com/r/onedata/onezone/) to run Onezone on any Linux OS supporting [Docker](https://docs.docker.com/engine/installation/#supported-platforms). This method involves [Docker Compose](https://docs.docker.com/compose/) under the hood.
           
-Follow the steps described in the [Onezone installation guide](docs/25/admin-guide/onezone/installation#docker-based).`,
+Follow the steps described in the [Onezone installation guide](/docs/25/admin-guide/onezone/installation#docker-based).`,
       },
       {
         title: "Deploy Oneprovider",
@@ -690,8 +689,11 @@ for (const path of paths) {
   }
 
   .step-warning {
-    background: rgba(234, 179, 8, 0.08);
-    border: 1px solid rgba(234, 179, 8, 0.25);
-    color: #ca8a04;
+    /* orange-50 */
+    background: oklch(98% 0.016 73.684);
+    border: 1px solid;
+    /* orange-200 */
+    border-color: oklch(90.1% 0.076 70.697);
+    color: var(--od-text-muted);
   }
 </style>

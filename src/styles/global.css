@@ -465,6 +465,11 @@ h6 {
   padding: 3rem;
 }
 
+/* Do not use highlight on hover for large, full-content od-cards */
+.od-card-main.od-card:hover {
+  border-color: var(--od-border);
+}
+
 @media (max-width: 768px) {
   .od-card-main {
     padding: 1.5rem;

@@ -48,17 +48,24 @@ const releasesCollection = defineCollection({
     // Provided for squashed release, e.g., 17.06.x, which summaries multiple legacy
     // releases, is date of the first unstable release in this line.
     beginDate: z.date().optional(),
-    minOneprovider: z.string().optional(), // e.g. "20.02.8"
-    title: z.string(), // blog post / release page title
-    description: z.string(), // short description (card + full post header)
-    image: z.string().optional(), // blog card image
+    // e.g. "20.02.8"
+    minOneprovider: z.string().optional(),
+    // blog post / release page title
+    title: z.string(),
+    // short description (card + full post header)
+    description: z.string(),
+    // blog card image
+    image: z.string().optional(),
     highlights: z.array(
       z.object({
         title: z.string(),
         description: z.string(),
       }),
     ),
-    upgradeNotes: z.array(z.string()).optional(), // upgrade note bullet points
+    // non-buletted single paragraph in the Highlights section if highlights collection is empty
+    highlightsPlaceholder: z.string().optional(),
+    // upgrade note bullet points
+    upgradeNotes: z.array(z.string()).optional(),
     changelog: z.array(ChangelogEntrySchema),
   }),
 });

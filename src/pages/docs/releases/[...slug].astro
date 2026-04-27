@@ -342,7 +342,8 @@ const highlights = release?.data.highlights;
                 </ul>
               ) : (
                 <p>
-                  Minor improvements and fixes — see the full changelog below.
+                  {release.data.highlightsPlaceholder ||
+                    "New features, improvements, optimizations, and fixes — see the full changelog below."}
                 </p>
               )}
             </section>

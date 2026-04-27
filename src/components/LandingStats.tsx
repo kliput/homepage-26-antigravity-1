@@ -15,23 +15,21 @@ const stats = [
   // { value: "30M", label: "Lines of code", tooltip: "Counted across <num1> repositories." },
   {
     id: "data-providers",
-    value: "300+",
+    value: "110+",
     label: "Data providers",
     tooltip:
       "Total number of data providers (data centers) across the Onedata ecosystems we operate.<br>The overall figure is higher, but we do not have statistics for deployments managed by other organizations.",
   },
-  // FIXME:
   {
     id: "data-spaces",
-    value: "500+",
+    value: "2700+",
     label: "Data spaces",
     tooltip:
       "Total number of data spaces across the Onedata ecosystems we operate.<br>The overall figure is higher, but we do not have statistics for deployments managed by other organizations.",
   },
-  // FIXME:
   {
     id: "data-managed",
-    value: "50PB+",
+    value: "3.5 PB+",
     label: "Data managed",
     tooltip:
       "Total allocated storage capacity for data spaces across the Onedata ecosystems we operate.<br>The overall figure is higher, but we do not have statistics for deployments managed by other organizations.",
