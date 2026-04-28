@@ -133,6 +133,7 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
           {
             showVersionSelector && (
               <DocsVersionSelect
+                label="Release line:"
                 selectorId="docs-version-select"
                 version={version}
                 availableVersions={availableVersions}
@@ -199,6 +200,7 @@ function renderSidebarNode(node: SidebarNode, currentPath: string) {
             showVersionSelector && (
               <div class="mobile-selector">
                 <DocsVersionSelect
+                  label="Release line:"
                   selectorId="docs-version-select"
                   version={version}
                   availableVersions={availableVersions}

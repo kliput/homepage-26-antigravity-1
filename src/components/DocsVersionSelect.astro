@@ -1,5 +1,6 @@
 ---
 const {
+  label,
   availableVersions,
   version,
   pathPrefix,
@@ -20,10 +21,11 @@ function isVersionSelected(v: string) {
 }
 
 const className = Astro.props.className;
+const effLabel = label || "Version:";
 ---
 
 <div class={"version-select-wrap" + (className ? " " + className : "")}>
-  <label for={selectorId} class="version-label">Version:</label>
+  <label for={selectorId} class="version-label">{effLabel}</label>
   <select
     id={selectorId}
     class="version-select"

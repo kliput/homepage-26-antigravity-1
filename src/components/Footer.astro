@@ -1,7 +1,7 @@
 ---
 import Logo from "./Logo.astro";
 
-// Footer component
+const yearRange = `2013—${new Date().getFullYear()}`;
 ---
 
 <footer class="site-footer">
@@ -9,7 +9,7 @@ import Logo from "./Logo.astro";
     <div class="footer-brand">
       <Logo />
       <p class="copyright">
-        &copy; {new Date().getFullYear()} Onedata. All rights reserved.
+        &copy; {yearRange} Onedata. All rights reserved.
       </p>
     </div>
 
