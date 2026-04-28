@@ -29,3 +29,6 @@ one-data-hub*
 # api
 src/content/api/*
 !src/content/api/.gitkeep
+
+# python
+.venv

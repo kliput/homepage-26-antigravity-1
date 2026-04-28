@@ -1,0 +1,6 @@
+[submodule "bamboos"]
+	path = bamboos
+	url = ssh://git@git.onedata.org:7999/vfs/bamboos.git
+[submodule "compatibility-reference"]
+	path = compatibility-reference
+	url = ssh://git@git.onedata.org:7999/vfs/compatibility-reference.git
