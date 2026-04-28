@@ -32,3 +32,7 @@ src/content/api/*
 
 # python
 .venv
+
+# Docker artifacts
+docker-build-list.json
+docker-build-report.txt
